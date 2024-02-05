@@ -1413,6 +1413,9 @@ public class MetastoreConf {
         "Fully qualified class name for the metastore schema information class \n"
             + "which is used by schematool to fetch the schema information.\n"
             + " This class should implement the IMetaStoreSchemaInfo interface"),
+    SCHEMA_OWNER("metastore.schema.owner", "hive.metastore.schema.owner",
+            "",
+            "Owner of metastore schema. Uses to create schema  at initialisation phase after hive install."),
     SCHEMA_VERIFICATION("metastore.schema.verification", "hive.metastore.schema.verification", true,
         "Enforce metastore schema version consistency.\n" +
         "True: Verify that version information stored in is compatible with one from Hive jars.  Also disable automatic\n" +

@@ -17,9 +17,18 @@
  */
 package org.apache.hadoop.hive.metastore.tools.schematool;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.util.Optional;
 
 import org.apache.hadoop.hive.metastore.HiveMetaException;
+import org.apache.hadoop.hive.metastore.conf.MetastoreConf;
+
+import static org.apache.hadoop.hive.metastore.IMetaStoreSchemaInfo.SQL_FILE_EXTENSION;
 
 /**
  * Initialize the metastore schema.
@@ -54,12 +63,13 @@ class SchemaToolTaskInit extends SchemaToolTask {
     System.out.println("Starting metastore schema initialization to " + toVersion);
 
     String initScriptDir = schemaTool.getMetaStoreSchemaInfo().getMetaStoreScriptDir();
-    String initScriptFile = schemaTool.getMetaStoreSchemaInfo().generateInitFileName(toVersion);
+    String protoScriptFile = schemaTool.getMetaStoreSchemaInfo().generateInitFileName(toVersion);
 
     try {
-      System.out.println("Initialization script " + initScriptFile);
+      File initScriptFile = subUser(initScriptDir, protoScriptFile);
+      System.out.println("Initialization script " + initScriptFile.getAbsolutePath());
       if (!schemaTool.isDryRun()) {
-        schemaTool.execSql(initScriptDir, initScriptFile);
+        schemaTool.execSql(initScriptFile.getParent(), initScriptFile.getName());
         System.out.println("Initialization script completed");
       }
     } catch (IOException e) {
@@ -69,5 +79,33 @@ class SchemaToolTaskInit extends SchemaToolTask {
     if (validate) {
       schemaTool.verifySchemaVersion();
     }
+  }
+
+  private File subUser(String parent, String filename) throws IOException {
+    String dbType = schemaTool.getDbType();
+    String user = Optional.ofNullable(schemaTool.getHiveUser()).orElse(schemaTool.userName);
+    String customSchemaOwner = MetastoreConf.getVar(schemaTool.conf, MetastoreConf.ConfVars.SCHEMA_OWNER);
+    String schemaOwner = customSchemaOwner.isEmpty() ? user : customSchemaOwner;
+    String prefix = filename.replaceAll("(.*)\\." + dbType + "\\." + SQL_FILE_EXTENSION, "$1");
+    File createFile = File.createTempFile(prefix + "-" + dbType, ".sql");
+    File proto = new File(parent, filename);
+
+    try (BufferedWriter writer = new BufferedWriter(new FileWriter(createFile));
+         BufferedReader reader = new BufferedReader(new FileReader(proto))
+    ) {
+      reader.lines()
+              .map(s -> s.replace("_REPLACE_WITH_USER_", user)
+                      .replace("_REPLACE_WITH_OWNER_", schemaOwner)
+              )
+              .forEach(s -> {
+                try {
+                  writer.write(s);
+                  writer.newLine();
+                } catch (IOException e) {
+                  throw new RuntimeException("Unable to write script to file ", e);
+                }
+              });
+    }
+    return createFile;
   }
 }

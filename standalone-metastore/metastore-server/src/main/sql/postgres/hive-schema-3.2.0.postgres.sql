@@ -9,7 +9,9 @@ SET check_function_bodies = false;
 SET client_min_messages = warning;
 SET escape_string_warning = off;
 
-SET search_path = public, pg_catalog;
+CREATE SCHEMA IF NOT EXISTS _REPLACE_WITH_USER_ AUTHORIZATION _REPLACE_WITH_OWNER_;
+
+SET search_path = _REPLACE_WITH_USER_, public, pg_catalog;
 
 SET default_tablespace = '';
 
@@ -1639,8 +1641,8 @@ ALTER TABLE ONLY "MV_TABLES_USED"
 -- Name: public; Type: ACL; Schema: -; Owner: hiveuser
 --
 
-REVOKE ALL ON SCHEMA public FROM PUBLIC;
-GRANT ALL ON SCHEMA public TO PUBLIC;
+REVOKE ALL ON SCHEMA _REPLACE_WITH_USER_ FROM _REPLACE_WITH_USER_;
+GRANT ALL ON SCHEMA _REPLACE_WITH_USER_ TO _REPLACE_WITH_USER_;
 
 --
 -- PostgreSQL database dump complete
