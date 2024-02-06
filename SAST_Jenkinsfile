@@ -1,6 +1,8 @@
 @Library("sdp-pipelines@develop")
 @Library('ru.sbrf.devsecops@master')
 
+import ru.sber.Variables
+
 properties([
   parameters([
     booleanParam(
