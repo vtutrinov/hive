@@ -45,6 +45,7 @@
     <module>parser</module>
     <module>udf</module>
     <module>ql</module>
+    <module>kryo3support</module>
     <module>serde</module>
     <module>service-rpc</module>
     <module>service</module>

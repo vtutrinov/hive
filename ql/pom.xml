@@ -439,6 +439,11 @@
       <artifactId>jackson-core</artifactId>
     </dependency>
     <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>kryo3support</artifactId>
+      <version>{project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
       <artifactId>jackson-databind</artifactId>
     </dependency>

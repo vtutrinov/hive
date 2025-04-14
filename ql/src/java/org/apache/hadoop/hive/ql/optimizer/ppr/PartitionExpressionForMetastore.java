@@ -40,6 +40,7 @@ import org.apache.hadoop.hive.ql.plan.ExprNodeDescUtils;
 import org.apache.hadoop.hive.ql.plan.ExprNodeGenericFuncDesc;
 import org.apache.hadoop.hive.serde2.typeinfo.PrimitiveTypeInfo;
 import org.apache.hadoop.hive.serde2.typeinfo.TypeInfoFactory;
+import org.apache.hive.Kryo3SerializationUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -112,7 +113,7 @@ public class PartitionExpressionForMetastore implements PartitionExpressionProxy
     } catch (Exception ex) {
       LOG.error("Failed to deserialize the expression, fall back to deserializeObjectFromKryo", ex);
       try {
-        expr = SerializationUtilities.deserializeObjectFromKryo(exprBytes, ExprNodeGenericFuncDesc.class);
+        expr = Kryo3SerializationUtils.deserializeObjectFromKryo(exprBytes, ExprNodeGenericFuncDesc.class);
       } catch (Exception e) {
         LOG.error("Failed to deserialize the expression", e);
         throw new MetaException("SerializationUtilities#deserializeObjectWithTypeInformation: " + ex.getMessage() +
