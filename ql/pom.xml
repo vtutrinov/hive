@@ -441,7 +441,7 @@
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>kryo3support</artifactId>
-      <version>{project.version}</version>
+      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>

@@ -27,6 +27,7 @@
   <url>https://hive.apache.org</url>
   <inceptionYear>2008</inceptionYear>
   <modules>
+    <module>kryo3support</module>
     <module>storage-api</module>
     <module>accumulo-handler</module>
     <module>vector-code-gen</module>
@@ -45,7 +46,6 @@
     <module>parser</module>
     <module>udf</module>
     <module>ql</module>
-    <module>kryo3support</module>
     <module>serde</module>
     <module>service-rpc</module>
     <module>service</module>
