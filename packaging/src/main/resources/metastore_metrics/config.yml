@@ -1,0 +1,34 @@
+rules:
+  #Общие JVM метрики
+  - pattern: "java.lang<type=Memory><(.*)>"
+    name: "java_memory_$1"
+    type: GAUGE
+
+  - pattern: "java.lang<type=Threading><(.*)>"
+    name: "java_threading_$1"
+    type: GAUGE
+
+  - pattern: "java.lang<type=GarbageCollector, name=(.*)><CollectionTime>"
+    name: "java_gc_$1_collection_time_ms"
+    type: COUNTER
+
+  - pattern: "java.lang<type=GarbageCollector, name=(.*)><CollectionCount>"
+    name: "java_gc_$1_collection_count"
+    type: COUNTER
+
+  - pattern: "java.lang<type=OperationSystem><(.*)>"
+    name: "java_os_$1"
+    type: GAUGE
+
+  #Hive Metastore metrics
+  - pattern: "Hadoop<service=Metastore, name=<(.*)>>"
+    name: "hive_metastore_$1"
+    type: GAUGE
+
+  #Таймеры Hive
+  - pattern: "Hive<name=(.*)><(Count|Time)?>"
+    name: "hive_$1_$2"
+    type: GAUGE
+
+  - pattern: ".*"
+

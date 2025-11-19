@@ -25,6 +25,7 @@
   <name>Hive Packaging</name>
   <properties>
     <hive.path.to.root>..</hive.path.to.root>
+    <jmx.prometheus.version>0.3.0</jmx.prometheus.version>
     <hive.jdbc.driver.jar>apache-hive-${project.version}-jdbc.jar</hive.jdbc.driver.jar>
   </properties>
   <profiles>
@@ -90,6 +91,25 @@
                       <overWrite>true</overWrite>
                       <outputDirectory>${project.build.directory}</outputDirectory>
                       <destFileName>${hive.jdbc.driver.jar}</destFileName>
+                    </artifactItem>
+                  </artifactItems>
+                </configuration>
+              </execution>
+              <execution>
+                <id>download_jmx_agent</id>
+                <phase>generate-resources</phase>
+                <goals>
+                  <goal>copy</goal>
+                </goals>
+                <configuration>
+                  <artifactItems>
+                    <artifactItem>
+                      <groupId>io.prometheus.jmx</groupId>
+                      <artifactId>jmx_prometheus_javaagent</artifactId>
+                      <version>${jmx.prometheus.version}</version>
+                      <type>jar</type>
+                      <destFileName>jmx_prometheus_javaagent-0.3.0.jar</destFileName>
+                      <outputDirectory>${project.parent.basedir}/packaging/src/main/resources/metastore_metrics/</outputDirectory>
                     </artifactItem>
                   </artifactItems>
                 </configuration>

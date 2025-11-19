@@ -411,6 +411,13 @@
       </includes>
       <outputDirectory>hcatalog/sbin</outputDirectory>
     </fileSet>
+    <fileSet>
+      <directory>${project.parent.basedir}/packaging/src/main/resources/metastore_metrics/</directory>
+      <outputDirectory>metastore_metrics</outputDirectory>
+      <includes>
+        <include>**/*</include>
+      </includes>
+    </fileSet>
   </fileSets>
 
   <files>
