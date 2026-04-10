@@ -20,15 +20,5 @@ rules:
     name: "java_os_$1"
     type: GAUGE
 
-  #Hive Metastore metrics
-  - pattern: "Hadoop<service=Metastore, name=<(.*)>>"
-    name: "hive_metastore_$1"
-    type: GAUGE
-
-  #Таймеры Hive
-  - pattern: "Hive<name=(.*)><(Count|Time)?>"
-    name: "hive_$1_$2"
-    type: GAUGE
-
   - pattern: ".*"
 

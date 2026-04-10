@@ -1199,7 +1199,7 @@ public class MetastoreConf {
         "When used in conjunction with the org.apache.hadoop.hive.ql.parse.MetaDataExportListener pre event listener, \n" +
             "this setting determines if the metadata that is exported will subsequently be moved to the user's trash directory \n" +
             "alongside the dropped table data. This ensures that the metadata will be cleaned up along with the dropped table data."),
-    METRICS_ENABLED("metastore.metrics.enabled", "hive.metastore.metrics.enabled", false,
+    METRICS_ENABLED("metastore.metrics.enabled", "hive.metastore.metrics.enabled", true,
         "Enable metrics on the metastore."),
     METRICS_CLASS("metastore.metrics.class", "hive.service.metrics.class", "org.apache.hadoop.hive.common.metrics.metrics2.CodahaleMetrics",
         new StringSetValidator(
