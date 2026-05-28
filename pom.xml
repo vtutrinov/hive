@@ -112,6 +112,9 @@
     <!-- Make sure to sync it with standalone-metastore/pom.xml -->
     <antlr4.version>4.9.3</antlr4.version>
     <apache-directory-server.version>2.0.0-M24</apache-directory-server.version>
+    <!-- CVE pins for transitively-resolved, shaded libs (see dependencyManagement below) -->
+    <aircompressor.version>2.0.2</aircompressor.version>
+    <async-http-client.version>2.12.4</async-http-client.version>
     <avro.version>1.12.0</avro.version>
     <bcprov-jdk18on.version>1.82</bcprov-jdk18on.version>
     <calcite.version>1.33.0</calcite.version>
@@ -193,7 +196,7 @@
     <mockito-core.version>5.17.0</mockito-core.version>
     <mockito-inline.version>5.2.0</mockito-inline.version>
     <mina.version>2.0.0-M5</mina.version>
-    <netty.version>4.1.127.Final</netty.version>
+    <netty.version>4.1.128.Final</netty.version>
     <netty3.version>3.10.5.Final</netty3.version>
     <!-- used by druid storage handler -->
     <pac4j-saml.version>4.5.8</pac4j-saml.version>
@@ -220,7 +223,7 @@
     <velocity.version>2.3</velocity.version>
     <xerces.version>2.12.2</xerces.version>
     <xmlsec.version>2.3.4</xmlsec.version>
-    <zookeeper.version>3.8.4</zookeeper.version>
+    <zookeeper.version>3.9.2</zookeeper.version>
     <jpam.version>1.1</jpam.version>
     <felix.version>2.4.0</felix.version>
     <curator.version>5.7.1</curator.version>
@@ -230,6 +233,7 @@
     <re2j.version>1.2</re2j.version>
     <rs-api.version>2.0.1</rs-api.version>
     <json-path.version>2.9.0</json-path.version>
+    <json-smart.version>2.5.2</json-smart.version>
     <janino.version>3.1.12</janino.version>
     <datasketches.version>2.0.0</datasketches.version>
     <spotbugs.version>4.8.6</spotbugs.version>
@@ -778,6 +782,41 @@
         <version>${jackson.version}</version>
         <type>pom</type>
         <scope>import</scope>
+      </dependency>
+      <!-- Align all netty-* artifacts (e.g. netty-handler pulled transitively by ZooKeeper)
+           to a single CVE-patched version, since the property only governs netty-all. -->
+      <dependency>
+        <groupId>io.netty</groupId>
+        <artifactId>netty-bom</artifactId>
+        <version>${netty.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
+      </dependency>
+      <!-- CVE remediation: pin versions of transitively-resolved libs that get shaded into Hive jars. -->
+      <dependency>
+        <groupId>io.airlift</groupId>
+        <artifactId>aircompressor</artifactId>
+        <version>${aircompressor.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.asynchttpclient</groupId>
+        <artifactId>async-http-client</artifactId>
+        <version>${async-http-client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.asynchttpclient</groupId>
+        <artifactId>async-http-client-netty-utils</artifactId>
+        <version>${async-http-client.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.minidev</groupId>
+        <artifactId>json-smart</artifactId>
+        <version>${json-smart.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>net.minidev</groupId>
+        <artifactId>accessors-smart</artifactId>
+        <version>${json-smart.version}</version>
       </dependency>
       <dependency>
         <groupId>org.codehaus.jettison</groupId>

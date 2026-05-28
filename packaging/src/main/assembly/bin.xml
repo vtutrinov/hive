@@ -42,6 +42,8 @@
         <exclude>org.apache.calcite:*</exclude>
         <exclude>org.apache.hadoop:*</exclude>
         <exclude>org.apache.hive.hcatalog:*</exclude>
+        <!-- htrace-core (CVE-2025-52999, abandoned, bundles jackson 2.4.0): unused by Hive; Hadoop ships its own under /opt/hadoop -->
+        <exclude>org.apache.htrace:*</exclude>
         <exclude>org.slf4j:*</exclude>
         <exclude>log4j:*</exclude>
         <exclude>ch.qos.reload4j:*</exclude>

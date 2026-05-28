@@ -363,11 +363,9 @@
       <artifactId>hive-hbase-handler</artifactId>
       <version>${project.version}</version>
     </dependency>
-    <dependency>
-      <groupId>org.apache.hive</groupId>
-      <artifactId>hive-druid-handler</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    <!-- hive-druid-handler removed from the distribution: it bundles EOL netty 3.10.x
+         (CVE-2019-20444, no fix in the 3.x line) and async-http-client; the Druid storage
+         handler is optional and not required by the metastore or core Hive services. -->
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-iceberg-handler</artifactId>
