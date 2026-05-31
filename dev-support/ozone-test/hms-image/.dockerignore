@@ -1,0 +1,6 @@
+# Only ship what build.sh puts here
+*
+!Dockerfile
+!entrypoint.sh
+!hive-staging/
+!hive-staging/**

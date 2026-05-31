@@ -1,0 +1,84 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!--
+ HMS test configuration:
+   * backing RDBMS:  postgres (container hostname 'postgres')
+   * warehouse:      ofs://om/warehouse (Apache Ozone via OM at hostname 'om')
+   * no kerberos, no SSL  (test cluster only)
+-->
+<configuration>
+
+  <!-- ===== JDO / RDBMS ===== -->
+  <property>
+    <name>javax.jdo.option.ConnectionURL</name>
+    <value>jdbc:postgresql://postgres:5432/metastore_db</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionDriverName</name>
+    <value>org.postgresql.Driver</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionUserName</name>
+    <value>hive</value>
+  </property>
+  <property>
+    <name>javax.jdo.option.ConnectionPassword</name>
+    <value>hivepass</value>
+  </property>
+  <property>
+    <name>datanucleus.autoCreateSchema</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>datanucleus.fixedDatastore</name>
+    <value>true</value>
+  </property>
+
+  <!-- ===== Warehouse on Ozone ===== -->
+  <property>
+    <name>hive.metastore.warehouse.dir</name>
+    <value>ofs://om/warehouse/tablespace/managed/hive</value>
+  </property>
+  <property>
+    <name>hive.metastore.warehouse.external.dir</name>
+    <value>ofs://om/warehouse/tablespace/external/hive</value>
+  </property>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>ofs://om/</value>
+  </property>
+  <property>
+    <name>fs.ofs.impl</name>
+    <value>org.apache.hadoop.fs.ozone.RootedOzoneFileSystem</value>
+  </property>
+  <property>
+    <name>fs.AbstractFileSystem.ofs.impl</name>
+    <value>org.apache.hadoop.fs.ozone.RootedOzFs</value>
+  </property>
+
+  <!-- ===== HMS service ===== -->
+  <property>
+    <name>hive.metastore.event.db.notification.api.auth</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>hive.metastore.uris</name>
+    <value>thrift://hms:9083</value>
+  </property>
+  <property>
+    <name>metastore.thrift.port</name>
+    <value>9083</value>
+  </property>
+  <property>
+    <name>hive.security.authorization.enabled</name>
+    <value>false</value>
+  </property>
+  <property>
+    <name>hive.metastore.metrics.enabled</name>
+    <value>true</value>
+  </property>
+  <property>
+    <name>metastore.metrics.enabled</name>
+    <value>true</value>
+  </property>
+</configuration>

@@ -1,0 +1,8 @@
+# Build artifacts (re-created on every `./hms-image/build.sh` run -- ~430 MB of jars).
+hms-image/hive-staging/
+
+# Host-specific config (copy .env.example -> .env to override versions/ports).
+.env
+
+# Container logs and other ephemera, if redirected here.
+*.log

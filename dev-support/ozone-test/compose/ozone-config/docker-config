@@ -1,0 +1,23 @@
+# env_file format -- one VAR=value per line. apache/ozone images consume these
+# and rewrite ozone-site.xml at container start. Mirrors what the official
+# Apache Ozone docker-compose examples use for a single-node test cluster.
+CORE-SITE.XML_fs.defaultFS=ofs://om
+OZONE-SITE.XML_ozone.scm.client.address=scm
+OZONE-SITE.XML_ozone.scm.names=scm
+OZONE-SITE.XML_ozone.scm.datanode.id.dir=/data/metadata
+OZONE-SITE.XML_ozone.metadata.dirs=/data/metadata
+OZONE-SITE.XML_ozone.scm.block.client.address=scm
+OZONE-SITE.XML_ozone.om.address=om
+OZONE-SITE.XML_ozone.om.http-address=om:9874
+OZONE-SITE.XML_ozone.scm.container.size=1GB
+OZONE-SITE.XML_ozone.scm.block.size=64MB
+OZONE-SITE.XML_ozone.replication=1
+OZONE-SITE.XML_hdds.replication=1
+OZONE-SITE.XML_ozone.server.default.replication=1
+OZONE-SITE.XML_ozone.scm.pipeline.creation.interval=30s
+OZONE-SITE.XML_ozone.scm.stale.node.interval=30s
+# Disable security/auth in this test cluster
+OZONE-SITE.XML_ozone.security.enabled=false
+OZONE-SITE.XML_hdds.grpc.tls.enabled=false
+HDFS-SITE.XML_rpc.metrics.quantile.enable=true
+HDFS-SITE.XML_rpc.metrics.percentiles.intervals=60,300

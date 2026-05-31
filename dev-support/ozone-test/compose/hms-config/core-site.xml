@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+<?xml-stylesheet type="text/xsl" href="configuration.xsl"?>
+<!-- Minimal core-site.xml for the HMS test container.
+     `hadoop fs` and other Hadoop CLIs refuse to start without core-site.xml
+     on HADOOP_CONF_DIR. Real config is in hive-site.xml; this just ensures
+     the default FS + Ozone scheme bindings are visible to the Hadoop CLI. -->
+<configuration>
+  <property>
+    <name>fs.defaultFS</name>
+    <value>ofs://om/</value>
+  </property>
+  <property>
+    <name>fs.ofs.impl</name>
+    <value>org.apache.hadoop.fs.ozone.RootedOzoneFileSystem</value>
+  </property>
+  <property>
+    <name>fs.AbstractFileSystem.ofs.impl</name>
+    <value>org.apache.hadoop.fs.ozone.RootedOzFs</value>
+  </property>
+</configuration>

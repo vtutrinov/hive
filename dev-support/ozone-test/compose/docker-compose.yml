@@ -1,0 +1,120 @@
+# HMS + Ozone integration test stack.
+# `./run.sh up` from dev-support/ozone-test/ brings this up.
+#
+# Network layout: a single user-defined bridge. Services resolve each other
+# by name (om, scm, datanode, postgres, hms).
+name: ${COMPOSE_PROJECT_NAME:-ozone-test}
+
+services:
+
+  # ----- Apache Ozone mini-cluster (OM + SCM + 1 datanode) -----
+  scm:
+    image: apache/ozone:${OZONE_VERSION:-1.4.1}
+    hostname: scm
+    user: "0:0"   # run as root: needed so the empty named-volume /data/metadata is writable
+    command: ["ozone", "scm"]
+    environment:
+      - OZONE_OPTS=
+      # entrypoint runs `ozone scm --init` if this marker file is missing
+      - ENSURE_SCM_INITIALIZED=/data/metadata/scm/current/VERSION
+    env_file: ./ozone-config/docker-config
+    # SCM web UI (9876) intentionally NOT bound to the host -- internal-only;
+    # avoids collision with other Ozone clusters that may already be running.
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9876/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - scm-meta:/data/metadata
+
+  om:
+    image: apache/ozone:${OZONE_VERSION:-1.4.1}
+    hostname: om
+    user: "0:0"
+    command: ["ozone", "om"]
+    environment:
+      - OZONE_OPTS=
+      - WAITFOR=scm:9876
+      - ENSURE_OM_INITIALIZED=/data/metadata/om/current/VERSION
+    env_file: ./ozone-config/docker-config
+    # OM web/RPC ports (9874/9862) NOT bound to the host -- HMS reaches OM
+    # over the docker network at om:9862; avoids collision with other Ozone
+    # clusters running on the host. Use `docker exec` to inspect OM.
+    depends_on:
+      scm:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://localhost:9874/ || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+    volumes:
+      - om-meta:/data/metadata
+
+  datanode:
+    image: apache/ozone:${OZONE_VERSION:-1.4.1}
+    user: "0:0"
+    command: ["ozone", "datanode"]
+    environment:
+      - OZONE_OPTS=
+      - WAITFOR=om:9874
+    env_file: ./ozone-config/docker-config
+    depends_on:
+      om:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "ozone admin datanode list 2>/dev/null | grep -q HEALTHY || exit 1"]
+      interval: 15s
+      timeout: 10s
+      retries: 20
+      start_period: 30s
+
+  # ----- HMS backing RDBMS -----
+  postgres:
+    image: postgres:${POSTGRES_VERSION:-14}
+    environment:
+      POSTGRES_USER:     ${POSTGRES_USER:-hive}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-hivepass}
+      POSTGRES_DB:       ${POSTGRES_DB:-metastore_db}
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${POSTGRES_USER:-hive} -d $${POSTGRES_DB:-metastore_db}"]
+      interval: 5s
+      timeout: 3s
+      retries: 15
+    volumes:
+      - pg-data:/var/lib/postgresql/data
+      - ./postgres-init:/docker-entrypoint-initdb.d:ro
+
+  # ----- Hive Metastore (custom-built from this branch) -----
+  hms:
+    image: ${HMS_IMAGE:-hms-ozone-test:cve-bumped}
+    hostname: hms
+    environment:
+      PG_HOST: postgres
+      PG_PORT: 5432
+      PG_USER: ${POSTGRES_USER:-hive}
+      PG_DB:   ${POSTGRES_DB:-metastore_db}
+      OM_HOST: om
+      OM_PORT: 9862
+    ports:
+      - "9083:9083"
+    depends_on:
+      postgres:  { condition: service_healthy }
+      om:        { condition: service_healthy }
+      datanode:  { condition: service_started   }
+    healthcheck:
+      test: ["CMD-SHELL", "nc -z localhost 9083 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 30
+      start_period: 40s
+    volumes:
+      - ../compose/hms-config:/opt/hive/conf:ro
+
+volumes:
+  scm-meta:
+  om-meta:
+  pg-data:
