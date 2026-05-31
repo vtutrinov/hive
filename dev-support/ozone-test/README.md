@@ -82,20 +82,42 @@ and exercises `hmsbench` Thrift CRUD. Exit 0 = clean.
 
 ## Iterating on CVE fixes
 
-The Dockerfile is parameterised so you can flip versions without editing it:
+The Dockerfile is parameterised so you can flip versions without editing it.
+All knobs honour caller env vars first, with `.env` providing defaults.
 
 ```bash
-# Baseline (current)
-HADOOP_VERSION=3.3.6 ./run.sh build
+# Phase 1 baseline (no swaps)
+./run.sh build
 
-# Phase 2: swap jackson + netty in /opt/hadoop/common/lib (uses SWAP_HADOOP_LIBS=1)
-SWAP_HADOOP_LIBS=1 JACKSON_VERSION=2.17.0 NETTY_VERSION=4.1.128.Final ./run.sh build
+# Phase 2: swap jackson + netty in /opt/hadoop/common/lib
+SWAP_HADOOP_LIBS=1 ./run.sh build
 
-# Phase 3: Hadoop 3.4.1 (requires source-side bump on a separate branch)
-HADOOP_VERSION=3.4.1 ./run.sh build
+# Phase 3: Hadoop 3.4.1. The 1.4.1 ozone-filesystem-hadoop3 client references
+# com.google.protobuf.ServiceException (legacy protobuf-java 2.5.0 API), which
+# Hadoop 3.4 dropped from common/lib -- so pick ONE of these two options:
+#
+#   (a) RECOMMENDED: bump the Ozone client jar. 2.0.0+ links against modern
+#       protobuf. Wire protocol is backward-compatible so a 2.x client talks
+#       to a 1.4.x Ozone server fine.
+HADOOP_VERSION=3.4.1 OZONE_FS_HADOOP3_VERSION=2.0.0 ./run.sh build
+#
+#   (b) KEEP CLIENT AT 1.4.1: ship protobuf-java-2.5.0.jar as a compat shim.
+#       Use this when you MUST pin the Ozone client to 1.4.x for production
+#       alignment. Trade-off: protobuf-java 2.5.0 has its OWN CVEs
+#       (CVE-2015-5237, CVE-2021-22569, CVE-2022-3171, CVE-2024-7254) which
+#       will reappear in scans for that single jar.
+HADOOP_VERSION=3.4.1 OZONE_FS_HADOOP3_VERSION=1.4.1 ADD_LEGACY_PROTOBUF=1 \
+  ./run.sh build
+
+# Max-coverage: Phase 2 + Phase 3 combined
+HADOOP_VERSION=3.4.1 OZONE_FS_HADOOP3_VERSION=2.0.0 SWAP_HADOOP_LIBS=1 ./run.sh build
 ```
 
 After each rebuild: `./run.sh down && ./run.sh up && ./run.sh smoke`.
+
+The smoke test's Test 8 does a real CREATE TABLE -- which forces HMS
+to `Warehouse.mkdirs()` against the `ofs://` location -- so it exercises
+the actual FileSystem write path, not just metadata.
 
 ## Known limits
 

@@ -37,6 +37,8 @@ fi
 : "${JACKSON_VERSION:=2.17.0}"
 : "${NETTY_VERSION:=4.1.128.Final}"
 : "${OZONE_FS_HADOOP3_VERSION:=1.4.1}"
+: "${ADD_LEGACY_PROTOBUF:=0}"
+: "${LEGACY_PROTOBUF_VERSION:=2.5.0}"
 : "${NO_CACHE:=0}"
 
 echo "=== build config ==="
@@ -173,6 +175,8 @@ docker build $NO_CACHE_FLAG \
   --build-arg SWAP_HADOOP_LIBS="$SWAP_HADOOP_LIBS" \
   --build-arg JACKSON_VERSION="$JACKSON_VERSION" \
   --build-arg NETTY_VERSION="$NETTY_VERSION" \
+  --build-arg ADD_LEGACY_PROTOBUF="$ADD_LEGACY_PROTOBUF" \
+  --build-arg LEGACY_PROTOBUF_VERSION="$LEGACY_PROTOBUF_VERSION" \
   -t "$HMS_IMAGE" \
   "$SCRIPT_DIR"
 
