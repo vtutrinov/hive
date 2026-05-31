@@ -19,9 +19,14 @@ SCRIPT_DIR=$(cd "$(dirname "$0")" && pwd)
 HARNESS_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
 HIVE_REPO="${HIVE_REPO:-$(cd "$HARNESS_ROOT/../.." && pwd)}"
 
-# Load .env if present (and convert KEY=VAL lines to exports)
+# Load .env if present -- BUT caller-supplied env vars take precedence.
+# (`set -a; . .env; set +a` clobbers caller env -- not what we want.)
 if [ -f "$HARNESS_ROOT/.env" ]; then
-  set -a; . "$HARNESS_ROOT/.env"; set +a
+  while IFS='=' read -r key val; do
+    [[ -z "$key" || "$key" =~ ^[[:space:]]*# ]] && continue
+    # only export if not already set in the caller's environment
+    [ -z "${!key+x}" ] && export "$key=$val"
+  done < "$HARNESS_ROOT/.env"
 fi
 
 : "${M2_REPO:=$HOME/.m2/repository}"
