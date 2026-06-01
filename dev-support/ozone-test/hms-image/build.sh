@@ -37,6 +37,7 @@ fi
 : "${JACKSON_VERSION:=2.17.0}"
 : "${NETTY_VERSION:=4.1.128.Final}"
 : "${OZONE_FS_HADOOP3_VERSION:=1.4.1}"
+: "${OZONE_FS_LOCAL_JAR:=}"   # set to a path to use a locally-built ozone client jar
 : "${ADD_LEGACY_PROTOBUF:=0}"
 : "${LEGACY_PROTOBUF_VERSION:=2.5.0}"
 : "${NO_CACHE:=0}"
@@ -136,6 +137,15 @@ cp "$HIVE_REPO"/conf/*.template "$STAGING/conf/" 2>/dev/null || true
 
 # Drop the conf bind mount point as an empty dir so docker doesn't auto-create as root
 mkdir -p "$STAGING/conf"
+
+# ---------- 3.5 optional: stage a locally-built ozone client jar ----------
+if [ -n "$OZONE_FS_LOCAL_JAR" ]; then
+  if [ ! -f "$OZONE_FS_LOCAL_JAR" ]; then
+    echo "OZONE_FS_LOCAL_JAR='$OZONE_FS_LOCAL_JAR' not a file" >&2; exit 1
+  fi
+  cp "$OZONE_FS_LOCAL_JAR" "$STAGING/ozone-fs-local.jar"
+  echo "  staged local Ozone client jar: $(du -h "$OZONE_FS_LOCAL_JAR" | cut -f1) from $OZONE_FS_LOCAL_JAR"
+fi
 
 # ---------- 3a. metastore schema SQL (needed by schematool -initSchema) ----------
 echo "=== staging metastore schema SQL ==="

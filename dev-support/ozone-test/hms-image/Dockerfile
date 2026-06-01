@@ -60,11 +60,19 @@ RUN H=/stage/hadoop \
  && rm -rf $H/share/doc \
  && echo "after prune: $(du -sh $H | cut -f1)"
 
-# Ozone FileSystem hadoop3 client (the bridge that makes ofs:// work in HMS)
-RUN echo ">>> downloading ozone-filesystem-hadoop3 ${OZONE_FS_HADOOP3_VERSION}" \
- && mkdir -p /stage/extra-jars \
- && curl -fSL --retry 3 -o /stage/extra-jars/ozone-filesystem-hadoop3.jar \
-      "https://repo1.maven.org/maven2/org/apache/ozone/ozone-filesystem-hadoop3/${OZONE_FS_HADOOP3_VERSION}/ozone-filesystem-hadoop3-${OZONE_FS_HADOOP3_VERSION}.jar"
+# Ozone FileSystem hadoop3 client (the bridge that makes ofs:// work in HMS).
+# If hive-staging/ozone-fs-local.jar is present (staged by build.sh when
+# OZONE_FS_LOCAL_JAR is set), use it; otherwise download from Maven Central.
+RUN mkdir -p /stage/extra-jars
+COPY hive-staging/ /tmp/hive-staging/
+RUN if [ -f /tmp/hive-staging/ozone-fs-local.jar ]; then \
+      echo ">>> using locally-built Ozone client jar (OZONE_FS_LOCAL_JAR)" ; \
+      cp /tmp/hive-staging/ozone-fs-local.jar /stage/extra-jars/ozone-filesystem-hadoop3.jar ; \
+    else \
+      echo ">>> downloading ozone-filesystem-hadoop3 ${OZONE_FS_HADOOP3_VERSION}" ; \
+      curl -fSL --retry 3 -o /stage/extra-jars/ozone-filesystem-hadoop3.jar \
+        "https://repo1.maven.org/maven2/org/apache/ozone/ozone-filesystem-hadoop3-client/${OZONE_FS_HADOOP3_VERSION}/ozone-filesystem-hadoop3-client-${OZONE_FS_HADOOP3_VERSION}.jar" ; \
+    fi
 
 # Postgres JDBC driver
 RUN echo ">>> downloading postgresql-${POSTGRES_JDBC_VERSION}" \
