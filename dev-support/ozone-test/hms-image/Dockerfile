@@ -15,15 +15,6 @@ ARG HADOOP_VERSION=3.3.6
 ARG OZONE_FS_HADOOP3_VERSION=1.4.1
 ARG POSTGRES_JDBC_VERSION=42.7.4
 ARG JMX_EXPORTER_VERSION=1.5.0
-# Legacy compat shim: set ADD_LEGACY_PROTOBUF=1 to drop protobuf-java-2.5.0.jar
-# into /opt/hadoop/share/hadoop/common/lib/. Needed when pairing
-# ozone-filesystem-hadoop3 1.4.x (which references com.google.protobuf.ServiceException)
-# with Hadoop 3.4+ (which dropped protobuf-java 2.5.0 from common/lib).
-# WARNING: protobuf-java 2.5.0 (2013) has known CVEs (CVE-2015-5237, CVE-2021-22569,
-# CVE-2022-3171, CVE-2024-7254). Enable only when you must pin the Ozone client
-# version, and accept the residual finding for that jar.
-ARG ADD_LEGACY_PROTOBUF=0
-ARG LEGACY_PROTOBUF_VERSION=2.5.0
 
 # -----------------------------------------------------------------------------
 # Stage 1: fetch + prune Hadoop, fetch extra jars
@@ -83,17 +74,6 @@ RUN echo ">>> downloading postgresql-${POSTGRES_JDBC_VERSION}" \
 RUN echo ">>> downloading jmx_prometheus_javaagent ${JMX_EXPORTER_VERSION}" \
  && curl -fSL --retry 3 -o /stage/extra-jars/jmx_prometheus_javaagent.jar \
       "https://github.com/prometheus/jmx_exporter/releases/download/${JMX_EXPORTER_VERSION}/jmx_prometheus_javaagent-${JMX_EXPORTER_VERSION}.jar"
-
-# Optional legacy protobuf-java for older Ozone clients on Hadoop 3.4+
-ARG ADD_LEGACY_PROTOBUF
-ARG LEGACY_PROTOBUF_VERSION
-RUN if [ "$ADD_LEGACY_PROTOBUF" = "1" ]; then \
-      echo ">>> downloading legacy protobuf-java ${LEGACY_PROTOBUF_VERSION} (compat shim)" ; \
-      curl -fSL --retry 3 -o /stage/extra-jars/protobuf-java-legacy.jar \
-        "https://repo1.maven.org/maven2/com/google/protobuf/protobuf-java/${LEGACY_PROTOBUF_VERSION}/protobuf-java-${LEGACY_PROTOBUF_VERSION}.jar" ; \
-    else \
-      echo "ADD_LEGACY_PROTOBUF=0 -- skipping legacy protobuf-java" ; \
-    fi
 
 # -----------------------------------------------------------------------------
 # Stage 2: optional surgical jackson/netty swap in /opt/hadoop/common/lib (Phase 2)
@@ -155,19 +135,6 @@ COPY --from=hadoop-patched /stage/extra-jars/jmx_prometheus_javaagent.jar /opt/h
 # Ozone client jar goes into /opt/hadoop's common/lib so the hadoop FileSystem
 # loader finds the OzoneFileSystem implementation when resolving ofs://.
 COPY --from=hadoop-patched /stage/extra-jars/ozone-filesystem-hadoop3.jar /opt/hadoop/share/hadoop/common/lib/ozone-filesystem-hadoop3.jar
-
-# Legacy protobuf-java shim (only present when ADD_LEGACY_PROTOBUF=1 during build).
-# The fetcher only creates this file when the arg is on; otherwise the COPY
-# uses the placeholder created below.
-ARG ADD_LEGACY_PROTOBUF
-ARG LEGACY_PROTOBUF_VERSION
-COPY --from=hadoop-patched /stage/extra-jars/ /tmp/extra-jars/
-RUN if [ "$ADD_LEGACY_PROTOBUF" = "1" ] && [ -f /tmp/extra-jars/protobuf-java-legacy.jar ]; then \
-      mv /tmp/extra-jars/protobuf-java-legacy.jar \
-         /opt/hadoop/share/hadoop/common/lib/protobuf-java-${LEGACY_PROTOBUF_VERSION}.jar ; \
-      echo "legacy protobuf-java ${LEGACY_PROTOBUF_VERSION} installed" ; \
-    fi \
- && rm -rf /tmp/extra-jars
 
 # Entry script
 COPY ./entrypoint.sh /opt/hive/bin/hms-entrypoint.sh
