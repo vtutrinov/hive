@@ -86,9 +86,15 @@ class SchemaToolTaskInit extends SchemaToolTask {
     String user = Optional.ofNullable(schemaTool.getHiveUser()).orElse(schemaTool.userName);
     String customSchemaOwner = MetastoreConf.getVar(schemaTool.conf, MetastoreConf.ConfVars.SCHEMA_OWNER);
     String schemaOwner = customSchemaOwner.isEmpty() ? user : customSchemaOwner;
+    String customSchemaName = MetastoreConf.getVar(schemaTool.conf, MetastoreConf.ConfVars.SCHEMA_NAME);
+    String schemaName = customSchemaName.isEmpty() ? user : customSchemaName;
     String prefix = filename.replaceAll("(.*)\\." + dbType + "\\." + SQL_FILE_EXTENSION, "$1");
     File createFile = File.createTempFile(prefix + "-" + dbType, ".sql");
     File proto = new File(parent, filename);
+
+    System.out.println("user: " + user);
+    System.out.println("schemaOwner: " + schemaOwner);
+    System.out.println("schemaName: " + schemaName);
 
     try (BufferedWriter writer = new BufferedWriter(new FileWriter(createFile));
          BufferedReader reader = new BufferedReader(new FileReader(proto))
@@ -96,6 +102,7 @@ class SchemaToolTaskInit extends SchemaToolTask {
       reader.lines()
               .map(s -> s.replace("_REPLACE_WITH_USER_", user)
                       .replace("_REPLACE_WITH_OWNER_", schemaOwner)
+                      .replace("_REPLACE_WITH_SCHEMA_", schemaName)
               )
               .forEach(s -> {
                 try {

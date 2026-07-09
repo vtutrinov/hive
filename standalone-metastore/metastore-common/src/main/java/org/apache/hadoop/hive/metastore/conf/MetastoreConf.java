@@ -1413,6 +1413,9 @@ public class MetastoreConf {
         "Fully qualified class name for the metastore schema information class \n"
             + "which is used by schematool to fetch the schema information.\n"
             + " This class should implement the IMetaStoreSchemaInfo interface"),
+    SCHEMA_NAME("metastore.schema.name", "hive.metastore.schema.name",
+            "",
+            "Name of metastore schema. Uses to create schema  at initialisation phase after hive install."),
     SCHEMA_OWNER("metastore.schema.owner", "hive.metastore.schema.owner",
             "",
             "Owner of metastore schema. Uses to create schema  at initialisation phase after hive install."),
@@ -1719,7 +1722,7 @@ public class MetastoreConf {
         "metastore.server.thrift.http.response.header.size", 6*1024,
         "Response header size in bytes when using HTTP transport mode for metastore thrift server."
             + " Defaults to jetty's defaults"),
-    METASTORE_THRIFT_HTTP_MAX_IDLE_TIME("metastore.thrift.http.max.idle.time", "hive.metastore.thrift.http.max.idle.time", 
+    METASTORE_THRIFT_HTTP_MAX_IDLE_TIME("metastore.thrift.http.max.idle.time", "hive.metastore.thrift.http.max.idle.time",
         1800, TimeUnit.SECONDS,
         "Maximum idle time for a connection on the server when in HTTP mode."),
     USE_SSL("metastore.use.SSL", "hive.metastore.use.SSL", false,
