@@ -3587,7 +3587,7 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
           catalog, database, tables);
 
       if (tables.size() > 0) {
-        tObjects = getMS().getTableObjectsByName(catalog, database, tables);
+        tObjects = getTableObjectsByNameBatched(catalog, database, tables);
         LOG.debug("get_tables_ext:getTableObjectsByName() returned " + tObjects.size());
         if (processorCapabilities == null || processorCapabilities.size() == 0 ||
             processorCapabilities.contains("MANAGERAWMETADATA")) {
@@ -3614,6 +3614,32 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
       endFunction("get_tables_ext", ret != null, ex);
     }
     return ret;
+  }
+
+  /**
+   * Fetches full table objects for the given names in batches of
+   * {@link ConfVars#BATCH_RETRIEVE_MAX}.
+   *
+   * Asking RawStore for every name in one call makes ObjectStore build a single JDOQL filter of N
+   * ORed equalities, which DataNucleus emits as N left-nested parentheses. No backend can parse
+   * that for a large database: PostgreSQL aborts the statement with
+   * {@code ERROR: memory exhausted at or near "("} once the nesting reaches its parser stack limit
+   * (~10k levels), and Oracle with {@code ORA-01795}. Batching keeps each statement small enough,
+   * for the same reason {@link #getTableObjectsInternal} does it.
+   */
+  private List<Table> getTableObjectsByNameBatched(String catName, String dbName,
+      List<String> tableNames) throws MetaException, UnknownDBException {
+    final int tableBatchSize = MetastoreConf.getIntVar(conf, ConfVars.BATCH_RETRIEVE_MAX);
+    if (tableNames.size() <= tableBatchSize) {
+      return getMS().getTableObjectsByName(catName, dbName, tableNames);
+    }
+    List<Table> tables = new ArrayList<>(tableNames.size());
+    for (int startIndex = 0; startIndex < tableNames.size(); startIndex += tableBatchSize) {
+      int endIndex = Math.min(startIndex + tableBatchSize, tableNames.size());
+      tables.addAll(getMS().getTableObjectsByName(catName, dbName,
+          tableNames.subList(startIndex, endIndex)));
+    }
+    return tables;
   }
 
   private ExtendedTableInfo convertTableToExtendedTable (Table table,
@@ -6227,11 +6253,14 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
 
     try {
       ret = getMS().getTables(parsedDbName[CAT_NAME], parsedDbName[DB_NAME], pattern);
-      if(ret !=  null && !ret.isEmpty()) {
-        List<Table> tableInfo = new ArrayList<>();
-        tableInfo = getMS().getTableObjectsByName(parsedDbName[CAT_NAME], parsedDbName[DB_NAME], ret);
+      // The full table objects are fetched only to give the server-side filter hook the owner
+      // information it filters on. With no filter hook configured the names returned above are
+      // already the answer, and the second round trip is pure overhead.
+      if (isServerFilterEnabled && ret != null && !ret.isEmpty()) {
+        List<Table> tableInfo =
+            getTableObjectsByNameBatched(parsedDbName[CAT_NAME], parsedDbName[DB_NAME], ret);
         tableInfo = FilterUtils.filterTablesIfEnabled(isServerFilterEnabled, filterHook, tableInfo);// tableInfo object has the owner information of the table which is being passed to FilterUtils.
-        ret = new ArrayList<>();
+        ret = new ArrayList<>(tableInfo.size());
         for (Table tbl : tableInfo) {
           ret.add(tbl.getTableName());
         }
