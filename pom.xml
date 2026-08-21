@@ -28,6 +28,7 @@
   <inceptionYear>2008</inceptionYear>
   <modules>
     <module>kryo3support</module>
+    <module>htrace-core-shaded</module>
     <module>storage-api</module>
     <module>accumulo-handler</module>
     <module>vector-code-gen</module>
@@ -148,6 +149,9 @@
     <hadoop.bin.path>${basedir}/${hive.path.to.root}/testutils/hadoop</hadoop.bin.path>
     <hamcrest.version>1.3</hamcrest.version>
     <hbase.version>2.5.6-hadoop3</hbase.version>
+    <!-- Consumed only by the htrace-core-shaded module, which repackages this jar to replace
+         its bundled jackson 2.4.0. Depend on hive-htrace-core-shaded, never on this directly. -->
+    <htrace.version>3.1.0-incubating</htrace.version>
     <hppc.version>0.7.2</hppc.version>
     <graalvm.version>23.0.8</graalvm.version>
     <!-- required for logging test to avoid including hbase which pulls disruptor transitively -->
@@ -223,7 +227,8 @@
     <velocity.version>2.3</velocity.version>
     <xerces.version>2.12.2</xerces.version>
     <xmlsec.version>2.3.4</xmlsec.version>
-    <zookeeper.version>3.9.2</zookeeper.version>
+    <!-- 3.8.3 is affected by CVE-2024-23944; 3.9.0-3.9.2 by CVE-2024-51504. 3.9.4 is clear of both. -->
+    <zookeeper.version>3.9.4</zookeeper.version>
     <jpam.version>1.1</jpam.version>
     <felix.version>2.4.0</felix.version>
     <curator.version>5.7.1</curator.version>
@@ -541,6 +546,11 @@
         <groupId>org.apache.commons</groupId>
         <artifactId>commons-exec</artifactId>
         <version>${commons-exec.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-htrace-core-shaded</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.accumulo</groupId>

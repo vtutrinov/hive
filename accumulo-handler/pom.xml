@@ -47,6 +47,12 @@
           <groupId>commons-collections</groupId>
           <artifactId>commons-collections</artifactId>
         </exclusion>
+        <!-- Replaced by hive-htrace-core-shaded below, which carries the same
+             org.apache.htrace classes with a current jackson inside. -->
+        <exclusion>
+          <groupId>org.apache.htrace</groupId>
+          <artifactId>htrace-core</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>
@@ -60,6 +66,16 @@
     <dependency>
       <groupId>org.apache.accumulo</groupId>
       <artifactId>accumulo-trace</artifactId>
+      <exclusions>
+        <exclusion>
+          <groupId>org.apache.htrace</groupId>
+          <artifactId>htrace-core</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-htrace-core-shaded</artifactId>
     </dependency>
     <dependency>
       <groupId>org.apache.hive</groupId>

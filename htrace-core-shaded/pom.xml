@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Licensed under the Apache License, Version 2.0 (the "License");
+  you may not use this file except in compliance with the License.
+  You may obtain a copy of the License at
+
+      http://www.apache.org/licenses/LICENSE-2.0
+
+  Unless required by applicable law or agreed to in writing, software
+  distributed under the License is distributed on an "AS IS" BASIS,
+  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  See the License for the specific language governing permissions and
+  limitations under the License.
+-->
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>org.apache.hive</groupId>
+    <artifactId>hive</artifactId>
+    <version>4.2.1</version>
+    <relativePath>../pom.xml</relativePath>
+  </parent>
+  <artifactId>hive-htrace-core-shaded</artifactId>
+  <packaging>jar</packaging>
+  <name>Hive HTrace Core Shaded</name>
+  <description>
+    Repackaged htrace-core with its internal jackson upgraded to a non-vulnerable version
+    (jackson-databind 2.4.0 -> ${jackson.version}, CVE-2020-9548 and friends).
+
+    htrace-core 3.1.0-incubating is the last release of a retired Apache project and bundles
+    jackson 2.4.0 relocated under org.apache.htrace.fasterxml. accumulo-core still requires it,
+    so the jar cannot simply be dropped. Instead we strip the stale jackson copy and relocate a
+    current jackson into the exact same package, so htrace's own bytecode links against it
+    unchanged. Note the prefix here has no "shaded" segment - that is htrace-core4's layout,
+    not htrace-core 3.x's.
+  </description>
+  <properties>
+    <hive.path.to.root>..</hive.path.to.root>
+  </properties>
+  <!--
+    All four are <optional>true</optional> on purpose. They are shaded *into* this jar, so they
+    must not leak to consumers as transitive dependencies - otherwise the original htrace-core
+    (with its jackson 2.4.0) is pulled straight back in and the distribution ships both copies.
+
+    createDependencyReducedPom alone is not enough: the reduced pom only takes effect for builds
+    that read it back from the repository, so within a single reactor run the packaging module
+    still sees the original dependency list. 'optional' is non-transitive by definition and so
+    holds on a clean CI checkout too.
+
+    It has to be 'optional' rather than 'provided': the shade plugin's default artifactSet only
+    covers compile/runtime scope, so marking these 'provided' silently produces an EMPTY jar.
+  -->
+  <dependencies>
+    <dependency>
+      <groupId>org.apache.htrace</groupId>
+      <artifactId>htrace-core</artifactId>
+      <version>${htrace.version}</version>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-databind</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-core</artifactId>
+      <optional>true</optional>
+    </dependency>
+    <dependency>
+      <groupId>com.fasterxml.jackson.core</groupId>
+      <artifactId>jackson-annotations</artifactId>
+      <optional>true</optional>
+    </dependency>
+  </dependencies>
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>shade-htrace-core</id>
+            <phase>package</phase>
+            <goals>
+              <goal>shade</goal>
+            </goals>
+            <configuration>
+              <!-- Must be true: the inputs are shaded *into* this jar, so the installed pom
+                   must not keep declaring them. Otherwise consumers pull the original
+                   htrace-core (and its jackson 2.4.0) straight back in transitively, and
+                   the distribution ends up shipping both copies. -->
+              <createDependencyReducedPom>true</createDependencyReducedPom>
+              <shadedArtifactAttached>false</shadedArtifactAttached>
+              <promoteTransitiveDependencies>false</promoteTransitiveDependencies>
+              <artifactSet>
+                <includes>
+                  <include>org.apache.htrace:htrace-core</include>
+                  <include>com.fasterxml.jackson.core:jackson-databind</include>
+                  <include>com.fasterxml.jackson.core:jackson-core</include>
+                  <include>com.fasterxml.jackson.core:jackson-annotations</include>
+                </includes>
+              </artifactSet>
+              <filters>
+                <filter>
+                  <artifact>org.apache.htrace:htrace-core</artifact>
+                  <excludes>
+                    <!-- The stale jackson 2.4.0 copy. org/apache/htrace/commons/** is the
+                         relocated commons-logging and must be kept - htrace's own classes
+                         reference it. -->
+                    <exclude>org/apache/htrace/fasterxml/**</exclude>
+                    <exclude>META-INF/maven/com.fasterxml.jackson.core/**</exclude>
+                  </excludes>
+                </filter>
+                <filter>
+                  <artifact>*:*</artifact>
+                  <excludes>
+                    <exclude>META-INF/*.SF</exclude>
+                    <exclude>META-INF/*.DSA</exclude>
+                    <exclude>META-INF/*.RSA</exclude>
+                    <exclude>module-info.class</exclude>
+                    <!-- The shaded jar is not marked Multi-Release, so the JVM never loads
+                         these entries; shade also leaves their paths unrelocated, which
+                         would break anything that did turn the MR flag back on. Dropping
+                         them also keeps the shade plugin's ASM off jackson-core's Java 21
+                         classes. -->
+                    <exclude>META-INF/versions/**</exclude>
+                  </excludes>
+                </filter>
+              </filters>
+              <relocations>
+                <relocation>
+                  <pattern>com.fasterxml.jackson</pattern>
+                  <shadedPattern>org.apache.htrace.fasterxml.jackson</shadedPattern>
+                </relocation>
+              </relocations>
+              <transformers>
+                <transformer implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+              </transformers>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
