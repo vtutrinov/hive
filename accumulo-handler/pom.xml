@@ -77,6 +77,13 @@
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-htrace-core-shaded</artifactId>
     </dependency>
+    <!-- commons-vfs2 2.10.0 (the CVE-2025-27553 fix) moved the HDFS provider out of the main
+         artifact. accumulo-start's AccumuloVFSClassLoader does an unconditional
+         new HdfsFileProvider(), so without this it dies with NoClassDefFoundError. -->
+    <dependency>
+      <groupId>org.apache.commons</groupId>
+      <artifactId>commons-vfs2-hdfs</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.apache.hive</groupId>
       <artifactId>hive-common</artifactId>

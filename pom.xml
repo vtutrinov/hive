@@ -136,6 +136,11 @@
     <commons-math3.version>3.6.1</commons-math3.version>
     <commons-dbcp2.version>2.12.0</commons-dbcp2.version>
     <commons-text.version>1.10.0</commons-text.version>
+    <!-- Not a direct dependency: pinned to keep accumulo-core from dragging in 2.3
+         (CVE-2025-27553, fixed only in 2.10.0). 2.10.0 also split the HDFS provider out into
+         commons-vfs2-hdfs, which accumulo-start's AccumuloVFSClassLoader registers
+         unconditionally - so that artifact has to be added back alongside the pin. -->
+    <commons-vfs2.version>2.10.0</commons-vfs2.version>
     <derby.version>10.17.1.0</derby.version>
     <dropwizard.version>3.1.0</dropwizard.version>
     <dropwizard-metrics-hadoop-metrics2-reporter.version>0.1.2</dropwizard-metrics-hadoop-metrics2-reporter.version>
@@ -184,7 +189,12 @@
     <kafka.version>2.5.0</kafka.version>
     <kryo.version>5.5.0</kryo.version>
     <reflectasm.version>1.11.9</reflectasm.version>
-    <kudu.version>1.17.0</kudu.version>
+    <!-- 1.12.0 shades protobuf 3.11.3 (CVE-2021-22569, CVE-2021-22570, CVE-2022-3509,
+         CVE-2022-3510, CVE-2024-7254). 1.18.1 shades protobuf >=3.25.5, clearing all of them,
+         and netty 4.1.115. Both are relocated under org.apache.kudu.shaded, so they can only
+         move when kudu itself moves; netty is still short of the 4.1.118/4.1.124 that
+         CVE-2025-24970/CVE-2025-55163 need, and 1.18.1 is the latest kudu release. -->
+    <kudu.version>1.18.1</kudu.version>
     <!-- Leaving libfb303 at 0.9.3 regardless of libthrift: As per THRIFT-4613 The Apache Thrift project does not publish items related to fb303 at this point -->
     <libfb303.version>0.9.3</libfb303.version>
     <libthrift.version>0.16.0</libthrift.version>
@@ -224,7 +234,10 @@
     <snappy.version>1.1.10.4</snappy.version>
     <jersey-wadl-doclet.version>4.0.0-M2</jersey-wadl-doclet.version>
     <jaxb-runtime.version>4.0.0-M2</jaxb-runtime.version>
-    <velocity.version>2.3</velocity.version>
+    <!-- 2.3 shades commons-io 2.8.0 (CVE-2024-47554) under org/apache/velocity/shaded/commons/io.
+         2.4.1 drops that copy entirely - its only dependencies are commons-lang3 and slf4j-api.
+         Reached transitively through pac4j-saml-opensamlv3; Hive has no direct velocity usage. -->
+    <velocity.version>2.4.1</velocity.version>
     <xerces.version>2.12.2</xerces.version>
     <xmlsec.version>2.3.4</xmlsec.version>
     <!-- 3.8.3 is affected by CVE-2024-23944; 3.9.0-3.9.2 by CVE-2024-51504. 3.9.4 is clear of both. -->
@@ -416,6 +429,17 @@
         <groupId>commons-io</groupId>
         <artifactId>commons-io</artifactId>
         <version>${commons-io.version}</version>
+      </dependency>
+      <!-- Transitive-only pins; see the notes on the version properties. -->
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-vfs2</artifactId>
+        <version>${commons-vfs2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.commons</groupId>
+        <artifactId>commons-vfs2-hdfs</artifactId>
+        <version>${commons-vfs2.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.commons</groupId>
@@ -1464,6 +1488,13 @@
         <artifactId>tez-common</artifactId>
         <version>${tez.version}</version>
       </dependency>
+      <!--
+        Import the whole framework BOM rather than pinning individual artifacts. Only spring-core
+        and spring-jdbc used to be managed here, which left the artifacts reached through
+        atlas-intg (context, expression, aop, beans) on 5.3.21 while the managed chain was on
+        5.3.39. That skew shipped a 5.3.21 spring-expression carrying CVE-2023-20863, fixed in
+        5.3.27. The BOM keeps every spring-framework artifact on one version.
+      -->
       <dependency>
         <groupId>org.apache.tez</groupId>
         <artifactId>tez-protobuf-history-plugin</artifactId>
@@ -1477,13 +1508,10 @@
       </dependency>
       <dependency>
         <groupId>org.springframework</groupId>
-        <artifactId>spring-jdbc</artifactId>
+        <artifactId>spring-framework-bom</artifactId>
         <version>${spring.version}</version>
-      </dependency>
-      <dependency>
-        <groupId>org.springframework</groupId>
-        <artifactId>spring-core</artifactId>
-        <version>${spring.version}</version>
+        <type>pom</type>
+        <scope>import</scope>
       </dependency>
       <dependency>
         <groupId>org.fusesource.jansi</groupId>
