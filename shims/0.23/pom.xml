@@ -276,6 +276,16 @@
           <groupId>com.nimbusds</groupId>
           <artifactId>nimbus-jose-jwt</artifactId>
         </exclusion>
+        <!-- fst is only used by the ResourceManager's own state-store serialization and
+             drags in java-util -> json-io 2.5.1 (CVE-2023-34610). json-io cannot be
+             upgraded in place: 4.x moved the API out of com.cedarsoftware.util.io, so
+             java-util 1.9.0 loses JsonReader/JsonWriter. Hive never instantiates RM
+             classes - Hadoop23Shims only reads yarn.resourcemanager.* config strings -
+             so the whole chain is dead weight here. -->
+        <exclusion>
+          <groupId>de.ruedigermoeller</groupId>
+          <artifactId>fst</artifactId>
+        </exclusion>
       </exclusions>
     </dependency>
     <dependency>

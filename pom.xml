@@ -209,7 +209,10 @@
     <otel.version>1.42.0</otel.version>
     <mockito-core.version>5.17.0</mockito-core.version>
     <mockito-inline.version>5.2.0</mockito-inline.version>
-    <mina.version>2.0.0-M5</mina.version>
+    <!-- Was 2.0.0-M5 and referenced nowhere. mina-core 2.2.3 (CVE-2024-52046) used to reach the
+         build via jetty-runner -> jetty-jaas -> api-ldap-model; kept as a guard pin: 2.2.4 is the
+         fix, 2.2.9 is the current 2.2.x. -->
+    <mina.version>2.2.9</mina.version>
     <netty.version>4.1.128.Final</netty.version>
     <netty3.version>3.10.5.Final</netty3.version>
     <!-- used by druid storage handler -->
@@ -892,6 +895,24 @@
         <groupId>org.eclipse.jetty</groupId>
         <artifactId>jetty-http</artifactId>
         <version>${jetty.version}</version>
+      </dependency>
+      <!-- Not managed before: hadoop-yarn-client (via tez-api) pulls these at
+           9.4.51.v20230217, below the 9.4.57 that fixes CVE-2024-13009, and they would land in
+           the distribution next to Hive's own 9.4.57 jetty jars. -->
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-client</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-client</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.apache.mina</groupId>
+        <artifactId>mina-core</artifactId>
+        <version>${mina.version}</version>
       </dependency>
       <dependency>
         <groupId>org.eclipse.jetty</groupId>

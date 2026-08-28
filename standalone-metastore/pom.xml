@@ -483,6 +483,21 @@
         <artifactId>jetty-servlet</artifactId>
         <version>${jetty.version}</version>
       </dependency>
+      <!-- This pom has its own dependencyManagement, so the root hive pom's pins do not
+           reach it. Without these, hadoop-yarn-client (via tez-api) resolves them at
+           9.4.51.v20230217 here - below the 9.4.57 that fixes CVE-2024-13009 - and the
+           SDPOZN-2444 copy-dependencies step then copies that older pair into
+           /opt/hive/lib alongside Hive's own 9.4.57 jars. -->
+      <dependency>
+        <groupId>org.eclipse.jetty</groupId>
+        <artifactId>jetty-client</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.eclipse.jetty.websocket</groupId>
+        <artifactId>websocket-client</artifactId>
+        <version>${jetty.version}</version>
+      </dependency>
       <!-- test scope dependencies -->
       <dependency>
         <groupId>junit</groupId>
