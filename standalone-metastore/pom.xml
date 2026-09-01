@@ -76,8 +76,10 @@
     <derby.version>10.17.1.0</derby.version>
     <mariadb.version>2.5.0</mariadb.version>
     <mssql.version>6.2.1.jre8</mssql.version>
-    <mysql.version>8.2.0</mysql.version>
-    <postgres.version>42.7.3</postgres.version>
+    <!-- CVE-2023-22102; 8.4.0 is the last 8.x -->
+    <mysql.version>8.4.0</mysql.version>
+    <!-- CVE-2026-42198 -->
+    <postgres.version>42.7.13</postgres.version>
     <oracle.version>21.3.0.0</oracle.version>
     <dropwizard-metrics-hadoop-metrics2-reporter.version>0.1.2
     </dropwizard-metrics-hadoop-metrics2-reporter.version>
@@ -85,7 +87,8 @@
     <guava.version>22.0</guava.version>
     <hadoop.version>3.4.1</hadoop.version>
     <hikaricp.version>4.0.3</hikaricp.version>
-    <jackson.version>2.16.1</jackson.version>
+    <!-- CVE-2026-54513/54512; report asks >=2.18.8, 2.18.10 is the latest 2.18.x -->
+    <jackson.version>2.18.10</jackson.version>
     <jexl.version>3.3</jexl.version>
     <javolution.version>5.5.1</javolution.version>
     <junit.version>4.13.2</junit.version>
@@ -93,17 +96,26 @@
     <junit.vintage.version>5.13.3</junit.vintage.version>
     <junit.platform.version>1.13.3</junit.platform.version>
     <libfb303.version>0.9.3</libfb303.version>
+    <!-- Stays at 0.16.0. CVE-2026-43869 needs >=0.23.0 per NVD, but no version above 0.16.0
+         compiles the thrift-generated sources checked into src/gen: thrift 0.17 changed
+         ProcessFunction from two type arguments to three, so ThriftHiveMetastore.java fails
+         with 200 "wrong number of type arguments" errors (verified by clean-building
+         metastore-common against 0.17.0, 0.18.1, 0.19.0, 0.20.0, 0.21.0 and 0.23.0 - all fail).
+         Closing this CVE means regenerating the thrift sources with the 0.23.0 compiler, which
+         the thriftif profile gates on having that exact compiler installed. -->
     <libthrift.version>0.16.0</libthrift.version>
     <log4j2.version>2.24.3</log4j2.version>
     <mockito-core.version>5.17.0</mockito-core.version>
     <orc.version>2.1.2</orc.version>
-    <aircompressor.version>2.0.2</aircompressor.version>
+    <!-- CVE-2025-67721; NVD fix boundary is 2.0.3. 2.x keeps the io.airlift.compress package. -->
+    <aircompressor.version>2.0.3</aircompressor.version>
     <protobuf.version>3.25.5</protobuf.version>
     <protoc-jar-maven-plugin.version>3.11.4</protoc-jar-maven-plugin.version>
     <protoc.path>${env.PROTOC_PATH}</protoc.path>
     <io.grpc.version>1.72.0</io.grpc.version>
     <sqlline.version>1.9.0</sqlline.version>
-    <netty.version>4.1.128.Final</netty.version>
+    <!-- CVE-2026-59901/42583 and the codec-* family flagged in the report -->
+    <netty.version>4.1.137.Final</netty.version>
     <!-- HIVE-28992: only upgrade to newer than 3.25.0 if you tested the prompt -->
     <jline.version>3.25.0</jline.version>
     <ST4.version>4.0.4</ST4.version>
@@ -113,7 +125,8 @@
     <hamcrest.version>1.3</hamcrest.version>
     <curator.version>5.7.1</curator.version>
     <!-- 3.8.3 is affected by CVE-2024-23944; 3.9.0-3.9.2 by CVE-2024-51504. 3.9.4 is clear of both. -->
-    <zookeeper.version>3.9.4</zookeeper.version>
+    <!-- CVE-2026-24308, CVE-2026-24281 -->
+    <zookeeper.version>3.9.5</zookeeper.version>
     <!-- Keep hadoop-common from pulling an old avro (CVE-2024-47561); pin it like the root pom does. -->
     <avro.version>1.12.0</avro.version>
     <cron-utils.version>9.2.1</cron-utils.version>
@@ -122,9 +135,15 @@
     <slf4j.version>1.7.30</slf4j.version>
     <httpcomponents.core.version>4.4.13</httpcomponents.core.version>
     <httpcomponents.client.version>4.5.13</httpcomponents.client.version>
-    <pac4j-core.version>4.5.8</pac4j-core.version>
+    <!-- Latest 4.5.x. NOTE: this does NOT close CVE-2026-40458 - NVD gives the fix as
+         5.7.10/6.4.1, and the 4.5.x line has no fixed release. Taken as a patch-level
+         improvement only; closing the CVE needs the pac4j 5.x migration. -->
+    <pac4j-core.version>4.5.10</pac4j-core.version>
     <nimbus-oauth.version>11.28</nimbus-oauth.version>
-    <jetty.version>9.4.57.v20241219</jetty.version>
+    <!-- Latest public 9.4.x. NOTE: this does NOT close CVE-2026-2332 / CVE-2026-10050 -
+         NVD gives their fix boundary as 9.4.60/9.4.63, which are not published to Maven
+         Central (9.4 is EOL; those are extended-support builds). Closing them needs Jetty 10+. -->
+    <jetty.version>9.4.58.v20250814</jetty.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
     <keycloak.version>26.0.6</keycloak.version>
     <!-- If upgrading, upgrade atlas as well in ql/pom.xml, which brings in some springframework dependencies transitively -->

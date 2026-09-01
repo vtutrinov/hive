@@ -114,7 +114,8 @@
     <antlr4.version>4.9.3</antlr4.version>
     <apache-directory-server.version>2.0.0-M24</apache-directory-server.version>
     <!-- CVE pins for transitively-resolved, shaded libs (see dependencyManagement below) -->
-    <aircompressor.version>2.0.2</aircompressor.version>
+    <!-- CVE-2025-67721; NVD fix boundary is 2.0.3. 2.x keeps the io.airlift.compress package. -->
+    <aircompressor.version>2.0.3</aircompressor.version>
     <async-http-client.version>2.12.4</async-http-client.version>
     <avro.version>1.12.0</avro.version>
     <bcprov-jdk18on.version>1.82</bcprov-jdk18on.version>
@@ -169,13 +170,17 @@
     <httpcomponents5.core.version>5.3.1</httpcomponents5.core.version>
     <httpcomponents5.client.version>5.3.1</httpcomponents5.client.version>
     <ivy.version>2.5.2</ivy.version>
-    <jackson.version>2.16.1</jackson.version>
+    <!-- CVE-2026-54513/54512; report asks >=2.18.8, 2.18.10 is the latest 2.18.x -->
+    <jackson.version>2.18.10</jackson.version>
     <jamon.plugin.version>2.3.4</jamon.plugin.version>
     <jamon-runtime.version>2.4.1</jamon-runtime.version>
     <javax-servlet.version>3.1.0</javax-servlet.version>
     <javolution.version>5.5.1</javolution.version>
     <jettison.version>1.5.4</jettison.version>
-    <jetty.version>9.4.57.v20241219</jetty.version>
+    <!-- Latest public 9.4.x. NOTE: this does NOT close CVE-2026-2332 / CVE-2026-10050 -
+         NVD gives their fix boundary as 9.4.60/9.4.63, which are not published to Maven
+         Central (9.4 is EOL; those are extended-support builds). Closing them needs Jetty 10+. -->
+    <jetty.version>9.4.58.v20250814</jetty.version>
     <jersey.version>1.19.4</jersey.version>
     <!-- HIVE-28992: only upgrade to newer than 3.25.0 if you tested the prompt -->
     <jline.version>3.25.0</jline.version>
@@ -197,12 +202,21 @@
     <kudu.version>1.18.1</kudu.version>
     <!-- Leaving libfb303 at 0.9.3 regardless of libthrift: As per THRIFT-4613 The Apache Thrift project does not publish items related to fb303 at this point -->
     <libfb303.version>0.9.3</libfb303.version>
+    <!-- Stays at 0.16.0. CVE-2026-43869 needs >=0.23.0 per NVD, but no version above 0.16.0
+         compiles the thrift-generated sources checked into src/gen: thrift 0.17 changed
+         ProcessFunction from two type arguments to three, so ThriftHiveMetastore.java fails
+         with 200 "wrong number of type arguments" errors (verified by clean-building
+         metastore-common against 0.17.0, 0.18.1, 0.19.0, 0.20.0, 0.21.0 and 0.23.0 - all fail).
+         Closing this CVE means regenerating the thrift sources with the 0.23.0 compiler, which
+         the thriftif profile gates on having that exact compiler installed. -->
     <libthrift.version>0.16.0</libthrift.version>
     <log4j2.version>2.24.3</log4j2.version>
     <mariadb.version>2.5.0</mariadb.version>
     <mssql.version>6.2.1.jre8</mssql.version>
-    <mysql.version>8.2.0</mysql.version>
-    <postgres.version>42.7.3</postgres.version>
+    <!-- CVE-2023-22102; 8.4.0 is the last 8.x -->
+    <mysql.version>8.4.0</mysql.version>
+    <!-- CVE-2026-42198 -->
+    <postgres.version>42.7.13</postgres.version>
     <oracle.version>21.3.0.0</oracle.version>
     <opencsv.version>5.9</opencsv.version>
     <orc.version>2.1.2</orc.version>
@@ -213,10 +227,12 @@
          build via jetty-runner -> jetty-jaas -> api-ldap-model; kept as a guard pin: 2.2.4 is the
          fix, 2.2.9 is the current 2.2.x. -->
     <mina.version>2.2.9</mina.version>
-    <netty.version>4.1.128.Final</netty.version>
+    <!-- CVE-2026-59901/42583 and the codec-* family flagged in the report -->
+    <netty.version>4.1.137.Final</netty.version>
     <netty3.version>3.10.5.Final</netty3.version>
     <!-- used by druid storage handler -->
-    <pac4j-saml.version>4.5.8</pac4j-saml.version>
+    <!-- keep in lockstep with pac4j-core -->
+    <pac4j-saml.version>4.5.10</pac4j-saml.version>
     <paranamer.version>2.8</paranamer.version>
     <parquet.version>1.15.2</parquet.version>
     <pig.version>0.16.0</pig.version>
@@ -244,7 +260,8 @@
     <xerces.version>2.12.2</xerces.version>
     <xmlsec.version>2.3.4</xmlsec.version>
     <!-- 3.8.3 is affected by CVE-2024-23944; 3.9.0-3.9.2 by CVE-2024-51504. 3.9.4 is clear of both. -->
-    <zookeeper.version>3.9.4</zookeeper.version>
+    <!-- CVE-2026-24308, CVE-2026-24281 -->
+    <zookeeper.version>3.9.5</zookeeper.version>
     <jpam.version>1.1</jpam.version>
     <felix.version>2.4.0</felix.version>
     <curator.version>5.7.1</curator.version>
