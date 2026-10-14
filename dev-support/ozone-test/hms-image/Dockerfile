@@ -1,6 +1,6 @@
 # syntax=docker/dockerfile:1
 #
-# HMS test image built from this branch's CVE-bumped Hive jars + Hadoop 3.3.6 (pruned).
+# HMS test image built from this branch's CVE-bumped Hive jars + Hadoop 3.4.1 (pruned).
 # Standalone HMS only -- no HS2.
 #
 # Build context layout (created by build.sh):
@@ -11,7 +11,7 @@
 #   ./Dockerfile
 
 ARG BASE_IMAGE=eclipse-temurin:8-jre-jammy
-ARG HADOOP_VERSION=3.3.6
+ARG HADOOP_VERSION=3.4.1
 ARG OZONE_FS_HADOOP3_VERSION=1.4.1
 ARG POSTGRES_JDBC_VERSION=42.7.4
 ARG JMX_EXPORTER_VERSION=1.5.0

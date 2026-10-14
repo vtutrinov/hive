@@ -5,8 +5,8 @@
 # ENV / args:
 #   HIVE_REPO       (../../..)        path to the Hive source repo (this branch)
 #   M2_REPO         ($HOME/.m2/repository)
-#   HIVE_VERSION    (4.0.0)
-#   HADOOP_VERSION  (3.3.6)
+#   HIVE_VERSION    (4.2.1)
+#   HADOOP_VERSION  (3.4.1)
 #   HMS_IMAGE       (hms-ozone-test:cve-bumped)
 #   SWAP_HADOOP_LIBS (0)              set to 1 to surgically swap jackson/netty
 #   JACKSON_VERSION  (2.17.0)
@@ -30,8 +30,8 @@ if [ -f "$HARNESS_ROOT/.env" ]; then
 fi
 
 : "${M2_REPO:=$HOME/.m2/repository}"
-: "${HIVE_VERSION:=4.0.0}"
-: "${HADOOP_VERSION:=3.3.6}"
+: "${HIVE_VERSION:=4.2.1}"
+: "${HADOOP_VERSION:=3.4.1}"
 : "${HMS_IMAGE:=hms-ozone-test:cve-bumped}"
 : "${SWAP_HADOOP_LIBS:=0}"
 : "${JACKSON_VERSION:=2.17.0}"

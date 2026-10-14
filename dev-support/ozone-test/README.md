@@ -3,7 +3,7 @@
 Local docker-compose stack that brings up:
 - Apache Ozone mini-cluster (OM + SCM + 1 datanode, `apache/ozone:1.4.1`)
 - PostgreSQL 14 (HMS backing RDBMS)
-- **Hive Metastore** built from this repo's CVE-bumped Hive 4.0.0 source
+- **Hive Metastore** built from this repo's CVE-bumped Hive 4.2.1 source
 
 Purpose: prove the dependency upgrades on this branch don't regress HMS
 functionality end-to-end against a real Ozone warehouse (`ofs://...`), and give
