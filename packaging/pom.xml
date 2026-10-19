@@ -485,10 +485,9 @@
         </exclusion>
       </exclusions>
     </dependency>
-    <dependency>
-      <groupId>org.apache.hive</groupId>
-      <artifactId>hive-kudu-handler</artifactId>
-      <version>${project.version}</version>
-    </dependency>
+    <!-- hive-kudu-handler removed from the distribution, like hive-druid-handler: kudu-client
+         relocates its own netty 4.1.115 under org.apache.kudu.shaded (CVE-2025-24970 and the 2026
+         codec/handler family), so it only moves when kudu does, and 1.18.1 is the latest kudu
+         release. The Kudu storage handler is optional and not used by the metastore. -->
   </dependencies>
 </project>

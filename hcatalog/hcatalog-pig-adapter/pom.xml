@@ -126,7 +126,13 @@
     </dependency>
     <dependency>
       <groupId>org.jline</groupId>
-      <artifactId>jline</artifactId>
+      <artifactId>jline-reader</artifactId>
+      <version>${jline.version}</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.jline</groupId>
+      <artifactId>jline-terminal</artifactId>
       <version>${jline.version}</version>
       <scope>test</scope>
     </dependency>

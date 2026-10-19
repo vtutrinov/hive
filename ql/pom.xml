@@ -190,8 +190,8 @@
       <scope>provided</scope>
     </dependency>
     <dependency>
-      <groupId>org.apache.parquet</groupId>
-      <artifactId>parquet-hadoop-bundle</artifactId>
+      <groupId>org.apache.hive</groupId>
+      <artifactId>hive-parquet-hadoop-bundle-shaded</artifactId>
     </dependency>
     <dependency>
       <groupId>commons-codec</groupId>
@@ -1058,7 +1058,7 @@
                   <include>org.apache.hive:hive-service-rpc</include>
                   <include>com.esotericsoftware.kryo:kryo5</include>
                   <include>org.objenesis:objenesis</include>
-                  <include>org.apache.parquet:parquet-hadoop-bundle</include>
+                  <include>org.apache.hive:hive-parquet-hadoop-bundle-shaded</include>
                   <include>org.apache.thrift:libthrift</include>
                   <include>org.apache.thrift:libfb303</include>
                   <include>org.datanucleus:javax.jdo</include>

@@ -29,6 +29,7 @@
   <modules>
     <module>kryo3support</module>
     <module>htrace-core-shaded</module>
+    <module>parquet-hadoop-bundle-shaded</module>
     <module>storage-api</module>
     <module>accumulo-handler</module>
     <module>vector-code-gen</module>
@@ -118,7 +119,8 @@
     <aircompressor.version>2.0.3</aircompressor.version>
     <async-http-client.version>2.12.4</async-http-client.version>
     <avro.version>1.12.0</avro.version>
-    <bcprov-jdk18on.version>1.82</bcprov-jdk18on.version>
+    <!-- CVE-2025-14813, CVE-2026-5598 -->
+    <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
     <calcite.version>1.33.0</calcite.version>
     <datanucleus-api-jdo.version>6.0.3</datanucleus-api-jdo.version>
     <datanucleus-core.version>6.0.10</datanucleus-core.version>
@@ -167,8 +169,10 @@
     <httpcomponents.client.version>4.5.13</httpcomponents.client.version>
     <httpcomponents.core.version>4.4.13</httpcomponents.core.version>
     <immutables.version>2.9.2</immutables.version>
-    <httpcomponents5.core.version>5.3.1</httpcomponents5.core.version>
-    <httpcomponents5.client.version>5.3.1</httpcomponents5.client.version>
+    <!-- CVE-2026-54399 (httpcore5), CVE-2026-54428 (httpcore5-h2): fixed in 5.4.3. httpclient5 5.6.x
+         is the line built against httpcore5 5.4; only iceberg-catalog's REST client uses them. -->
+    <httpcomponents5.core.version>5.4.4</httpcomponents5.core.version>
+    <httpcomponents5.client.version>5.6.5</httpcomponents5.client.version>
     <ivy.version>2.5.2</ivy.version>
     <!-- CVE-2026-54513/54512; report asks >=2.18.8, 2.18.10 is the latest 2.18.x -->
     <jackson.version>2.18.10</jackson.version>
@@ -278,6 +282,13 @@
     <validation-api.version>1.1.0.Final</validation-api.version>
     <aws-secretsmanager-caching.version>1.0.1</aws-secretsmanager-caching.version>
     <aws-java-sdk.version>1.12.720</aws-java-sdk.version>
+    <!-- AWS SDK v2 bundle used by hadoop-aws (S3A). hadoop-aws 3.4.1 asks for 2.24.6, which shades
+         netty 4.1.100 (CVE-2025-24970, CVE-2025-55163 and the 2026 codec-http/handler family);
+         2.57.0 shades netty 4.1.138 and jackson-core 2.21.7. Managed in the root pom as well,
+         because the packaging modules resolve hadoop-aws transitively through metastore-server.
+         NOTE: SDK >= 2.30 sends CRC checksums on uploads by default, which some non-AWS S3
+         endpoints reject; set aws.requestChecksumCalculation=WHEN_REQUIRED for those. -->
+    <aws-java-sdk-v2.version>2.57.0</aws-java-sdk-v2.version>
     <jansi.version>2.4.0</jansi.version>
     <!-- If upgrading, upgrade atlas as well in ql/pom.xml, which brings in some springframework dependencies transitively -->
     <spring.version>5.3.39</spring.version>
@@ -325,6 +336,11 @@
             <artifactId>*</artifactId>
           </exclusion>
         </exclusions>
+      </dependency>
+      <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bundle</artifactId>
+        <version>${aws-java-sdk-v2.version}</version>
       </dependency>
       <dependency>
         <groupId>com.amazonaws.secretsmanager</groupId>
@@ -388,6 +404,12 @@
         <groupId>org.apache.parquet</groupId>
         <artifactId>parquet-hadoop-bundle</artifactId>
         <version>${parquet.version}</version>
+      </dependency>
+      <!-- Use this instead of parquet-hadoop-bundle: same classes, current jackson inside. -->
+      <dependency>
+        <groupId>org.apache.hive</groupId>
+        <artifactId>hive-parquet-hadoop-bundle-shaded</artifactId>
+        <version>${project.version}</version>
       </dependency>
       <dependency>
         <groupId>org.immutables</groupId>
@@ -521,9 +543,26 @@
         <artifactId>javolution</artifactId>
         <version>${javolution.version}</version>
       </dependency>
+      <!-- The modular jline artifacts instead of the org.jline:jline uber jar: the uber jar also
+           bundles jline-remote-telnet/-ssh (CVE-2026-56740, CVE-2026-56741), which Hive never uses. -->
       <dependency>
         <groupId>org.jline</groupId>
-        <artifactId>jline</artifactId>
+        <artifactId>jline-terminal</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-terminal-jni</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-reader</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-builtins</artifactId>
         <version>${jline.version}</version>
       </dependency>
       <dependency>
@@ -658,7 +697,7 @@
       <dependency>
         <groupId>org.apache.httpcomponents.client5</groupId>
         <artifactId>httpclient5</artifactId>
-        <version>${httpcomponents5.core.version}</version>
+        <version>${httpcomponents5.client.version}</version>
       </dependency>
       <dependency>
         <groupId>org.apache.httpcomponents.core5</groupId>
@@ -718,11 +757,24 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <!-- orc-core 2.x pulls the shaded Hadoop client (hadoop-client-api + hadoop-client-runtime).
+           Hive runs on the unshaded hadoop-common/hdfs jars, and hadoop-client-runtime re-ships
+           old jackson 2.12.7, avro 1.9.2, commons-beanutils 1.9.4, jetty 9.4.53 and jline 3.9.0
+           (CVE-2025-52999, CVE-2024-47561, CVE-2025-48734, ...). Drop both: the api jar only works
+           together with the runtime jar's org.apache.hadoop.shaded.* classes. -->
       <dependency>
         <groupId>org.apache.orc</groupId>
         <artifactId>orc-core</artifactId>
         <version>${orc.version}</version>
         <exclusions>
+          <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client-runtime</artifactId>
+          </exclusion>
           <exclusion>
             <groupId>org.apache.hadoop</groupId>
             <artifactId>hadoop-common</artifactId>

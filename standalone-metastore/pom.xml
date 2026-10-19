@@ -150,10 +150,14 @@
     <spring.version>5.3.39</spring.version>
     <spring.ldap.version>2.4.4</spring.ldap.version>
     <testcontainers.version>1.21.3</testcontainers.version>
-    <!-- SDK v1 bundle for S3A setups that still configure com.amazonaws.* credential providers;
-         hadoop-aws 3.4.x itself runs on the v2 SDK bundle, which it pulls in transitively.
-         Kept in sync with aws-java-sdk.version in the root pom. -->
-    <aws.java.sdk.version>1.12.720</aws.java.sdk.version>
+    <!-- AWS SDK v2 bundle used by hadoop-aws (S3A). hadoop-aws 3.4.1 asks for 2.24.6, which shades
+         netty 4.1.100 (CVE-2025-24970, CVE-2025-55163 and the 2026 codec-http/handler family);
+         2.57.0 shades netty 4.1.138 and jackson-core 2.21.7. Keep in sync with the root pom.
+         NOTE: SDK >= 2.30 sends CRC checksums on uploads by default, which some non-AWS S3
+         endpoints reject; set aws.requestChecksumCalculation=WHEN_REQUIRED for those. -->
+    <aws-java-sdk-v2.version>2.57.0</aws-java-sdk-v2.version>
+    <!-- CVE-2025-14813, CVE-2026-5598. hadoop-common 3.4.1 would otherwise bring 1.78.1. Keep in sync with the root pom. -->
+    <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
     <!-- Thrift properties -->
     <thrift.home>you-must-set-this-to-run-thrift</thrift.home>
     <thrift.gen.dir>${basedir}/src/gen/thrift</thrift.gen.dir>
@@ -186,19 +190,39 @@
         <classifier>linux-x86_64</classifier>
       </dependency>
       <dependency>
-        <groupId>com.amazonaws</groupId>
-        <artifactId>aws-java-sdk-bundle</artifactId>
-        <version>${aws.java.sdk.version}</version>
-      </dependency>
-      <dependency>
         <groupId>org.apache.hadoop</groupId>
         <artifactId>hadoop-aws</artifactId>
         <version>${hadoop.version}</version>
       </dependency>
       <dependency>
+        <groupId>software.amazon.awssdk</groupId>
+        <artifactId>bundle</artifactId>
+        <version>${aws-java-sdk-v2.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.bouncycastle</groupId>
+        <artifactId>bcprov-jdk18on</artifactId>
+        <version>${bcprov-jdk18on.version}</version>
+      </dependency>
+      <!-- orc-core 2.x pulls the shaded Hadoop client (hadoop-client-api + hadoop-client-runtime).
+           Hive runs on the unshaded hadoop-common/hdfs jars, and hadoop-client-runtime re-ships
+           old jackson 2.12.7, avro 1.9.2, commons-beanutils 1.9.4, jetty 9.4.53 and jline 3.9.0
+           (CVE-2025-52999, CVE-2024-47561, CVE-2025-48734, ...). Drop both: the api jar only works
+           together with the runtime jar's org.apache.hadoop.shaded.* classes. -->
+      <dependency>
         <groupId>org.apache.orc</groupId>
         <artifactId>orc-core</artifactId>
         <version>${orc.version}</version>
+        <exclusions>
+          <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client-api</artifactId>
+          </exclusion>
+          <exclusion>
+            <groupId>org.apache.hadoop</groupId>
+            <artifactId>hadoop-client-runtime</artifactId>
+          </exclusion>
+        </exclusions>
       </dependency>
       <!-- Not a direct dependency: this only exists to keep hadoop-common from
            pulling avro 1.7.7 (CVE-2024-47561) into the metastore classpath. -->
@@ -436,9 +460,26 @@
           </exclusion>
         </exclusions>
       </dependency>
+      <!-- The modular jline artifacts instead of the org.jline:jline uber jar: the uber jar also
+           bundles jline-remote-telnet/-ssh (CVE-2026-56740, CVE-2026-56741), which Hive never uses. -->
       <dependency>
         <groupId>org.jline</groupId>
-        <artifactId>jline</artifactId>
+        <artifactId>jline-terminal</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-terminal-jni</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-reader</artifactId>
+        <version>${jline.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-builtins</artifactId>
         <version>${jline.version}</version>
       </dependency>
       <dependency>

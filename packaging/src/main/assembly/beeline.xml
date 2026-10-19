@@ -48,7 +48,12 @@
                 <include>org.apache.hive:hive-service-rpc:jar</include>
                 <include>commons-cli:commons-cli:jar</include>
                 <include>commons-io:commons-io:jar</include>
-                <include>org.jline:jline:jar</include>
+                <include>org.jline:jline-reader:jar</include>
+                <include>org.jline:jline-terminal:jar</include>
+                <include>org.jline:jline-terminal-jni:jar</include>
+                <include>org.jline:jline-native:jar</include>
+                <include>org.jline:jline-builtins:jar</include>
+                <include>org.jline:jline-style:jar</include>
                 <include>org.apache.thrift:libthrift:jar</include>
                 <include>org.slf4j:slf4j-api:jar</include>
                 <include>net.sf.supercsv:super-csv:jar</include>
