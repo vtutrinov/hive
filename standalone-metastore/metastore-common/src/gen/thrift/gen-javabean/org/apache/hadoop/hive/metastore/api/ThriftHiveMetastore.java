@@ -129,6 +129,10 @@ package org.apache.hadoop.hive.metastore.api;
 
     public java.util.List<java.lang.String> get_all_tables(java.lang.String db_name) throws MetaException, org.apache.thrift.TException;
 
+    public Table get_table(java.lang.String dbname, java.lang.String tbl_name) throws MetaException, NoSuchObjectException, org.apache.thrift.TException;
+
+    public java.util.List<Table> get_table_objects_by_name(java.lang.String dbname, java.util.List<java.lang.String> tbl_names) throws MetaException, InvalidOperationException, UnknownDBException, org.apache.thrift.TException;
+
     public java.util.List<ExtendedTableInfo> get_tables_ext(GetTablesExtRequest req) throws MetaException, org.apache.thrift.TException;
 
     public GetTableResult get_table_req(GetTableRequest req) throws MetaException, NoSuchObjectException, org.apache.thrift.TException;
@@ -700,6 +704,10 @@ package org.apache.hadoop.hive.metastore.api;
     public void get_table_meta(java.lang.String db_patterns, java.lang.String tbl_patterns, java.util.List<java.lang.String> tbl_types, org.apache.thrift.async.AsyncMethodCallback<java.util.List<TableMeta>> resultHandler) throws org.apache.thrift.TException;
 
     public void get_all_tables(java.lang.String db_name, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.String>> resultHandler) throws org.apache.thrift.TException;
+
+    public void get_table(java.lang.String dbname, java.lang.String tbl_name, org.apache.thrift.async.AsyncMethodCallback<Table> resultHandler) throws org.apache.thrift.TException;
+
+    public void get_table_objects_by_name(java.lang.String dbname, java.util.List<java.lang.String> tbl_names, org.apache.thrift.async.AsyncMethodCallback<java.util.List<Table>> resultHandler) throws org.apache.thrift.TException;
 
     public void get_tables_ext(GetTablesExtRequest req, org.apache.thrift.async.AsyncMethodCallback<java.util.List<ExtendedTableInfo>> resultHandler) throws org.apache.thrift.TException;
 
@@ -2793,6 +2801,69 @@ package org.apache.hadoop.hive.metastore.api;
         throw result.o1;
       }
       throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "get_all_tables failed: unknown result");
+    }
+
+    public Table get_table(java.lang.String dbname, java.lang.String tbl_name) throws MetaException, NoSuchObjectException, org.apache.thrift.TException
+    {
+      send_get_table(dbname, tbl_name);
+      return recv_get_table();
+    }
+
+    public void send_get_table(java.lang.String dbname, java.lang.String tbl_name) throws org.apache.thrift.TException
+    {
+      get_table_args args = new get_table_args();
+      args.setDbname(dbname);
+      args.setTbl_name(tbl_name);
+      sendBase("get_table", args);
+    }
+
+    public Table recv_get_table() throws MetaException, NoSuchObjectException, org.apache.thrift.TException
+    {
+      get_table_result result = new get_table_result();
+      receiveBase(result, "get_table");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.o1 != null) {
+        throw result.o1;
+      }
+      if (result.o2 != null) {
+        throw result.o2;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "get_table failed: unknown result");
+    }
+
+    public java.util.List<Table> get_table_objects_by_name(java.lang.String dbname, java.util.List<java.lang.String> tbl_names) throws MetaException, InvalidOperationException, UnknownDBException, org.apache.thrift.TException
+    {
+      send_get_table_objects_by_name(dbname, tbl_names);
+      return recv_get_table_objects_by_name();
+    }
+
+    public void send_get_table_objects_by_name(java.lang.String dbname, java.util.List<java.lang.String> tbl_names) throws org.apache.thrift.TException
+    {
+      get_table_objects_by_name_args args = new get_table_objects_by_name_args();
+      args.setDbname(dbname);
+      args.setTbl_names(tbl_names);
+      sendBase("get_table_objects_by_name", args);
+    }
+
+    public java.util.List<Table> recv_get_table_objects_by_name() throws MetaException, InvalidOperationException, UnknownDBException, org.apache.thrift.TException
+    {
+      get_table_objects_by_name_result result = new get_table_objects_by_name_result();
+      receiveBase(result, "get_table_objects_by_name");
+      if (result.isSetSuccess()) {
+        return result.success;
+      }
+      if (result.o1 != null) {
+        throw result.o1;
+      }
+      if (result.o2 != null) {
+        throw result.o2;
+      }
+      if (result.o3 != null) {
+        throw result.o3;
+      }
+      throw new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.MISSING_RESULT, "get_table_objects_by_name failed: unknown result");
     }
 
     public java.util.List<ExtendedTableInfo> get_tables_ext(GetTablesExtRequest req) throws MetaException, org.apache.thrift.TException
@@ -11119,6 +11190,76 @@ package org.apache.hadoop.hive.metastore.api;
       }
     }
 
+    public void get_table(java.lang.String dbname, java.lang.String tbl_name, org.apache.thrift.async.AsyncMethodCallback<Table> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      get_table_call method_call = new get_table_call(dbname, tbl_name, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_call extends org.apache.thrift.async.TAsyncMethodCall<Table> {
+      private java.lang.String dbname;
+      private java.lang.String tbl_name;
+      public get_table_call(java.lang.String dbname, java.lang.String tbl_name, org.apache.thrift.async.AsyncMethodCallback<Table> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.dbname = dbname;
+        this.tbl_name = tbl_name;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("get_table", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        get_table_args args = new get_table_args();
+        args.setDbname(dbname);
+        args.setTbl_name(tbl_name);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public Table getResult() throws MetaException, NoSuchObjectException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_get_table();
+      }
+    }
+
+    public void get_table_objects_by_name(java.lang.String dbname, java.util.List<java.lang.String> tbl_names, org.apache.thrift.async.AsyncMethodCallback<java.util.List<Table>> resultHandler) throws org.apache.thrift.TException {
+      checkReady();
+      get_table_objects_by_name_call method_call = new get_table_objects_by_name_call(dbname, tbl_names, resultHandler, this, ___protocolFactory, ___transport);
+      this.___currentMethod = method_call;
+      ___manager.call(method_call);
+    }
+
+    @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_objects_by_name_call extends org.apache.thrift.async.TAsyncMethodCall<java.util.List<Table>> {
+      private java.lang.String dbname;
+      private java.util.List<java.lang.String> tbl_names;
+      public get_table_objects_by_name_call(java.lang.String dbname, java.util.List<java.lang.String> tbl_names, org.apache.thrift.async.AsyncMethodCallback<java.util.List<Table>> resultHandler, org.apache.thrift.async.TAsyncClient client, org.apache.thrift.protocol.TProtocolFactory protocolFactory, org.apache.thrift.transport.TNonblockingTransport transport) throws org.apache.thrift.TException {
+        super(client, protocolFactory, transport, resultHandler, false);
+        this.dbname = dbname;
+        this.tbl_names = tbl_names;
+      }
+
+      public void write_args(org.apache.thrift.protocol.TProtocol prot) throws org.apache.thrift.TException {
+        prot.writeMessageBegin(new org.apache.thrift.protocol.TMessage("get_table_objects_by_name", org.apache.thrift.protocol.TMessageType.CALL, 0));
+        get_table_objects_by_name_args args = new get_table_objects_by_name_args();
+        args.setDbname(dbname);
+        args.setTbl_names(tbl_names);
+        args.write(prot);
+        prot.writeMessageEnd();
+      }
+
+      public java.util.List<Table> getResult() throws MetaException, InvalidOperationException, UnknownDBException, org.apache.thrift.TException {
+        if (getState() != org.apache.thrift.async.TAsyncMethodCall.State.RESPONSE_READ) {
+          throw new java.lang.IllegalStateException("Method call not finished!");
+        }
+        org.apache.thrift.transport.TMemoryInputTransport memoryTransport = new org.apache.thrift.transport.TMemoryInputTransport(getFrameBuffer().array());
+        org.apache.thrift.protocol.TProtocol prot = client.getProtocolFactory().getProtocol(memoryTransport);
+        return (new Client(prot)).recv_get_table_objects_by_name();
+      }
+    }
+
     public void get_tables_ext(GetTablesExtRequest req, org.apache.thrift.async.AsyncMethodCallback<java.util.List<ExtendedTableInfo>> resultHandler) throws org.apache.thrift.TException {
       checkReady();
       get_tables_ext_call method_call = new get_tables_ext_call(req, resultHandler, this, ___protocolFactory, ___transport);
@@ -18879,6 +19020,8 @@ package org.apache.hadoop.hive.metastore.api;
       processMap.put("get_materialized_views_for_rewriting", new get_materialized_views_for_rewriting());
       processMap.put("get_table_meta", new get_table_meta());
       processMap.put("get_all_tables", new get_all_tables());
+      processMap.put("get_table", new get_table());
+      processMap.put("get_table_objects_by_name", new get_table_objects_by_name());
       processMap.put("get_tables_ext", new get_tables_ext());
       processMap.put("get_table_req", new get_table_req());
       processMap.put("get_table_objects_by_name_req", new get_table_objects_by_name_req());
@@ -20887,6 +21030,70 @@ package org.apache.hadoop.hive.metastore.api;
           result.success = iface.get_all_tables(args.db_name);
         } catch (MetaException o1) {
           result.o1 = o1;
+        }
+        return result;
+      }
+    }
+
+    @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table<I extends Iface> extends org.apache.thrift.ProcessFunction<I, get_table_args> {
+      public get_table() {
+        super("get_table");
+      }
+
+      public get_table_args getEmptyArgsInstance() {
+        return new get_table_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public get_table_result getResult(I iface, get_table_args args) throws org.apache.thrift.TException {
+        get_table_result result = new get_table_result();
+        try {
+          result.success = iface.get_table(args.dbname, args.tbl_name);
+        } catch (MetaException o1) {
+          result.o1 = o1;
+        } catch (NoSuchObjectException o2) {
+          result.o2 = o2;
+        }
+        return result;
+      }
+    }
+
+    @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_objects_by_name<I extends Iface> extends org.apache.thrift.ProcessFunction<I, get_table_objects_by_name_args> {
+      public get_table_objects_by_name() {
+        super("get_table_objects_by_name");
+      }
+
+      public get_table_objects_by_name_args getEmptyArgsInstance() {
+        return new get_table_objects_by_name_args();
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      @Override
+      protected boolean rethrowUnhandledExceptions() {
+        return false;
+      }
+
+      public get_table_objects_by_name_result getResult(I iface, get_table_objects_by_name_args args) throws org.apache.thrift.TException {
+        get_table_objects_by_name_result result = new get_table_objects_by_name_result();
+        try {
+          result.success = iface.get_table_objects_by_name(args.dbname, args.tbl_names);
+        } catch (MetaException o1) {
+          result.o1 = o1;
+        } catch (InvalidOperationException o2) {
+          result.o2 = o2;
+        } catch (UnknownDBException o3) {
+          result.o3 = o3;
         }
         return result;
       }
@@ -27853,6 +28060,8 @@ package org.apache.hadoop.hive.metastore.api;
       processMap.put("get_materialized_views_for_rewriting", new get_materialized_views_for_rewriting());
       processMap.put("get_table_meta", new get_table_meta());
       processMap.put("get_all_tables", new get_all_tables());
+      processMap.put("get_table", new get_table());
+      processMap.put("get_table_objects_by_name", new get_table_objects_by_name());
       processMap.put("get_tables_ext", new get_tables_ext());
       processMap.put("get_table_req", new get_table_req());
       processMap.put("get_table_objects_by_name_req", new get_table_objects_by_name_req());
@@ -32019,6 +32228,148 @@ package org.apache.hadoop.hive.metastore.api;
 
       public void start(I iface, get_all_tables_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.List<java.lang.String>> resultHandler) throws org.apache.thrift.TException {
         iface.get_all_tables(args.db_name,resultHandler);
+      }
+    }
+
+    @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, get_table_args, Table> {
+      public get_table() {
+        super("get_table");
+      }
+
+      public get_table_args getEmptyArgsInstance() {
+        return new get_table_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<Table> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<Table>() { 
+          public void onComplete(Table o) {
+            get_table_result result = new get_table_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            get_table_result result = new get_table_result();
+            if (e instanceof MetaException) {
+              result.o1 = (MetaException) e;
+              result.setO1IsSet(true);
+              msg = result;
+            } else if (e instanceof NoSuchObjectException) {
+              result.o2 = (NoSuchObjectException) e;
+              result.setO2IsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, get_table_args args, org.apache.thrift.async.AsyncMethodCallback<Table> resultHandler) throws org.apache.thrift.TException {
+        iface.get_table(args.dbname, args.tbl_name,resultHandler);
+      }
+    }
+
+    @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_objects_by_name<I extends AsyncIface> extends org.apache.thrift.AsyncProcessFunction<I, get_table_objects_by_name_args, java.util.List<Table>> {
+      public get_table_objects_by_name() {
+        super("get_table_objects_by_name");
+      }
+
+      public get_table_objects_by_name_args getEmptyArgsInstance() {
+        return new get_table_objects_by_name_args();
+      }
+
+      public org.apache.thrift.async.AsyncMethodCallback<java.util.List<Table>> getResultHandler(final org.apache.thrift.server.AbstractNonblockingServer.AsyncFrameBuffer fb, final int seqid) {
+        final org.apache.thrift.AsyncProcessFunction fcall = this;
+        return new org.apache.thrift.async.AsyncMethodCallback<java.util.List<Table>>() { 
+          public void onComplete(java.util.List<Table> o) {
+            get_table_objects_by_name_result result = new get_table_objects_by_name_result();
+            result.success = o;
+            try {
+              fcall.sendResponse(fb, result, org.apache.thrift.protocol.TMessageType.REPLY,seqid);
+            } catch (org.apache.thrift.transport.TTransportException e) {
+              _LOGGER.error("TTransportException writing to internal frame buffer", e);
+              fb.close();
+            } catch (java.lang.Exception e) {
+              _LOGGER.error("Exception writing to internal frame buffer", e);
+              onError(e);
+            }
+          }
+          public void onError(java.lang.Exception e) {
+            byte msgType = org.apache.thrift.protocol.TMessageType.REPLY;
+            org.apache.thrift.TSerializable msg;
+            get_table_objects_by_name_result result = new get_table_objects_by_name_result();
+            if (e instanceof MetaException) {
+              result.o1 = (MetaException) e;
+              result.setO1IsSet(true);
+              msg = result;
+            } else if (e instanceof InvalidOperationException) {
+              result.o2 = (InvalidOperationException) e;
+              result.setO2IsSet(true);
+              msg = result;
+            } else if (e instanceof UnknownDBException) {
+              result.o3 = (UnknownDBException) e;
+              result.setO3IsSet(true);
+              msg = result;
+            } else if (e instanceof org.apache.thrift.transport.TTransportException) {
+              _LOGGER.error("TTransportException inside handler", e);
+              fb.close();
+              return;
+            } else if (e instanceof org.apache.thrift.TApplicationException) {
+              _LOGGER.error("TApplicationException inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = (org.apache.thrift.TApplicationException)e;
+            } else {
+              _LOGGER.error("Exception inside handler", e);
+              msgType = org.apache.thrift.protocol.TMessageType.EXCEPTION;
+              msg = new org.apache.thrift.TApplicationException(org.apache.thrift.TApplicationException.INTERNAL_ERROR, e.getMessage());
+            }
+            try {
+              fcall.sendResponse(fb,msg,msgType,seqid);
+            } catch (java.lang.Exception ex) {
+              _LOGGER.error("Exception writing to internal frame buffer", ex);
+              fb.close();
+            }
+          }
+        };
+      }
+
+      protected boolean isOneway() {
+        return false;
+      }
+
+      public void start(I iface, get_table_objects_by_name_args args, org.apache.thrift.async.AsyncMethodCallback<java.util.List<Table>> resultHandler) throws org.apache.thrift.TException {
+        iface.get_table_objects_by_name(args.dbname, args.tbl_names,resultHandler);
       }
     }
 
@@ -102694,6 +103045,2302 @@ package org.apache.hadoop.hive.metastore.api;
     }
   }
 
+  @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_args implements org.apache.thrift.TBase<get_table_args, get_table_args._Fields>, java.io.Serializable, Cloneable, Comparable<get_table_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_table_args");
+
+    private static final org.apache.thrift.protocol.TField DBNAME_FIELD_DESC = new org.apache.thrift.protocol.TField("dbname", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField TBL_NAME_FIELD_DESC = new org.apache.thrift.protocol.TField("tbl_name", org.apache.thrift.protocol.TType.STRING, (short)2);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new get_table_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new get_table_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.lang.String dbname; // required
+    private @org.apache.thrift.annotation.Nullable java.lang.String tbl_name; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      DBNAME((short)1, "dbname"),
+      TBL_NAME((short)2, "tbl_name");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // DBNAME
+            return DBNAME;
+          case 2: // TBL_NAME
+            return TBL_NAME;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.DBNAME, new org.apache.thrift.meta_data.FieldMetaData("dbname", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.TBL_NAME, new org.apache.thrift.meta_data.FieldMetaData("tbl_name", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_table_args.class, metaDataMap);
+    }
+
+    public get_table_args() {
+    }
+
+    public get_table_args(
+      java.lang.String dbname,
+      java.lang.String tbl_name)
+    {
+      this();
+      this.dbname = dbname;
+      this.tbl_name = tbl_name;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public get_table_args(get_table_args other) {
+      if (other.isSetDbname()) {
+        this.dbname = other.dbname;
+      }
+      if (other.isSetTbl_name()) {
+        this.tbl_name = other.tbl_name;
+      }
+    }
+
+    public get_table_args deepCopy() {
+      return new get_table_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.dbname = null;
+      this.tbl_name = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getDbname() {
+      return this.dbname;
+    }
+
+    public void setDbname(@org.apache.thrift.annotation.Nullable java.lang.String dbname) {
+      this.dbname = dbname;
+    }
+
+    public void unsetDbname() {
+      this.dbname = null;
+    }
+
+    /** Returns true if field dbname is set (has been assigned a value) and false otherwise */
+    public boolean isSetDbname() {
+      return this.dbname != null;
+    }
+
+    public void setDbnameIsSet(boolean value) {
+      if (!value) {
+        this.dbname = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getTbl_name() {
+      return this.tbl_name;
+    }
+
+    public void setTbl_name(@org.apache.thrift.annotation.Nullable java.lang.String tbl_name) {
+      this.tbl_name = tbl_name;
+    }
+
+    public void unsetTbl_name() {
+      this.tbl_name = null;
+    }
+
+    /** Returns true if field tbl_name is set (has been assigned a value) and false otherwise */
+    public boolean isSetTbl_name() {
+      return this.tbl_name != null;
+    }
+
+    public void setTbl_nameIsSet(boolean value) {
+      if (!value) {
+        this.tbl_name = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case DBNAME:
+        if (value == null) {
+          unsetDbname();
+        } else {
+          setDbname((java.lang.String)value);
+        }
+        break;
+
+      case TBL_NAME:
+        if (value == null) {
+          unsetTbl_name();
+        } else {
+          setTbl_name((java.lang.String)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case DBNAME:
+        return getDbname();
+
+      case TBL_NAME:
+        return getTbl_name();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case DBNAME:
+        return isSetDbname();
+      case TBL_NAME:
+        return isSetTbl_name();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that instanceof get_table_args)
+        return this.equals((get_table_args)that);
+      return false;
+    }
+
+    public boolean equals(get_table_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_dbname = true && this.isSetDbname();
+      boolean that_present_dbname = true && that.isSetDbname();
+      if (this_present_dbname || that_present_dbname) {
+        if (!(this_present_dbname && that_present_dbname))
+          return false;
+        if (!this.dbname.equals(that.dbname))
+          return false;
+      }
+
+      boolean this_present_tbl_name = true && this.isSetTbl_name();
+      boolean that_present_tbl_name = true && that.isSetTbl_name();
+      if (this_present_tbl_name || that_present_tbl_name) {
+        if (!(this_present_tbl_name && that_present_tbl_name))
+          return false;
+        if (!this.tbl_name.equals(that.tbl_name))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetDbname()) ? 131071 : 524287);
+      if (isSetDbname())
+        hashCode = hashCode * 8191 + dbname.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTbl_name()) ? 131071 : 524287);
+      if (isSetTbl_name())
+        hashCode = hashCode * 8191 + tbl_name.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(get_table_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.compare(isSetDbname(), other.isSetDbname());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetDbname()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.dbname, other.dbname);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetTbl_name(), other.isSetTbl_name());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTbl_name()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tbl_name, other.tbl_name);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("get_table_args(");
+      boolean first = true;
+
+      sb.append("dbname:");
+      if (this.dbname == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.dbname);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("tbl_name:");
+      if (this.tbl_name == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tbl_name);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class get_table_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_argsStandardScheme getScheme() {
+        return new get_table_argsStandardScheme();
+      }
+    }
+
+    private static class get_table_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<get_table_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, get_table_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // DBNAME
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.dbname = iprot.readString();
+                struct.setDbnameIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // TBL_NAME
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.tbl_name = iprot.readString();
+                struct.setTbl_nameIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, get_table_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.dbname != null) {
+          oprot.writeFieldBegin(DBNAME_FIELD_DESC);
+          oprot.writeString(struct.dbname);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tbl_name != null) {
+          oprot.writeFieldBegin(TBL_NAME_FIELD_DESC);
+          oprot.writeString(struct.tbl_name);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class get_table_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_argsTupleScheme getScheme() {
+        return new get_table_argsTupleScheme();
+      }
+    }
+
+    private static class get_table_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<get_table_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, get_table_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetDbname()) {
+          optionals.set(0);
+        }
+        if (struct.isSetTbl_name()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetDbname()) {
+          oprot.writeString(struct.dbname);
+        }
+        if (struct.isSetTbl_name()) {
+          oprot.writeString(struct.tbl_name);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, get_table_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.dbname = iprot.readString();
+          struct.setDbnameIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.tbl_name = iprot.readString();
+          struct.setTbl_nameIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_result implements org.apache.thrift.TBase<get_table_result, get_table_result._Fields>, java.io.Serializable, Cloneable, Comparable<get_table_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_table_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.STRUCT, (short)0);
+    private static final org.apache.thrift.protocol.TField O1_FIELD_DESC = new org.apache.thrift.protocol.TField("o1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField O2_FIELD_DESC = new org.apache.thrift.protocol.TField("o2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new get_table_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new get_table_resultTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable Table success; // required
+    private @org.apache.thrift.annotation.Nullable MetaException o1; // required
+    private @org.apache.thrift.annotation.Nullable NoSuchObjectException o2; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      O1((short)1, "o1"),
+      O2((short)2, "o2");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // O1
+            return O1;
+          case 2: // O2
+            return O2;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Table.class)));
+      tmpMap.put(_Fields.O1, new org.apache.thrift.meta_data.FieldMetaData("o1", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, MetaException.class)));
+      tmpMap.put(_Fields.O2, new org.apache.thrift.meta_data.FieldMetaData("o2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, NoSuchObjectException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_table_result.class, metaDataMap);
+    }
+
+    public get_table_result() {
+    }
+
+    public get_table_result(
+      Table success,
+      MetaException o1,
+      NoSuchObjectException o2)
+    {
+      this();
+      this.success = success;
+      this.o1 = o1;
+      this.o2 = o2;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public get_table_result(get_table_result other) {
+      if (other.isSetSuccess()) {
+        this.success = new Table(other.success);
+      }
+      if (other.isSetO1()) {
+        this.o1 = new MetaException(other.o1);
+      }
+      if (other.isSetO2()) {
+        this.o2 = new NoSuchObjectException(other.o2);
+      }
+    }
+
+    public get_table_result deepCopy() {
+      return new get_table_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.success = null;
+      this.o1 = null;
+      this.o2 = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public Table getSuccess() {
+      return this.success;
+    }
+
+    public void setSuccess(@org.apache.thrift.annotation.Nullable Table success) {
+      this.success = success;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public MetaException getO1() {
+      return this.o1;
+    }
+
+    public void setO1(@org.apache.thrift.annotation.Nullable MetaException o1) {
+      this.o1 = o1;
+    }
+
+    public void unsetO1() {
+      this.o1 = null;
+    }
+
+    /** Returns true if field o1 is set (has been assigned a value) and false otherwise */
+    public boolean isSetO1() {
+      return this.o1 != null;
+    }
+
+    public void setO1IsSet(boolean value) {
+      if (!value) {
+        this.o1 = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public NoSuchObjectException getO2() {
+      return this.o2;
+    }
+
+    public void setO2(@org.apache.thrift.annotation.Nullable NoSuchObjectException o2) {
+      this.o2 = o2;
+    }
+
+    public void unsetO2() {
+      this.o2 = null;
+    }
+
+    /** Returns true if field o2 is set (has been assigned a value) and false otherwise */
+    public boolean isSetO2() {
+      return this.o2 != null;
+    }
+
+    public void setO2IsSet(boolean value) {
+      if (!value) {
+        this.o2 = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((Table)value);
+        }
+        break;
+
+      case O1:
+        if (value == null) {
+          unsetO1();
+        } else {
+          setO1((MetaException)value);
+        }
+        break;
+
+      case O2:
+        if (value == null) {
+          unsetO2();
+        } else {
+          setO2((NoSuchObjectException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      case O1:
+        return getO1();
+
+      case O2:
+        return getO2();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case O1:
+        return isSetO1();
+      case O2:
+        return isSetO2();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that instanceof get_table_result)
+        return this.equals((get_table_result)that);
+      return false;
+    }
+
+    public boolean equals(get_table_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      boolean this_present_o1 = true && this.isSetO1();
+      boolean that_present_o1 = true && that.isSetO1();
+      if (this_present_o1 || that_present_o1) {
+        if (!(this_present_o1 && that_present_o1))
+          return false;
+        if (!this.o1.equals(that.o1))
+          return false;
+      }
+
+      boolean this_present_o2 = true && this.isSetO2();
+      boolean that_present_o2 = true && that.isSetO2();
+      if (this_present_o2 || that_present_o2) {
+        if (!(this_present_o2 && that_present_o2))
+          return false;
+        if (!this.o2.equals(that.o2))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetO1()) ? 131071 : 524287);
+      if (isSetO1())
+        hashCode = hashCode * 8191 + o1.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetO2()) ? 131071 : 524287);
+      if (isSetO2())
+        hashCode = hashCode * 8191 + o2.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(get_table_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.compare(isSetSuccess(), other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetO1(), other.isSetO1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetO1()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.o1, other.o1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetO2(), other.isSetO2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetO2()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.o2, other.o2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("get_table_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("o1:");
+      if (this.o1 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.o1);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("o2:");
+      if (this.o2 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.o2);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+      if (success != null) {
+        success.validate();
+      }
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class get_table_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_resultStandardScheme getScheme() {
+        return new get_table_resultStandardScheme();
+      }
+    }
+
+    private static class get_table_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<get_table_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, get_table_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.success = new Table();
+                struct.success.read(iprot);
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // O1
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.o1 = new MetaException();
+                struct.o1.read(iprot);
+                struct.setO1IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // O2
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.o2 = new NoSuchObjectException();
+                struct.o2.read(iprot);
+                struct.setO2IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, get_table_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          struct.success.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.o1 != null) {
+          oprot.writeFieldBegin(O1_FIELD_DESC);
+          struct.o1.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.o2 != null) {
+          oprot.writeFieldBegin(O2_FIELD_DESC);
+          struct.o2.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class get_table_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_resultTupleScheme getScheme() {
+        return new get_table_resultTupleScheme();
+      }
+    }
+
+    private static class get_table_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<get_table_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, get_table_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetO1()) {
+          optionals.set(1);
+        }
+        if (struct.isSetO2()) {
+          optionals.set(2);
+        }
+        oprot.writeBitSet(optionals, 3);
+        if (struct.isSetSuccess()) {
+          struct.success.write(oprot);
+        }
+        if (struct.isSetO1()) {
+          struct.o1.write(oprot);
+        }
+        if (struct.isSetO2()) {
+          struct.o2.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, get_table_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(3);
+        if (incoming.get(0)) {
+          struct.success = new Table();
+          struct.success.read(iprot);
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.o1 = new MetaException();
+          struct.o1.read(iprot);
+          struct.setO1IsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.o2 = new NoSuchObjectException();
+          struct.o2.read(iprot);
+          struct.setO2IsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_objects_by_name_args implements org.apache.thrift.TBase<get_table_objects_by_name_args, get_table_objects_by_name_args._Fields>, java.io.Serializable, Cloneable, Comparable<get_table_objects_by_name_args>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_table_objects_by_name_args");
+
+    private static final org.apache.thrift.protocol.TField DBNAME_FIELD_DESC = new org.apache.thrift.protocol.TField("dbname", org.apache.thrift.protocol.TType.STRING, (short)1);
+    private static final org.apache.thrift.protocol.TField TBL_NAMES_FIELD_DESC = new org.apache.thrift.protocol.TField("tbl_names", org.apache.thrift.protocol.TType.LIST, (short)2);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new get_table_objects_by_name_argsStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new get_table_objects_by_name_argsTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.lang.String dbname; // required
+    private @org.apache.thrift.annotation.Nullable java.util.List<java.lang.String> tbl_names; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      DBNAME((short)1, "dbname"),
+      TBL_NAMES((short)2, "tbl_names");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 1: // DBNAME
+            return DBNAME;
+          case 2: // TBL_NAMES
+            return TBL_NAMES;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.DBNAME, new org.apache.thrift.meta_data.FieldMetaData("dbname", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING)));
+      tmpMap.put(_Fields.TBL_NAMES, new org.apache.thrift.meta_data.FieldMetaData("tbl_names", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.FieldValueMetaData(org.apache.thrift.protocol.TType.STRING))));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_table_objects_by_name_args.class, metaDataMap);
+    }
+
+    public get_table_objects_by_name_args() {
+    }
+
+    public get_table_objects_by_name_args(
+      java.lang.String dbname,
+      java.util.List<java.lang.String> tbl_names)
+    {
+      this();
+      this.dbname = dbname;
+      this.tbl_names = tbl_names;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public get_table_objects_by_name_args(get_table_objects_by_name_args other) {
+      if (other.isSetDbname()) {
+        this.dbname = other.dbname;
+      }
+      if (other.isSetTbl_names()) {
+        java.util.List<java.lang.String> __this__tbl_names = new java.util.ArrayList<java.lang.String>(other.tbl_names);
+        this.tbl_names = __this__tbl_names;
+      }
+    }
+
+    public get_table_objects_by_name_args deepCopy() {
+      return new get_table_objects_by_name_args(this);
+    }
+
+    @Override
+    public void clear() {
+      this.dbname = null;
+      this.tbl_names = null;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.String getDbname() {
+      return this.dbname;
+    }
+
+    public void setDbname(@org.apache.thrift.annotation.Nullable java.lang.String dbname) {
+      this.dbname = dbname;
+    }
+
+    public void unsetDbname() {
+      this.dbname = null;
+    }
+
+    /** Returns true if field dbname is set (has been assigned a value) and false otherwise */
+    public boolean isSetDbname() {
+      return this.dbname != null;
+    }
+
+    public void setDbnameIsSet(boolean value) {
+      if (!value) {
+        this.dbname = null;
+      }
+    }
+
+    public int getTbl_namesSize() {
+      return (this.tbl_names == null) ? 0 : this.tbl_names.size();
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.util.Iterator<java.lang.String> getTbl_namesIterator() {
+      return (this.tbl_names == null) ? null : this.tbl_names.iterator();
+    }
+
+    public void addToTbl_names(java.lang.String elem) {
+      if (this.tbl_names == null) {
+        this.tbl_names = new java.util.ArrayList<java.lang.String>();
+      }
+      this.tbl_names.add(elem);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.util.List<java.lang.String> getTbl_names() {
+      return this.tbl_names;
+    }
+
+    public void setTbl_names(@org.apache.thrift.annotation.Nullable java.util.List<java.lang.String> tbl_names) {
+      this.tbl_names = tbl_names;
+    }
+
+    public void unsetTbl_names() {
+      this.tbl_names = null;
+    }
+
+    /** Returns true if field tbl_names is set (has been assigned a value) and false otherwise */
+    public boolean isSetTbl_names() {
+      return this.tbl_names != null;
+    }
+
+    public void setTbl_namesIsSet(boolean value) {
+      if (!value) {
+        this.tbl_names = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case DBNAME:
+        if (value == null) {
+          unsetDbname();
+        } else {
+          setDbname((java.lang.String)value);
+        }
+        break;
+
+      case TBL_NAMES:
+        if (value == null) {
+          unsetTbl_names();
+        } else {
+          setTbl_names((java.util.List<java.lang.String>)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case DBNAME:
+        return getDbname();
+
+      case TBL_NAMES:
+        return getTbl_names();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case DBNAME:
+        return isSetDbname();
+      case TBL_NAMES:
+        return isSetTbl_names();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that instanceof get_table_objects_by_name_args)
+        return this.equals((get_table_objects_by_name_args)that);
+      return false;
+    }
+
+    public boolean equals(get_table_objects_by_name_args that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_dbname = true && this.isSetDbname();
+      boolean that_present_dbname = true && that.isSetDbname();
+      if (this_present_dbname || that_present_dbname) {
+        if (!(this_present_dbname && that_present_dbname))
+          return false;
+        if (!this.dbname.equals(that.dbname))
+          return false;
+      }
+
+      boolean this_present_tbl_names = true && this.isSetTbl_names();
+      boolean that_present_tbl_names = true && that.isSetTbl_names();
+      if (this_present_tbl_names || that_present_tbl_names) {
+        if (!(this_present_tbl_names && that_present_tbl_names))
+          return false;
+        if (!this.tbl_names.equals(that.tbl_names))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetDbname()) ? 131071 : 524287);
+      if (isSetDbname())
+        hashCode = hashCode * 8191 + dbname.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetTbl_names()) ? 131071 : 524287);
+      if (isSetTbl_names())
+        hashCode = hashCode * 8191 + tbl_names.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(get_table_objects_by_name_args other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.compare(isSetDbname(), other.isSetDbname());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetDbname()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.dbname, other.dbname);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetTbl_names(), other.isSetTbl_names());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetTbl_names()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.tbl_names, other.tbl_names);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+    }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("get_table_objects_by_name_args(");
+      boolean first = true;
+
+      sb.append("dbname:");
+      if (this.dbname == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.dbname);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("tbl_names:");
+      if (this.tbl_names == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.tbl_names);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class get_table_objects_by_name_argsStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_objects_by_name_argsStandardScheme getScheme() {
+        return new get_table_objects_by_name_argsStandardScheme();
+      }
+    }
+
+    private static class get_table_objects_by_name_argsStandardScheme extends org.apache.thrift.scheme.StandardScheme<get_table_objects_by_name_args> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, get_table_objects_by_name_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 1: // DBNAME
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRING) {
+                struct.dbname = iprot.readString();
+                struct.setDbnameIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // TBL_NAMES
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list1814 = iprot.readListBegin();
+                  struct.tbl_names = new java.util.ArrayList<java.lang.String>(_list1814.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1815;
+                  for (int _i1816 = 0; _i1816 < _list1814.size; ++_i1816)
+                  {
+                    _elem1815 = iprot.readString();
+                    struct.tbl_names.add(_elem1815);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setTbl_namesIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, get_table_objects_by_name_args struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.dbname != null) {
+          oprot.writeFieldBegin(DBNAME_FIELD_DESC);
+          oprot.writeString(struct.dbname);
+          oprot.writeFieldEnd();
+        }
+        if (struct.tbl_names != null) {
+          oprot.writeFieldBegin(TBL_NAMES_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.tbl_names.size()));
+            for (java.lang.String _iter1817 : struct.tbl_names)
+            {
+              oprot.writeString(_iter1817);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class get_table_objects_by_name_argsTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_objects_by_name_argsTupleScheme getScheme() {
+        return new get_table_objects_by_name_argsTupleScheme();
+      }
+    }
+
+    private static class get_table_objects_by_name_argsTupleScheme extends org.apache.thrift.scheme.TupleScheme<get_table_objects_by_name_args> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, get_table_objects_by_name_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetDbname()) {
+          optionals.set(0);
+        }
+        if (struct.isSetTbl_names()) {
+          optionals.set(1);
+        }
+        oprot.writeBitSet(optionals, 2);
+        if (struct.isSetDbname()) {
+          oprot.writeString(struct.dbname);
+        }
+        if (struct.isSetTbl_names()) {
+          {
+            oprot.writeI32(struct.tbl_names.size());
+            for (java.lang.String _iter1818 : struct.tbl_names)
+            {
+              oprot.writeString(_iter1818);
+            }
+          }
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, get_table_objects_by_name_args struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(2);
+        if (incoming.get(0)) {
+          struct.dbname = iprot.readString();
+          struct.setDbnameIsSet(true);
+        }
+        if (incoming.get(1)) {
+          {
+            org.apache.thrift.protocol.TList _list1819 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.tbl_names = new java.util.ArrayList<java.lang.String>(_list1819.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1820;
+            for (int _i1821 = 0; _i1821 < _list1819.size; ++_i1821)
+            {
+              _elem1820 = iprot.readString();
+              struct.tbl_names.add(_elem1820);
+            }
+          }
+          struct.setTbl_namesIsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
+  @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_table_objects_by_name_result implements org.apache.thrift.TBase<get_table_objects_by_name_result, get_table_objects_by_name_result._Fields>, java.io.Serializable, Cloneable, Comparable<get_table_objects_by_name_result>   {
+    private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_table_objects_by_name_result");
+
+    private static final org.apache.thrift.protocol.TField SUCCESS_FIELD_DESC = new org.apache.thrift.protocol.TField("success", org.apache.thrift.protocol.TType.LIST, (short)0);
+    private static final org.apache.thrift.protocol.TField O1_FIELD_DESC = new org.apache.thrift.protocol.TField("o1", org.apache.thrift.protocol.TType.STRUCT, (short)1);
+    private static final org.apache.thrift.protocol.TField O2_FIELD_DESC = new org.apache.thrift.protocol.TField("o2", org.apache.thrift.protocol.TType.STRUCT, (short)2);
+    private static final org.apache.thrift.protocol.TField O3_FIELD_DESC = new org.apache.thrift.protocol.TField("o3", org.apache.thrift.protocol.TType.STRUCT, (short)3);
+
+    private static final org.apache.thrift.scheme.SchemeFactory STANDARD_SCHEME_FACTORY = new get_table_objects_by_name_resultStandardSchemeFactory();
+    private static final org.apache.thrift.scheme.SchemeFactory TUPLE_SCHEME_FACTORY = new get_table_objects_by_name_resultTupleSchemeFactory();
+
+    private @org.apache.thrift.annotation.Nullable java.util.List<Table> success; // required
+    private @org.apache.thrift.annotation.Nullable MetaException o1; // required
+    private @org.apache.thrift.annotation.Nullable InvalidOperationException o2; // required
+    private @org.apache.thrift.annotation.Nullable UnknownDBException o3; // required
+
+    /** The set of fields this struct contains, along with convenience methods for finding and manipulating them. */
+    public enum _Fields implements org.apache.thrift.TFieldIdEnum {
+      SUCCESS((short)0, "success"),
+      O1((short)1, "o1"),
+      O2((short)2, "o2"),
+      O3((short)3, "o3");
+
+      private static final java.util.Map<java.lang.String, _Fields> byName = new java.util.HashMap<java.lang.String, _Fields>();
+
+      static {
+        for (_Fields field : java.util.EnumSet.allOf(_Fields.class)) {
+          byName.put(field.getFieldName(), field);
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByThriftId(int fieldId) {
+        switch(fieldId) {
+          case 0: // SUCCESS
+            return SUCCESS;
+          case 1: // O1
+            return O1;
+          case 2: // O2
+            return O2;
+          case 3: // O3
+            return O3;
+          default:
+            return null;
+        }
+      }
+
+      /**
+       * Find the _Fields constant that matches fieldId, throwing an exception
+       * if it is not found.
+       */
+      public static _Fields findByThriftIdOrThrow(int fieldId) {
+        _Fields fields = findByThriftId(fieldId);
+        if (fields == null) throw new java.lang.IllegalArgumentException("Field " + fieldId + " doesn't exist!");
+        return fields;
+      }
+
+      /**
+       * Find the _Fields constant that matches name, or null if its not found.
+       */
+      @org.apache.thrift.annotation.Nullable
+      public static _Fields findByName(java.lang.String name) {
+        return byName.get(name);
+      }
+
+      private final short _thriftId;
+      private final java.lang.String _fieldName;
+
+      _Fields(short thriftId, java.lang.String fieldName) {
+        _thriftId = thriftId;
+        _fieldName = fieldName;
+      }
+
+      public short getThriftFieldId() {
+        return _thriftId;
+      }
+
+      public java.lang.String getFieldName() {
+        return _fieldName;
+      }
+    }
+
+    // isset id assignments
+    public static final java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> metaDataMap;
+    static {
+      java.util.Map<_Fields, org.apache.thrift.meta_data.FieldMetaData> tmpMap = new java.util.EnumMap<_Fields, org.apache.thrift.meta_data.FieldMetaData>(_Fields.class);
+      tmpMap.put(_Fields.SUCCESS, new org.apache.thrift.meta_data.FieldMetaData("success", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.ListMetaData(org.apache.thrift.protocol.TType.LIST, 
+              new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, Table.class))));
+      tmpMap.put(_Fields.O1, new org.apache.thrift.meta_data.FieldMetaData("o1", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, MetaException.class)));
+      tmpMap.put(_Fields.O2, new org.apache.thrift.meta_data.FieldMetaData("o2", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, InvalidOperationException.class)));
+      tmpMap.put(_Fields.O3, new org.apache.thrift.meta_data.FieldMetaData("o3", org.apache.thrift.TFieldRequirementType.DEFAULT, 
+          new org.apache.thrift.meta_data.StructMetaData(org.apache.thrift.protocol.TType.STRUCT, UnknownDBException.class)));
+      metaDataMap = java.util.Collections.unmodifiableMap(tmpMap);
+      org.apache.thrift.meta_data.FieldMetaData.addStructMetaDataMap(get_table_objects_by_name_result.class, metaDataMap);
+    }
+
+    public get_table_objects_by_name_result() {
+    }
+
+    public get_table_objects_by_name_result(
+      java.util.List<Table> success,
+      MetaException o1,
+      InvalidOperationException o2,
+      UnknownDBException o3)
+    {
+      this();
+      this.success = success;
+      this.o1 = o1;
+      this.o2 = o2;
+      this.o3 = o3;
+    }
+
+    /**
+     * Performs a deep copy on <i>other</i>.
+     */
+    public get_table_objects_by_name_result(get_table_objects_by_name_result other) {
+      if (other.isSetSuccess()) {
+        java.util.List<Table> __this__success = new java.util.ArrayList<Table>(other.success.size());
+        for (Table other_element : other.success) {
+          __this__success.add(new Table(other_element));
+        }
+        this.success = __this__success;
+      }
+      if (other.isSetO1()) {
+        this.o1 = new MetaException(other.o1);
+      }
+      if (other.isSetO2()) {
+        this.o2 = new InvalidOperationException(other.o2);
+      }
+      if (other.isSetO3()) {
+        this.o3 = new UnknownDBException(other.o3);
+      }
+    }
+
+    public get_table_objects_by_name_result deepCopy() {
+      return new get_table_objects_by_name_result(this);
+    }
+
+    @Override
+    public void clear() {
+      this.success = null;
+      this.o1 = null;
+      this.o2 = null;
+      this.o3 = null;
+    }
+
+    public int getSuccessSize() {
+      return (this.success == null) ? 0 : this.success.size();
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.util.Iterator<Table> getSuccessIterator() {
+      return (this.success == null) ? null : this.success.iterator();
+    }
+
+    public void addToSuccess(Table elem) {
+      if (this.success == null) {
+        this.success = new java.util.ArrayList<Table>();
+      }
+      this.success.add(elem);
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.util.List<Table> getSuccess() {
+      return this.success;
+    }
+
+    public void setSuccess(@org.apache.thrift.annotation.Nullable java.util.List<Table> success) {
+      this.success = success;
+    }
+
+    public void unsetSuccess() {
+      this.success = null;
+    }
+
+    /** Returns true if field success is set (has been assigned a value) and false otherwise */
+    public boolean isSetSuccess() {
+      return this.success != null;
+    }
+
+    public void setSuccessIsSet(boolean value) {
+      if (!value) {
+        this.success = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public MetaException getO1() {
+      return this.o1;
+    }
+
+    public void setO1(@org.apache.thrift.annotation.Nullable MetaException o1) {
+      this.o1 = o1;
+    }
+
+    public void unsetO1() {
+      this.o1 = null;
+    }
+
+    /** Returns true if field o1 is set (has been assigned a value) and false otherwise */
+    public boolean isSetO1() {
+      return this.o1 != null;
+    }
+
+    public void setO1IsSet(boolean value) {
+      if (!value) {
+        this.o1 = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public InvalidOperationException getO2() {
+      return this.o2;
+    }
+
+    public void setO2(@org.apache.thrift.annotation.Nullable InvalidOperationException o2) {
+      this.o2 = o2;
+    }
+
+    public void unsetO2() {
+      this.o2 = null;
+    }
+
+    /** Returns true if field o2 is set (has been assigned a value) and false otherwise */
+    public boolean isSetO2() {
+      return this.o2 != null;
+    }
+
+    public void setO2IsSet(boolean value) {
+      if (!value) {
+        this.o2 = null;
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public UnknownDBException getO3() {
+      return this.o3;
+    }
+
+    public void setO3(@org.apache.thrift.annotation.Nullable UnknownDBException o3) {
+      this.o3 = o3;
+    }
+
+    public void unsetO3() {
+      this.o3 = null;
+    }
+
+    /** Returns true if field o3 is set (has been assigned a value) and false otherwise */
+    public boolean isSetO3() {
+      return this.o3 != null;
+    }
+
+    public void setO3IsSet(boolean value) {
+      if (!value) {
+        this.o3 = null;
+      }
+    }
+
+    public void setFieldValue(_Fields field, @org.apache.thrift.annotation.Nullable java.lang.Object value) {
+      switch (field) {
+      case SUCCESS:
+        if (value == null) {
+          unsetSuccess();
+        } else {
+          setSuccess((java.util.List<Table>)value);
+        }
+        break;
+
+      case O1:
+        if (value == null) {
+          unsetO1();
+        } else {
+          setO1((MetaException)value);
+        }
+        break;
+
+      case O2:
+        if (value == null) {
+          unsetO2();
+        } else {
+          setO2((InvalidOperationException)value);
+        }
+        break;
+
+      case O3:
+        if (value == null) {
+          unsetO3();
+        } else {
+          setO3((UnknownDBException)value);
+        }
+        break;
+
+      }
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public java.lang.Object getFieldValue(_Fields field) {
+      switch (field) {
+      case SUCCESS:
+        return getSuccess();
+
+      case O1:
+        return getO1();
+
+      case O2:
+        return getO2();
+
+      case O3:
+        return getO3();
+
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    /** Returns true if field corresponding to fieldID is set (has been assigned a value) and false otherwise */
+    public boolean isSet(_Fields field) {
+      if (field == null) {
+        throw new java.lang.IllegalArgumentException();
+      }
+
+      switch (field) {
+      case SUCCESS:
+        return isSetSuccess();
+      case O1:
+        return isSetO1();
+      case O2:
+        return isSetO2();
+      case O3:
+        return isSetO3();
+      }
+      throw new java.lang.IllegalStateException();
+    }
+
+    @Override
+    public boolean equals(java.lang.Object that) {
+      if (that instanceof get_table_objects_by_name_result)
+        return this.equals((get_table_objects_by_name_result)that);
+      return false;
+    }
+
+    public boolean equals(get_table_objects_by_name_result that) {
+      if (that == null)
+        return false;
+      if (this == that)
+        return true;
+
+      boolean this_present_success = true && this.isSetSuccess();
+      boolean that_present_success = true && that.isSetSuccess();
+      if (this_present_success || that_present_success) {
+        if (!(this_present_success && that_present_success))
+          return false;
+        if (!this.success.equals(that.success))
+          return false;
+      }
+
+      boolean this_present_o1 = true && this.isSetO1();
+      boolean that_present_o1 = true && that.isSetO1();
+      if (this_present_o1 || that_present_o1) {
+        if (!(this_present_o1 && that_present_o1))
+          return false;
+        if (!this.o1.equals(that.o1))
+          return false;
+      }
+
+      boolean this_present_o2 = true && this.isSetO2();
+      boolean that_present_o2 = true && that.isSetO2();
+      if (this_present_o2 || that_present_o2) {
+        if (!(this_present_o2 && that_present_o2))
+          return false;
+        if (!this.o2.equals(that.o2))
+          return false;
+      }
+
+      boolean this_present_o3 = true && this.isSetO3();
+      boolean that_present_o3 = true && that.isSetO3();
+      if (this_present_o3 || that_present_o3) {
+        if (!(this_present_o3 && that_present_o3))
+          return false;
+        if (!this.o3.equals(that.o3))
+          return false;
+      }
+
+      return true;
+    }
+
+    @Override
+    public int hashCode() {
+      int hashCode = 1;
+
+      hashCode = hashCode * 8191 + ((isSetSuccess()) ? 131071 : 524287);
+      if (isSetSuccess())
+        hashCode = hashCode * 8191 + success.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetO1()) ? 131071 : 524287);
+      if (isSetO1())
+        hashCode = hashCode * 8191 + o1.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetO2()) ? 131071 : 524287);
+      if (isSetO2())
+        hashCode = hashCode * 8191 + o2.hashCode();
+
+      hashCode = hashCode * 8191 + ((isSetO3()) ? 131071 : 524287);
+      if (isSetO3())
+        hashCode = hashCode * 8191 + o3.hashCode();
+
+      return hashCode;
+    }
+
+    @Override
+    public int compareTo(get_table_objects_by_name_result other) {
+      if (!getClass().equals(other.getClass())) {
+        return getClass().getName().compareTo(other.getClass().getName());
+      }
+
+      int lastComparison = 0;
+
+      lastComparison = java.lang.Boolean.compare(isSetSuccess(), other.isSetSuccess());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetSuccess()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.success, other.success);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetO1(), other.isSetO1());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetO1()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.o1, other.o1);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetO2(), other.isSetO2());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetO2()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.o2, other.o2);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      lastComparison = java.lang.Boolean.compare(isSetO3(), other.isSetO3());
+      if (lastComparison != 0) {
+        return lastComparison;
+      }
+      if (isSetO3()) {
+        lastComparison = org.apache.thrift.TBaseHelper.compareTo(this.o3, other.o3);
+        if (lastComparison != 0) {
+          return lastComparison;
+        }
+      }
+      return 0;
+    }
+
+    @org.apache.thrift.annotation.Nullable
+    public _Fields fieldForId(int fieldId) {
+      return _Fields.findByThriftId(fieldId);
+    }
+
+    public void read(org.apache.thrift.protocol.TProtocol iprot) throws org.apache.thrift.TException {
+      scheme(iprot).read(iprot, this);
+    }
+
+    public void write(org.apache.thrift.protocol.TProtocol oprot) throws org.apache.thrift.TException {
+      scheme(oprot).write(oprot, this);
+      }
+
+    @Override
+    public java.lang.String toString() {
+      java.lang.StringBuilder sb = new java.lang.StringBuilder("get_table_objects_by_name_result(");
+      boolean first = true;
+
+      sb.append("success:");
+      if (this.success == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.success);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("o1:");
+      if (this.o1 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.o1);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("o2:");
+      if (this.o2 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.o2);
+      }
+      first = false;
+      if (!first) sb.append(", ");
+      sb.append("o3:");
+      if (this.o3 == null) {
+        sb.append("null");
+      } else {
+        sb.append(this.o3);
+      }
+      first = false;
+      sb.append(")");
+      return sb.toString();
+    }
+
+    public void validate() throws org.apache.thrift.TException {
+      // check for required fields
+      // check for sub-struct validity
+    }
+
+    private void writeObject(java.io.ObjectOutputStream out) throws java.io.IOException {
+      try {
+        write(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(out)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private void readObject(java.io.ObjectInputStream in) throws java.io.IOException, java.lang.ClassNotFoundException {
+      try {
+        read(new org.apache.thrift.protocol.TCompactProtocol(new org.apache.thrift.transport.TIOStreamTransport(in)));
+      } catch (org.apache.thrift.TException te) {
+        throw new java.io.IOException(te);
+      }
+    }
+
+    private static class get_table_objects_by_name_resultStandardSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_objects_by_name_resultStandardScheme getScheme() {
+        return new get_table_objects_by_name_resultStandardScheme();
+      }
+    }
+
+    private static class get_table_objects_by_name_resultStandardScheme extends org.apache.thrift.scheme.StandardScheme<get_table_objects_by_name_result> {
+
+      public void read(org.apache.thrift.protocol.TProtocol iprot, get_table_objects_by_name_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TField schemeField;
+        iprot.readStructBegin();
+        while (true)
+        {
+          schemeField = iprot.readFieldBegin();
+          if (schemeField.type == org.apache.thrift.protocol.TType.STOP) { 
+            break;
+          }
+          switch (schemeField.id) {
+            case 0: // SUCCESS
+              if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
+                {
+                  org.apache.thrift.protocol.TList _list1822 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Table>(_list1822.size);
+                  @org.apache.thrift.annotation.Nullable Table _elem1823;
+                  for (int _i1824 = 0; _i1824 < _list1822.size; ++_i1824)
+                  {
+                    _elem1823 = new Table();
+                    _elem1823.read(iprot);
+                    struct.success.add(_elem1823);
+                  }
+                  iprot.readListEnd();
+                }
+                struct.setSuccessIsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 1: // O1
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.o1 = new MetaException();
+                struct.o1.read(iprot);
+                struct.setO1IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 2: // O2
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.o2 = new InvalidOperationException();
+                struct.o2.read(iprot);
+                struct.setO2IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            case 3: // O3
+              if (schemeField.type == org.apache.thrift.protocol.TType.STRUCT) {
+                struct.o3 = new UnknownDBException();
+                struct.o3.read(iprot);
+                struct.setO3IsSet(true);
+              } else { 
+                org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+              }
+              break;
+            default:
+              org.apache.thrift.protocol.TProtocolUtil.skip(iprot, schemeField.type);
+          }
+          iprot.readFieldEnd();
+        }
+        iprot.readStructEnd();
+        struct.validate();
+      }
+
+      public void write(org.apache.thrift.protocol.TProtocol oprot, get_table_objects_by_name_result struct) throws org.apache.thrift.TException {
+        struct.validate();
+
+        oprot.writeStructBegin(STRUCT_DESC);
+        if (struct.success != null) {
+          oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
+          {
+            oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
+            for (Table _iter1825 : struct.success)
+            {
+              _iter1825.write(oprot);
+            }
+            oprot.writeListEnd();
+          }
+          oprot.writeFieldEnd();
+        }
+        if (struct.o1 != null) {
+          oprot.writeFieldBegin(O1_FIELD_DESC);
+          struct.o1.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.o2 != null) {
+          oprot.writeFieldBegin(O2_FIELD_DESC);
+          struct.o2.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        if (struct.o3 != null) {
+          oprot.writeFieldBegin(O3_FIELD_DESC);
+          struct.o3.write(oprot);
+          oprot.writeFieldEnd();
+        }
+        oprot.writeFieldStop();
+        oprot.writeStructEnd();
+      }
+
+    }
+
+    private static class get_table_objects_by_name_resultTupleSchemeFactory implements org.apache.thrift.scheme.SchemeFactory {
+      public get_table_objects_by_name_resultTupleScheme getScheme() {
+        return new get_table_objects_by_name_resultTupleScheme();
+      }
+    }
+
+    private static class get_table_objects_by_name_resultTupleScheme extends org.apache.thrift.scheme.TupleScheme<get_table_objects_by_name_result> {
+
+      @Override
+      public void write(org.apache.thrift.protocol.TProtocol prot, get_table_objects_by_name_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol oprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet optionals = new java.util.BitSet();
+        if (struct.isSetSuccess()) {
+          optionals.set(0);
+        }
+        if (struct.isSetO1()) {
+          optionals.set(1);
+        }
+        if (struct.isSetO2()) {
+          optionals.set(2);
+        }
+        if (struct.isSetO3()) {
+          optionals.set(3);
+        }
+        oprot.writeBitSet(optionals, 4);
+        if (struct.isSetSuccess()) {
+          {
+            oprot.writeI32(struct.success.size());
+            for (Table _iter1826 : struct.success)
+            {
+              _iter1826.write(oprot);
+            }
+          }
+        }
+        if (struct.isSetO1()) {
+          struct.o1.write(oprot);
+        }
+        if (struct.isSetO2()) {
+          struct.o2.write(oprot);
+        }
+        if (struct.isSetO3()) {
+          struct.o3.write(oprot);
+        }
+      }
+
+      @Override
+      public void read(org.apache.thrift.protocol.TProtocol prot, get_table_objects_by_name_result struct) throws org.apache.thrift.TException {
+        org.apache.thrift.protocol.TTupleProtocol iprot = (org.apache.thrift.protocol.TTupleProtocol) prot;
+        java.util.BitSet incoming = iprot.readBitSet(4);
+        if (incoming.get(0)) {
+          {
+            org.apache.thrift.protocol.TList _list1827 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Table>(_list1827.size);
+            @org.apache.thrift.annotation.Nullable Table _elem1828;
+            for (int _i1829 = 0; _i1829 < _list1827.size; ++_i1829)
+            {
+              _elem1828 = new Table();
+              _elem1828.read(iprot);
+              struct.success.add(_elem1828);
+            }
+          }
+          struct.setSuccessIsSet(true);
+        }
+        if (incoming.get(1)) {
+          struct.o1 = new MetaException();
+          struct.o1.read(iprot);
+          struct.setO1IsSet(true);
+        }
+        if (incoming.get(2)) {
+          struct.o2 = new InvalidOperationException();
+          struct.o2.read(iprot);
+          struct.setO2IsSet(true);
+        }
+        if (incoming.get(3)) {
+          struct.o3 = new UnknownDBException();
+          struct.o3.read(iprot);
+          struct.setO3IsSet(true);
+        }
+      }
+    }
+
+    private static <S extends org.apache.thrift.scheme.IScheme> S scheme(org.apache.thrift.protocol.TProtocol proto) {
+      return (org.apache.thrift.scheme.StandardScheme.class.equals(proto.getScheme()) ? STANDARD_SCHEME_FACTORY : TUPLE_SCHEME_FACTORY).getScheme();
+    }
+  }
+
   @org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public static class get_tables_ext_args implements org.apache.thrift.TBase<get_tables_ext_args, get_tables_ext_args._Fields>, java.io.Serializable, Cloneable, Comparable<get_tables_ext_args>   {
     private static final org.apache.thrift.protocol.TStruct STRUCT_DESC = new org.apache.thrift.protocol.TStruct("get_tables_ext_args");
 
@@ -103459,14 +106106,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1814 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<ExtendedTableInfo>(_list1814.size);
-                  @org.apache.thrift.annotation.Nullable ExtendedTableInfo _elem1815;
-                  for (int _i1816 = 0; _i1816 < _list1814.size; ++_i1816)
+                  org.apache.thrift.protocol.TList _list1830 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<ExtendedTableInfo>(_list1830.size);
+                  @org.apache.thrift.annotation.Nullable ExtendedTableInfo _elem1831;
+                  for (int _i1832 = 0; _i1832 < _list1830.size; ++_i1832)
                   {
-                    _elem1815 = new ExtendedTableInfo();
-                    _elem1815.read(iprot);
-                    struct.success.add(_elem1815);
+                    _elem1831 = new ExtendedTableInfo();
+                    _elem1831.read(iprot);
+                    struct.success.add(_elem1831);
                   }
                   iprot.readListEnd();
                 }
@@ -103501,9 +106148,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (ExtendedTableInfo _iter1817 : struct.success)
+            for (ExtendedTableInfo _iter1833 : struct.success)
             {
-              _iter1817.write(oprot);
+              _iter1833.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -103542,9 +106189,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (ExtendedTableInfo _iter1818 : struct.success)
+            for (ExtendedTableInfo _iter1834 : struct.success)
             {
-              _iter1818.write(oprot);
+              _iter1834.write(oprot);
             }
           }
         }
@@ -103559,14 +106206,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1819 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<ExtendedTableInfo>(_list1819.size);
-            @org.apache.thrift.annotation.Nullable ExtendedTableInfo _elem1820;
-            for (int _i1821 = 0; _i1821 < _list1819.size; ++_i1821)
+            org.apache.thrift.protocol.TList _list1835 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<ExtendedTableInfo>(_list1835.size);
+            @org.apache.thrift.annotation.Nullable ExtendedTableInfo _elem1836;
+            for (int _i1837 = 0; _i1837 < _list1835.size; ++_i1837)
             {
-              _elem1820 = new ExtendedTableInfo();
-              _elem1820.read(iprot);
-              struct.success.add(_elem1820);
+              _elem1836 = new ExtendedTableInfo();
+              _elem1836.read(iprot);
+              struct.success.add(_elem1836);
             }
           }
           struct.setSuccessIsSet(true);
@@ -109117,13 +111764,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1822 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list1822.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1823;
-                  for (int _i1824 = 0; _i1824 < _list1822.size; ++_i1824)
+                  org.apache.thrift.protocol.TList _list1838 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list1838.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1839;
+                  for (int _i1840 = 0; _i1840 < _list1838.size; ++_i1840)
                   {
-                    _elem1823 = iprot.readString();
-                    struct.success.add(_elem1823);
+                    _elem1839 = iprot.readString();
+                    struct.success.add(_elem1839);
                   }
                   iprot.readListEnd();
                 }
@@ -109176,9 +111823,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter1825 : struct.success)
+            for (java.lang.String _iter1841 : struct.success)
             {
-              oprot.writeString(_iter1825);
+              oprot.writeString(_iter1841);
             }
             oprot.writeListEnd();
           }
@@ -109233,9 +111880,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter1826 : struct.success)
+            for (java.lang.String _iter1842 : struct.success)
             {
-              oprot.writeString(_iter1826);
+              oprot.writeString(_iter1842);
             }
           }
         }
@@ -109256,13 +111903,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1827 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list1827.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1828;
-            for (int _i1829 = 0; _i1829 < _list1827.size; ++_i1829)
+            org.apache.thrift.protocol.TList _list1843 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list1843.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1844;
+            for (int _i1845 = 0; _i1845 < _list1843.size; ++_i1845)
             {
-              _elem1828 = iprot.readString();
-              struct.success.add(_elem1828);
+              _elem1844 = iprot.readString();
+              struct.success.add(_elem1844);
             }
           }
           struct.setSuccessIsSet(true);
@@ -116109,14 +118756,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 1: // NEW_PARTS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1830 = iprot.readListBegin();
-                  struct.new_parts = new java.util.ArrayList<Partition>(_list1830.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem1831;
-                  for (int _i1832 = 0; _i1832 < _list1830.size; ++_i1832)
+                  org.apache.thrift.protocol.TList _list1846 = iprot.readListBegin();
+                  struct.new_parts = new java.util.ArrayList<Partition>(_list1846.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem1847;
+                  for (int _i1848 = 0; _i1848 < _list1846.size; ++_i1848)
                   {
-                    _elem1831 = new Partition();
-                    _elem1831.read(iprot);
-                    struct.new_parts.add(_elem1831);
+                    _elem1847 = new Partition();
+                    _elem1847.read(iprot);
+                    struct.new_parts.add(_elem1847);
                   }
                   iprot.readListEnd();
                 }
@@ -116142,9 +118789,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(NEW_PARTS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.new_parts.size()));
-            for (Partition _iter1833 : struct.new_parts)
+            for (Partition _iter1849 : struct.new_parts)
             {
-              _iter1833.write(oprot);
+              _iter1849.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -116175,9 +118822,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetNew_parts()) {
           {
             oprot.writeI32(struct.new_parts.size());
-            for (Partition _iter1834 : struct.new_parts)
+            for (Partition _iter1850 : struct.new_parts)
             {
-              _iter1834.write(oprot);
+              _iter1850.write(oprot);
             }
           }
         }
@@ -116189,14 +118836,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1835 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.new_parts = new java.util.ArrayList<Partition>(_list1835.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem1836;
-            for (int _i1837 = 0; _i1837 < _list1835.size; ++_i1837)
+            org.apache.thrift.protocol.TList _list1851 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.new_parts = new java.util.ArrayList<Partition>(_list1851.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem1852;
+            for (int _i1853 = 0; _i1853 < _list1851.size; ++_i1853)
             {
-              _elem1836 = new Partition();
-              _elem1836.read(iprot);
-              struct.new_parts.add(_elem1836);
+              _elem1852 = new Partition();
+              _elem1852.read(iprot);
+              struct.new_parts.add(_elem1852);
             }
           }
           struct.setNew_partsIsSet(true);
@@ -117203,14 +119850,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 1: // NEW_PARTS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1838 = iprot.readListBegin();
-                  struct.new_parts = new java.util.ArrayList<PartitionSpec>(_list1838.size);
-                  @org.apache.thrift.annotation.Nullable PartitionSpec _elem1839;
-                  for (int _i1840 = 0; _i1840 < _list1838.size; ++_i1840)
+                  org.apache.thrift.protocol.TList _list1854 = iprot.readListBegin();
+                  struct.new_parts = new java.util.ArrayList<PartitionSpec>(_list1854.size);
+                  @org.apache.thrift.annotation.Nullable PartitionSpec _elem1855;
+                  for (int _i1856 = 0; _i1856 < _list1854.size; ++_i1856)
                   {
-                    _elem1839 = new PartitionSpec();
-                    _elem1839.read(iprot);
-                    struct.new_parts.add(_elem1839);
+                    _elem1855 = new PartitionSpec();
+                    _elem1855.read(iprot);
+                    struct.new_parts.add(_elem1855);
                   }
                   iprot.readListEnd();
                 }
@@ -117236,9 +119883,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(NEW_PARTS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.new_parts.size()));
-            for (PartitionSpec _iter1841 : struct.new_parts)
+            for (PartitionSpec _iter1857 : struct.new_parts)
             {
-              _iter1841.write(oprot);
+              _iter1857.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -117269,9 +119916,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetNew_parts()) {
           {
             oprot.writeI32(struct.new_parts.size());
-            for (PartitionSpec _iter1842 : struct.new_parts)
+            for (PartitionSpec _iter1858 : struct.new_parts)
             {
-              _iter1842.write(oprot);
+              _iter1858.write(oprot);
             }
           }
         }
@@ -117283,14 +119930,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1843 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.new_parts = new java.util.ArrayList<PartitionSpec>(_list1843.size);
-            @org.apache.thrift.annotation.Nullable PartitionSpec _elem1844;
-            for (int _i1845 = 0; _i1845 < _list1843.size; ++_i1845)
+            org.apache.thrift.protocol.TList _list1859 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.new_parts = new java.util.ArrayList<PartitionSpec>(_list1859.size);
+            @org.apache.thrift.annotation.Nullable PartitionSpec _elem1860;
+            for (int _i1861 = 0; _i1861 < _list1859.size; ++_i1861)
             {
-              _elem1844 = new PartitionSpec();
-              _elem1844.read(iprot);
-              struct.new_parts.add(_elem1844);
+              _elem1860 = new PartitionSpec();
+              _elem1860.read(iprot);
+              struct.new_parts.add(_elem1860);
             }
           }
           struct.setNew_partsIsSet(true);
@@ -118472,13 +121119,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1846 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1846.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1847;
-                  for (int _i1848 = 0; _i1848 < _list1846.size; ++_i1848)
+                  org.apache.thrift.protocol.TList _list1862 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1862.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1863;
+                  for (int _i1864 = 0; _i1864 < _list1862.size; ++_i1864)
                   {
-                    _elem1847 = iprot.readString();
-                    struct.part_vals.add(_elem1847);
+                    _elem1863 = iprot.readString();
+                    struct.part_vals.add(_elem1863);
                   }
                   iprot.readListEnd();
                 }
@@ -118514,9 +121161,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1849 : struct.part_vals)
+            for (java.lang.String _iter1865 : struct.part_vals)
             {
-              oprot.writeString(_iter1849);
+              oprot.writeString(_iter1865);
             }
             oprot.writeListEnd();
           }
@@ -118559,9 +121206,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1850 : struct.part_vals)
+            for (java.lang.String _iter1866 : struct.part_vals)
             {
-              oprot.writeString(_iter1850);
+              oprot.writeString(_iter1866);
             }
           }
         }
@@ -118581,13 +121228,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1851 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1851.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1852;
-            for (int _i1853 = 0; _i1853 < _list1851.size; ++_i1853)
+            org.apache.thrift.protocol.TList _list1867 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1867.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1868;
+            for (int _i1869 = 0; _i1869 < _list1867.size; ++_i1869)
             {
-              _elem1852 = iprot.readString();
-              struct.part_vals.add(_elem1852);
+              _elem1868 = iprot.readString();
+              struct.part_vals.add(_elem1868);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -120913,13 +123560,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1854 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1854.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1855;
-                  for (int _i1856 = 0; _i1856 < _list1854.size; ++_i1856)
+                  org.apache.thrift.protocol.TList _list1870 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1870.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1871;
+                  for (int _i1872 = 0; _i1872 < _list1870.size; ++_i1872)
                   {
-                    _elem1855 = iprot.readString();
-                    struct.part_vals.add(_elem1855);
+                    _elem1871 = iprot.readString();
+                    struct.part_vals.add(_elem1871);
                   }
                   iprot.readListEnd();
                 }
@@ -120964,9 +123611,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1857 : struct.part_vals)
+            for (java.lang.String _iter1873 : struct.part_vals)
             {
-              oprot.writeString(_iter1857);
+              oprot.writeString(_iter1873);
             }
             oprot.writeListEnd();
           }
@@ -121017,9 +123664,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1858 : struct.part_vals)
+            for (java.lang.String _iter1874 : struct.part_vals)
             {
-              oprot.writeString(_iter1858);
+              oprot.writeString(_iter1874);
             }
           }
         }
@@ -121042,13 +123689,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1859 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1859.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1860;
-            for (int _i1861 = 0; _i1861 < _list1859.size; ++_i1861)
+            org.apache.thrift.protocol.TList _list1875 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1875.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1876;
+            for (int _i1877 = 0; _i1877 < _list1875.size; ++_i1877)
             {
-              _elem1860 = iprot.readString();
-              struct.part_vals.add(_elem1860);
+              _elem1876 = iprot.readString();
+              struct.part_vals.add(_elem1876);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -125992,13 +128639,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1862 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1862.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1863;
-                  for (int _i1864 = 0; _i1864 < _list1862.size; ++_i1864)
+                  org.apache.thrift.protocol.TList _list1878 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1878.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1879;
+                  for (int _i1880 = 0; _i1880 < _list1878.size; ++_i1880)
                   {
-                    _elem1863 = iprot.readString();
-                    struct.part_vals.add(_elem1863);
+                    _elem1879 = iprot.readString();
+                    struct.part_vals.add(_elem1879);
                   }
                   iprot.readListEnd();
                 }
@@ -126042,9 +128689,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1865 : struct.part_vals)
+            for (java.lang.String _iter1881 : struct.part_vals)
             {
-              oprot.writeString(_iter1865);
+              oprot.writeString(_iter1881);
             }
             oprot.writeListEnd();
           }
@@ -126093,9 +128740,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1866 : struct.part_vals)
+            for (java.lang.String _iter1882 : struct.part_vals)
             {
-              oprot.writeString(_iter1866);
+              oprot.writeString(_iter1882);
             }
           }
         }
@@ -126118,13 +128765,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1867 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1867.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1868;
-            for (int _i1869 = 0; _i1869 < _list1867.size; ++_i1869)
+            org.apache.thrift.protocol.TList _list1883 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1883.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1884;
+            for (int _i1885 = 0; _i1885 < _list1883.size; ++_i1885)
             {
-              _elem1868 = iprot.readString();
-              struct.part_vals.add(_elem1868);
+              _elem1884 = iprot.readString();
+              struct.part_vals.add(_elem1884);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -127366,13 +130013,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1870 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1870.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1871;
-                  for (int _i1872 = 0; _i1872 < _list1870.size; ++_i1872)
+                  org.apache.thrift.protocol.TList _list1886 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1886.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1887;
+                  for (int _i1888 = 0; _i1888 < _list1886.size; ++_i1888)
                   {
-                    _elem1871 = iprot.readString();
-                    struct.part_vals.add(_elem1871);
+                    _elem1887 = iprot.readString();
+                    struct.part_vals.add(_elem1887);
                   }
                   iprot.readListEnd();
                 }
@@ -127425,9 +130072,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1873 : struct.part_vals)
+            for (java.lang.String _iter1889 : struct.part_vals)
             {
-              oprot.writeString(_iter1873);
+              oprot.writeString(_iter1889);
             }
             oprot.writeListEnd();
           }
@@ -127484,9 +130131,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1874 : struct.part_vals)
+            for (java.lang.String _iter1890 : struct.part_vals)
             {
-              oprot.writeString(_iter1874);
+              oprot.writeString(_iter1890);
             }
           }
         }
@@ -127512,13 +130159,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1875 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1875.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1876;
-            for (int _i1877 = 0; _i1877 < _list1875.size; ++_i1877)
+            org.apache.thrift.protocol.TList _list1891 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1891.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1892;
+            for (int _i1893 = 0; _i1893 < _list1891.size; ++_i1893)
             {
-              _elem1876 = iprot.readString();
-              struct.part_vals.add(_elem1876);
+              _elem1892 = iprot.readString();
+              struct.part_vals.add(_elem1892);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -133076,13 +135723,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1878 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1878.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1879;
-                  for (int _i1880 = 0; _i1880 < _list1878.size; ++_i1880)
+                  org.apache.thrift.protocol.TList _list1894 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1894.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1895;
+                  for (int _i1896 = 0; _i1896 < _list1894.size; ++_i1896)
                   {
-                    _elem1879 = iprot.readString();
-                    struct.part_vals.add(_elem1879);
+                    _elem1895 = iprot.readString();
+                    struct.part_vals.add(_elem1895);
                   }
                   iprot.readListEnd();
                 }
@@ -133118,9 +135765,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1881 : struct.part_vals)
+            for (java.lang.String _iter1897 : struct.part_vals)
             {
-              oprot.writeString(_iter1881);
+              oprot.writeString(_iter1897);
             }
             oprot.writeListEnd();
           }
@@ -133163,9 +135810,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1882 : struct.part_vals)
+            for (java.lang.String _iter1898 : struct.part_vals)
             {
-              oprot.writeString(_iter1882);
+              oprot.writeString(_iter1898);
             }
           }
         }
@@ -133185,13 +135832,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1883 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1883.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1884;
-            for (int _i1885 = 0; _i1885 < _list1883.size; ++_i1885)
+            org.apache.thrift.protocol.TList _list1899 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1899.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1900;
+            for (int _i1901 = 0; _i1901 < _list1899.size; ++_i1901)
             {
-              _elem1884 = iprot.readString();
-              struct.part_vals.add(_elem1884);
+              _elem1900 = iprot.readString();
+              struct.part_vals.add(_elem1900);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -135363,15 +138010,15 @@ package org.apache.hadoop.hive.metastore.api;
             case 1: // PARTITION_SPECS
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
-                  org.apache.thrift.protocol.TMap _map1886 = iprot.readMapBegin();
-                  struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1886.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _key1887;
-                  @org.apache.thrift.annotation.Nullable java.lang.String _val1888;
-                  for (int _i1889 = 0; _i1889 < _map1886.size; ++_i1889)
+                  org.apache.thrift.protocol.TMap _map1902 = iprot.readMapBegin();
+                  struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1902.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key1903;
+                  @org.apache.thrift.annotation.Nullable java.lang.String _val1904;
+                  for (int _i1905 = 0; _i1905 < _map1902.size; ++_i1905)
                   {
-                    _key1887 = iprot.readString();
-                    _val1888 = iprot.readString();
-                    struct.partitionSpecs.put(_key1887, _val1888);
+                    _key1903 = iprot.readString();
+                    _val1904 = iprot.readString();
+                    struct.partitionSpecs.put(_key1903, _val1904);
                   }
                   iprot.readMapEnd();
                 }
@@ -135429,10 +138076,10 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PARTITION_SPECS_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.partitionSpecs.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1890 : struct.partitionSpecs.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1906 : struct.partitionSpecs.entrySet())
             {
-              oprot.writeString(_iter1890.getKey());
-              oprot.writeString(_iter1890.getValue());
+              oprot.writeString(_iter1906.getKey());
+              oprot.writeString(_iter1906.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -135495,10 +138142,10 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPartitionSpecs()) {
           {
             oprot.writeI32(struct.partitionSpecs.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1891 : struct.partitionSpecs.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1907 : struct.partitionSpecs.entrySet())
             {
-              oprot.writeString(_iter1891.getKey());
-              oprot.writeString(_iter1891.getValue());
+              oprot.writeString(_iter1907.getKey());
+              oprot.writeString(_iter1907.getValue());
             }
           }
         }
@@ -135522,15 +138169,15 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(5);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TMap _map1892 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1892.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key1893;
-            @org.apache.thrift.annotation.Nullable java.lang.String _val1894;
-            for (int _i1895 = 0; _i1895 < _map1892.size; ++_i1895)
+            org.apache.thrift.protocol.TMap _map1908 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1908.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key1909;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val1910;
+            for (int _i1911 = 0; _i1911 < _map1908.size; ++_i1911)
             {
-              _key1893 = iprot.readString();
-              _val1894 = iprot.readString();
-              struct.partitionSpecs.put(_key1893, _val1894);
+              _key1909 = iprot.readString();
+              _val1910 = iprot.readString();
+              struct.partitionSpecs.put(_key1909, _val1910);
             }
           }
           struct.setPartitionSpecsIsSet(true);
@@ -136984,15 +139631,15 @@ package org.apache.hadoop.hive.metastore.api;
             case 1: // PARTITION_SPECS
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
-                  org.apache.thrift.protocol.TMap _map1896 = iprot.readMapBegin();
-                  struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1896.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _key1897;
-                  @org.apache.thrift.annotation.Nullable java.lang.String _val1898;
-                  for (int _i1899 = 0; _i1899 < _map1896.size; ++_i1899)
+                  org.apache.thrift.protocol.TMap _map1912 = iprot.readMapBegin();
+                  struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1912.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key1913;
+                  @org.apache.thrift.annotation.Nullable java.lang.String _val1914;
+                  for (int _i1915 = 0; _i1915 < _map1912.size; ++_i1915)
                   {
-                    _key1897 = iprot.readString();
-                    _val1898 = iprot.readString();
-                    struct.partitionSpecs.put(_key1897, _val1898);
+                    _key1913 = iprot.readString();
+                    _val1914 = iprot.readString();
+                    struct.partitionSpecs.put(_key1913, _val1914);
                   }
                   iprot.readMapEnd();
                 }
@@ -137050,10 +139697,10 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PARTITION_SPECS_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.partitionSpecs.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1900 : struct.partitionSpecs.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1916 : struct.partitionSpecs.entrySet())
             {
-              oprot.writeString(_iter1900.getKey());
-              oprot.writeString(_iter1900.getValue());
+              oprot.writeString(_iter1916.getKey());
+              oprot.writeString(_iter1916.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -137116,10 +139763,10 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPartitionSpecs()) {
           {
             oprot.writeI32(struct.partitionSpecs.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1901 : struct.partitionSpecs.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter1917 : struct.partitionSpecs.entrySet())
             {
-              oprot.writeString(_iter1901.getKey());
-              oprot.writeString(_iter1901.getValue());
+              oprot.writeString(_iter1917.getKey());
+              oprot.writeString(_iter1917.getValue());
             }
           }
         }
@@ -137143,15 +139790,15 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(5);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TMap _map1902 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1902.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key1903;
-            @org.apache.thrift.annotation.Nullable java.lang.String _val1904;
-            for (int _i1905 = 0; _i1905 < _map1902.size; ++_i1905)
+            org.apache.thrift.protocol.TMap _map1918 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.partitionSpecs = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map1918.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key1919;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val1920;
+            for (int _i1921 = 0; _i1921 < _map1918.size; ++_i1921)
             {
-              _key1903 = iprot.readString();
-              _val1904 = iprot.readString();
-              struct.partitionSpecs.put(_key1903, _val1904);
+              _key1919 = iprot.readString();
+              _val1920 = iprot.readString();
+              struct.partitionSpecs.put(_key1919, _val1920);
             }
           }
           struct.setPartitionSpecsIsSet(true);
@@ -137821,14 +140468,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1906 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list1906.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem1907;
-                  for (int _i1908 = 0; _i1908 < _list1906.size; ++_i1908)
+                  org.apache.thrift.protocol.TList _list1922 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list1922.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem1923;
+                  for (int _i1924 = 0; _i1924 < _list1922.size; ++_i1924)
                   {
-                    _elem1907 = new Partition();
-                    _elem1907.read(iprot);
-                    struct.success.add(_elem1907);
+                    _elem1923 = new Partition();
+                    _elem1923.read(iprot);
+                    struct.success.add(_elem1923);
                   }
                   iprot.readListEnd();
                 }
@@ -137890,9 +140537,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter1909 : struct.success)
+            for (Partition _iter1925 : struct.success)
             {
-              _iter1909.write(oprot);
+              _iter1925.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -137955,9 +140602,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter1910 : struct.success)
+            for (Partition _iter1926 : struct.success)
             {
-              _iter1910.write(oprot);
+              _iter1926.write(oprot);
             }
           }
         }
@@ -137981,14 +140628,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(5);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1911 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list1911.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem1912;
-            for (int _i1913 = 0; _i1913 < _list1911.size; ++_i1913)
+            org.apache.thrift.protocol.TList _list1927 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list1927.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem1928;
+            for (int _i1929 = 0; _i1929 < _list1927.size; ++_i1929)
             {
-              _elem1912 = new Partition();
-              _elem1912.read(iprot);
-              struct.success.add(_elem1912);
+              _elem1928 = new Partition();
+              _elem1928.read(iprot);
+              struct.success.add(_elem1928);
             }
           }
           struct.setSuccessIsSet(true);
@@ -138693,13 +141340,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1914 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1914.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1915;
-                  for (int _i1916 = 0; _i1916 < _list1914.size; ++_i1916)
+                  org.apache.thrift.protocol.TList _list1930 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1930.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1931;
+                  for (int _i1932 = 0; _i1932 < _list1930.size; ++_i1932)
                   {
-                    _elem1915 = iprot.readString();
-                    struct.part_vals.add(_elem1915);
+                    _elem1931 = iprot.readString();
+                    struct.part_vals.add(_elem1931);
                   }
                   iprot.readListEnd();
                 }
@@ -138719,13 +141366,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 5: // GROUP_NAMES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1917 = iprot.readListBegin();
-                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list1917.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1918;
-                  for (int _i1919 = 0; _i1919 < _list1917.size; ++_i1919)
+                  org.apache.thrift.protocol.TList _list1933 = iprot.readListBegin();
+                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list1933.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1934;
+                  for (int _i1935 = 0; _i1935 < _list1933.size; ++_i1935)
                   {
-                    _elem1918 = iprot.readString();
-                    struct.group_names.add(_elem1918);
+                    _elem1934 = iprot.readString();
+                    struct.group_names.add(_elem1934);
                   }
                   iprot.readListEnd();
                 }
@@ -138761,9 +141408,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1920 : struct.part_vals)
+            for (java.lang.String _iter1936 : struct.part_vals)
             {
-              oprot.writeString(_iter1920);
+              oprot.writeString(_iter1936);
             }
             oprot.writeListEnd();
           }
@@ -138778,9 +141425,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(GROUP_NAMES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.group_names.size()));
-            for (java.lang.String _iter1921 : struct.group_names)
+            for (java.lang.String _iter1937 : struct.group_names)
             {
-              oprot.writeString(_iter1921);
+              oprot.writeString(_iter1937);
             }
             oprot.writeListEnd();
           }
@@ -138829,9 +141476,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1922 : struct.part_vals)
+            for (java.lang.String _iter1938 : struct.part_vals)
             {
-              oprot.writeString(_iter1922);
+              oprot.writeString(_iter1938);
             }
           }
         }
@@ -138841,9 +141488,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetGroup_names()) {
           {
             oprot.writeI32(struct.group_names.size());
-            for (java.lang.String _iter1923 : struct.group_names)
+            for (java.lang.String _iter1939 : struct.group_names)
             {
-              oprot.writeString(_iter1923);
+              oprot.writeString(_iter1939);
             }
           }
         }
@@ -138863,13 +141510,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1924 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1924.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1925;
-            for (int _i1926 = 0; _i1926 < _list1924.size; ++_i1926)
+            org.apache.thrift.protocol.TList _list1940 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1940.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1941;
+            for (int _i1942 = 0; _i1942 < _list1940.size; ++_i1942)
             {
-              _elem1925 = iprot.readString();
-              struct.part_vals.add(_elem1925);
+              _elem1941 = iprot.readString();
+              struct.part_vals.add(_elem1941);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -138880,13 +141527,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(4)) {
           {
-            org.apache.thrift.protocol.TList _list1927 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.group_names = new java.util.ArrayList<java.lang.String>(_list1927.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1928;
-            for (int _i1929 = 0; _i1929 < _list1927.size; ++_i1929)
+            org.apache.thrift.protocol.TList _list1943 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.group_names = new java.util.ArrayList<java.lang.String>(_list1943.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1944;
+            for (int _i1945 = 0; _i1945 < _list1943.size; ++_i1945)
             {
-              _elem1928 = iprot.readString();
-              struct.group_names.add(_elem1928);
+              _elem1944 = iprot.readString();
+              struct.group_names.add(_elem1944);
             }
           }
           struct.setGroup_namesIsSet(true);
@@ -141673,14 +144320,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1930 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list1930.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem1931;
-                  for (int _i1932 = 0; _i1932 < _list1930.size; ++_i1932)
+                  org.apache.thrift.protocol.TList _list1946 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list1946.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem1947;
+                  for (int _i1948 = 0; _i1948 < _list1946.size; ++_i1948)
                   {
-                    _elem1931 = new Partition();
-                    _elem1931.read(iprot);
-                    struct.success.add(_elem1931);
+                    _elem1947 = new Partition();
+                    _elem1947.read(iprot);
+                    struct.success.add(_elem1947);
                   }
                   iprot.readListEnd();
                 }
@@ -141724,9 +144371,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter1933 : struct.success)
+            for (Partition _iter1949 : struct.success)
             {
-              _iter1933.write(oprot);
+              _iter1949.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -141773,9 +144420,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter1934 : struct.success)
+            for (Partition _iter1950 : struct.success)
             {
-              _iter1934.write(oprot);
+              _iter1950.write(oprot);
             }
           }
         }
@@ -141793,14 +144440,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1935 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list1935.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem1936;
-            for (int _i1937 = 0; _i1937 < _list1935.size; ++_i1937)
+            org.apache.thrift.protocol.TList _list1951 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list1951.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem1952;
+            for (int _i1953 = 0; _i1953 < _list1951.size; ++_i1953)
             {
-              _elem1936 = new Partition();
-              _elem1936.read(iprot);
-              struct.success.add(_elem1936);
+              _elem1952 = new Partition();
+              _elem1952.read(iprot);
+              struct.success.add(_elem1952);
             }
           }
           struct.setSuccessIsSet(true);
@@ -143438,13 +146085,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 5: // GROUP_NAMES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1938 = iprot.readListBegin();
-                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list1938.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1939;
-                  for (int _i1940 = 0; _i1940 < _list1938.size; ++_i1940)
+                  org.apache.thrift.protocol.TList _list1954 = iprot.readListBegin();
+                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list1954.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1955;
+                  for (int _i1956 = 0; _i1956 < _list1954.size; ++_i1956)
                   {
-                    _elem1939 = iprot.readString();
-                    struct.group_names.add(_elem1939);
+                    _elem1955 = iprot.readString();
+                    struct.group_names.add(_elem1955);
                   }
                   iprot.readListEnd();
                 }
@@ -143488,9 +146135,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(GROUP_NAMES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.group_names.size()));
-            for (java.lang.String _iter1941 : struct.group_names)
+            for (java.lang.String _iter1957 : struct.group_names)
             {
-              oprot.writeString(_iter1941);
+              oprot.writeString(_iter1957);
             }
             oprot.writeListEnd();
           }
@@ -143545,9 +146192,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetGroup_names()) {
           {
             oprot.writeI32(struct.group_names.size());
-            for (java.lang.String _iter1942 : struct.group_names)
+            for (java.lang.String _iter1958 : struct.group_names)
             {
-              oprot.writeString(_iter1942);
+              oprot.writeString(_iter1958);
             }
           }
         }
@@ -143575,13 +146222,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(4)) {
           {
-            org.apache.thrift.protocol.TList _list1943 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.group_names = new java.util.ArrayList<java.lang.String>(_list1943.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1944;
-            for (int _i1945 = 0; _i1945 < _list1943.size; ++_i1945)
+            org.apache.thrift.protocol.TList _list1959 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.group_names = new java.util.ArrayList<java.lang.String>(_list1959.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1960;
+            for (int _i1961 = 0; _i1961 < _list1959.size; ++_i1961)
             {
-              _elem1944 = iprot.readString();
-              struct.group_names.add(_elem1944);
+              _elem1960 = iprot.readString();
+              struct.group_names.add(_elem1960);
             }
           }
           struct.setGroup_namesIsSet(true);
@@ -144073,14 +146720,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1946 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list1946.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem1947;
-                  for (int _i1948 = 0; _i1948 < _list1946.size; ++_i1948)
+                  org.apache.thrift.protocol.TList _list1962 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list1962.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem1963;
+                  for (int _i1964 = 0; _i1964 < _list1962.size; ++_i1964)
                   {
-                    _elem1947 = new Partition();
-                    _elem1947.read(iprot);
-                    struct.success.add(_elem1947);
+                    _elem1963 = new Partition();
+                    _elem1963.read(iprot);
+                    struct.success.add(_elem1963);
                   }
                   iprot.readListEnd();
                 }
@@ -144124,9 +146771,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter1949 : struct.success)
+            for (Partition _iter1965 : struct.success)
             {
-              _iter1949.write(oprot);
+              _iter1965.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -144173,9 +146820,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter1950 : struct.success)
+            for (Partition _iter1966 : struct.success)
             {
-              _iter1950.write(oprot);
+              _iter1966.write(oprot);
             }
           }
         }
@@ -144193,14 +146840,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1951 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list1951.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem1952;
-            for (int _i1953 = 0; _i1953 < _list1951.size; ++_i1953)
+            org.apache.thrift.protocol.TList _list1967 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list1967.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem1968;
+            for (int _i1969 = 0; _i1969 < _list1967.size; ++_i1969)
             {
-              _elem1952 = new Partition();
-              _elem1952.read(iprot);
-              struct.success.add(_elem1952);
+              _elem1968 = new Partition();
+              _elem1968.read(iprot);
+              struct.success.add(_elem1968);
             }
           }
           struct.setSuccessIsSet(true);
@@ -145269,14 +147916,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1954 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<PartitionSpec>(_list1954.size);
-                  @org.apache.thrift.annotation.Nullable PartitionSpec _elem1955;
-                  for (int _i1956 = 0; _i1956 < _list1954.size; ++_i1956)
+                  org.apache.thrift.protocol.TList _list1970 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<PartitionSpec>(_list1970.size);
+                  @org.apache.thrift.annotation.Nullable PartitionSpec _elem1971;
+                  for (int _i1972 = 0; _i1972 < _list1970.size; ++_i1972)
                   {
-                    _elem1955 = new PartitionSpec();
-                    _elem1955.read(iprot);
-                    struct.success.add(_elem1955);
+                    _elem1971 = new PartitionSpec();
+                    _elem1971.read(iprot);
+                    struct.success.add(_elem1971);
                   }
                   iprot.readListEnd();
                 }
@@ -145320,9 +147967,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (PartitionSpec _iter1957 : struct.success)
+            for (PartitionSpec _iter1973 : struct.success)
             {
-              _iter1957.write(oprot);
+              _iter1973.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -145369,9 +148016,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (PartitionSpec _iter1958 : struct.success)
+            for (PartitionSpec _iter1974 : struct.success)
             {
-              _iter1958.write(oprot);
+              _iter1974.write(oprot);
             }
           }
         }
@@ -145389,14 +148036,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1959 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<PartitionSpec>(_list1959.size);
-            @org.apache.thrift.annotation.Nullable PartitionSpec _elem1960;
-            for (int _i1961 = 0; _i1961 < _list1959.size; ++_i1961)
+            org.apache.thrift.protocol.TList _list1975 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<PartitionSpec>(_list1975.size);
+            @org.apache.thrift.annotation.Nullable PartitionSpec _elem1976;
+            for (int _i1977 = 0; _i1977 < _list1975.size; ++_i1977)
             {
-              _elem1960 = new PartitionSpec();
-              _elem1960.read(iprot);
-              struct.success.add(_elem1960);
+              _elem1976 = new PartitionSpec();
+              _elem1976.read(iprot);
+              struct.success.add(_elem1976);
             }
           }
           struct.setSuccessIsSet(true);
@@ -146462,13 +149109,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1962 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list1962.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1963;
-                  for (int _i1964 = 0; _i1964 < _list1962.size; ++_i1964)
+                  org.apache.thrift.protocol.TList _list1978 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list1978.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1979;
+                  for (int _i1980 = 0; _i1980 < _list1978.size; ++_i1980)
                   {
-                    _elem1963 = iprot.readString();
-                    struct.success.add(_elem1963);
+                    _elem1979 = iprot.readString();
+                    struct.success.add(_elem1979);
                   }
                   iprot.readListEnd();
                 }
@@ -146512,9 +149159,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter1965 : struct.success)
+            for (java.lang.String _iter1981 : struct.success)
             {
-              oprot.writeString(_iter1965);
+              oprot.writeString(_iter1981);
             }
             oprot.writeListEnd();
           }
@@ -146561,9 +149208,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter1966 : struct.success)
+            for (java.lang.String _iter1982 : struct.success)
             {
-              oprot.writeString(_iter1966);
+              oprot.writeString(_iter1982);
             }
           }
         }
@@ -146581,13 +149228,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1967 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list1967.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1968;
-            for (int _i1969 = 0; _i1969 < _list1967.size; ++_i1969)
+            org.apache.thrift.protocol.TList _list1983 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list1983.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1984;
+            for (int _i1985 = 0; _i1985 < _list1983.size; ++_i1985)
             {
-              _elem1968 = iprot.readString();
-              struct.success.add(_elem1968);
+              _elem1984 = iprot.readString();
+              struct.success.add(_elem1984);
             }
           }
           struct.setSuccessIsSet(true);
@@ -147453,13 +150100,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1970 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list1970.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1971;
-                  for (int _i1972 = 0; _i1972 < _list1970.size; ++_i1972)
+                  org.apache.thrift.protocol.TList _list1986 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list1986.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1987;
+                  for (int _i1988 = 0; _i1988 < _list1986.size; ++_i1988)
                   {
-                    _elem1971 = iprot.readString();
-                    struct.success.add(_elem1971);
+                    _elem1987 = iprot.readString();
+                    struct.success.add(_elem1987);
                   }
                   iprot.readListEnd();
                 }
@@ -147503,9 +150150,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter1973 : struct.success)
+            for (java.lang.String _iter1989 : struct.success)
             {
-              oprot.writeString(_iter1973);
+              oprot.writeString(_iter1989);
             }
             oprot.writeListEnd();
           }
@@ -147552,9 +150199,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter1974 : struct.success)
+            for (java.lang.String _iter1990 : struct.success)
             {
-              oprot.writeString(_iter1974);
+              oprot.writeString(_iter1990);
             }
           }
         }
@@ -147572,13 +150219,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1975 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list1975.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1976;
-            for (int _i1977 = 0; _i1977 < _list1975.size; ++_i1977)
+            org.apache.thrift.protocol.TList _list1991 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list1991.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem1992;
+            for (int _i1993 = 0; _i1993 < _list1991.size; ++_i1993)
             {
-              _elem1976 = iprot.readString();
-              struct.success.add(_elem1976);
+              _elem1992 = iprot.readString();
+              struct.success.add(_elem1992);
             }
           }
           struct.setSuccessIsSet(true);
@@ -149119,13 +151766,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1978 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1978.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1979;
-                  for (int _i1980 = 0; _i1980 < _list1978.size; ++_i1980)
+                  org.apache.thrift.protocol.TList _list1994 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1994.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1995;
+                  for (int _i1996 = 0; _i1996 < _list1994.size; ++_i1996)
                   {
-                    _elem1979 = iprot.readString();
-                    struct.part_vals.add(_elem1979);
+                    _elem1995 = iprot.readString();
+                    struct.part_vals.add(_elem1995);
                   }
                   iprot.readListEnd();
                 }
@@ -149169,9 +151816,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter1981 : struct.part_vals)
+            for (java.lang.String _iter1997 : struct.part_vals)
             {
-              oprot.writeString(_iter1981);
+              oprot.writeString(_iter1997);
             }
             oprot.writeListEnd();
           }
@@ -149220,9 +151867,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter1982 : struct.part_vals)
+            for (java.lang.String _iter1998 : struct.part_vals)
             {
-              oprot.writeString(_iter1982);
+              oprot.writeString(_iter1998);
             }
           }
         }
@@ -149245,13 +151892,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list1983 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1983.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem1984;
-            for (int _i1985 = 0; _i1985 < _list1983.size; ++_i1985)
+            org.apache.thrift.protocol.TList _list1999 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1999.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2000;
+            for (int _i2001 = 0; _i2001 < _list1999.size; ++_i2001)
             {
-              _elem1984 = iprot.readString();
-              struct.part_vals.add(_elem1984);
+              _elem2000 = iprot.readString();
+              struct.part_vals.add(_elem2000);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -149747,14 +152394,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1986 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list1986.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem1987;
-                  for (int _i1988 = 0; _i1988 < _list1986.size; ++_i1988)
+                  org.apache.thrift.protocol.TList _list2002 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list2002.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2003;
+                  for (int _i2004 = 0; _i2004 < _list2002.size; ++_i2004)
                   {
-                    _elem1987 = new Partition();
-                    _elem1987.read(iprot);
-                    struct.success.add(_elem1987);
+                    _elem2003 = new Partition();
+                    _elem2003.read(iprot);
+                    struct.success.add(_elem2003);
                   }
                   iprot.readListEnd();
                 }
@@ -149798,9 +152445,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter1989 : struct.success)
+            for (Partition _iter2005 : struct.success)
             {
-              _iter1989.write(oprot);
+              _iter2005.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -149847,9 +152494,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter1990 : struct.success)
+            for (Partition _iter2006 : struct.success)
             {
-              _iter1990.write(oprot);
+              _iter2006.write(oprot);
             }
           }
         }
@@ -149867,14 +152514,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list1991 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list1991.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem1992;
-            for (int _i1993 = 0; _i1993 < _list1991.size; ++_i1993)
+            org.apache.thrift.protocol.TList _list2007 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list2007.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2008;
+            for (int _i2009 = 0; _i2009 < _list2007.size; ++_i2009)
             {
-              _elem1992 = new Partition();
-              _elem1992.read(iprot);
-              struct.success.add(_elem1992);
+              _elem2008 = new Partition();
+              _elem2008.read(iprot);
+              struct.success.add(_elem2008);
             }
           }
           struct.setSuccessIsSet(true);
@@ -150649,13 +153296,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1994 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list1994.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1995;
-                  for (int _i1996 = 0; _i1996 < _list1994.size; ++_i1996)
+                  org.apache.thrift.protocol.TList _list2010 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2010.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2011;
+                  for (int _i2012 = 0; _i2012 < _list2010.size; ++_i2012)
                   {
-                    _elem1995 = iprot.readString();
-                    struct.part_vals.add(_elem1995);
+                    _elem2011 = iprot.readString();
+                    struct.part_vals.add(_elem2011);
                   }
                   iprot.readListEnd();
                 }
@@ -150683,13 +153330,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 6: // GROUP_NAMES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list1997 = iprot.readListBegin();
-                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list1997.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem1998;
-                  for (int _i1999 = 0; _i1999 < _list1997.size; ++_i1999)
+                  org.apache.thrift.protocol.TList _list2013 = iprot.readListBegin();
+                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list2013.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2014;
+                  for (int _i2015 = 0; _i2015 < _list2013.size; ++_i2015)
                   {
-                    _elem1998 = iprot.readString();
-                    struct.group_names.add(_elem1998);
+                    _elem2014 = iprot.readString();
+                    struct.group_names.add(_elem2014);
                   }
                   iprot.readListEnd();
                 }
@@ -150725,9 +153372,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter2000 : struct.part_vals)
+            for (java.lang.String _iter2016 : struct.part_vals)
             {
-              oprot.writeString(_iter2000);
+              oprot.writeString(_iter2016);
             }
             oprot.writeListEnd();
           }
@@ -150745,9 +153392,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(GROUP_NAMES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.group_names.size()));
-            for (java.lang.String _iter2001 : struct.group_names)
+            for (java.lang.String _iter2017 : struct.group_names)
             {
-              oprot.writeString(_iter2001);
+              oprot.writeString(_iter2017);
             }
             oprot.writeListEnd();
           }
@@ -150799,9 +153446,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter2002 : struct.part_vals)
+            for (java.lang.String _iter2018 : struct.part_vals)
             {
-              oprot.writeString(_iter2002);
+              oprot.writeString(_iter2018);
             }
           }
         }
@@ -150814,9 +153461,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetGroup_names()) {
           {
             oprot.writeI32(struct.group_names.size());
-            for (java.lang.String _iter2003 : struct.group_names)
+            for (java.lang.String _iter2019 : struct.group_names)
             {
-              oprot.writeString(_iter2003);
+              oprot.writeString(_iter2019);
             }
           }
         }
@@ -150836,13 +153483,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2004 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2004.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2005;
-            for (int _i2006 = 0; _i2006 < _list2004.size; ++_i2006)
+            org.apache.thrift.protocol.TList _list2020 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2020.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2021;
+            for (int _i2022 = 0; _i2022 < _list2020.size; ++_i2022)
             {
-              _elem2005 = iprot.readString();
-              struct.part_vals.add(_elem2005);
+              _elem2021 = iprot.readString();
+              struct.part_vals.add(_elem2021);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -150857,13 +153504,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(5)) {
           {
-            org.apache.thrift.protocol.TList _list2007 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.group_names = new java.util.ArrayList<java.lang.String>(_list2007.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2008;
-            for (int _i2009 = 0; _i2009 < _list2007.size; ++_i2009)
+            org.apache.thrift.protocol.TList _list2023 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.group_names = new java.util.ArrayList<java.lang.String>(_list2023.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2024;
+            for (int _i2025 = 0; _i2025 < _list2023.size; ++_i2025)
             {
-              _elem2008 = iprot.readString();
-              struct.group_names.add(_elem2008);
+              _elem2024 = iprot.readString();
+              struct.group_names.add(_elem2024);
             }
           }
           struct.setGroup_namesIsSet(true);
@@ -151355,14 +154002,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2010 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list2010.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem2011;
-                  for (int _i2012 = 0; _i2012 < _list2010.size; ++_i2012)
+                  org.apache.thrift.protocol.TList _list2026 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list2026.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2027;
+                  for (int _i2028 = 0; _i2028 < _list2026.size; ++_i2028)
                   {
-                    _elem2011 = new Partition();
-                    _elem2011.read(iprot);
-                    struct.success.add(_elem2011);
+                    _elem2027 = new Partition();
+                    _elem2027.read(iprot);
+                    struct.success.add(_elem2027);
                   }
                   iprot.readListEnd();
                 }
@@ -151406,9 +154053,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter2013 : struct.success)
+            for (Partition _iter2029 : struct.success)
             {
-              _iter2013.write(oprot);
+              _iter2029.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -151455,9 +154102,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter2014 : struct.success)
+            for (Partition _iter2030 : struct.success)
             {
-              _iter2014.write(oprot);
+              _iter2030.write(oprot);
             }
           }
         }
@@ -151475,14 +154122,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2015 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list2015.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem2016;
-            for (int _i2017 = 0; _i2017 < _list2015.size; ++_i2017)
+            org.apache.thrift.protocol.TList _list2031 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list2031.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2032;
+            for (int _i2033 = 0; _i2033 < _list2031.size; ++_i2033)
             {
-              _elem2016 = new Partition();
-              _elem2016.read(iprot);
-              struct.success.add(_elem2016);
+              _elem2032 = new Partition();
+              _elem2032.read(iprot);
+              struct.success.add(_elem2032);
             }
           }
           struct.setSuccessIsSet(true);
@@ -153023,13 +155670,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2018 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2018.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2019;
-                  for (int _i2020 = 0; _i2020 < _list2018.size; ++_i2020)
+                  org.apache.thrift.protocol.TList _list2034 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2034.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2035;
+                  for (int _i2036 = 0; _i2036 < _list2034.size; ++_i2036)
                   {
-                    _elem2019 = iprot.readString();
-                    struct.part_vals.add(_elem2019);
+                    _elem2035 = iprot.readString();
+                    struct.part_vals.add(_elem2035);
                   }
                   iprot.readListEnd();
                 }
@@ -153073,9 +155720,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter2021 : struct.part_vals)
+            for (java.lang.String _iter2037 : struct.part_vals)
             {
-              oprot.writeString(_iter2021);
+              oprot.writeString(_iter2037);
             }
             oprot.writeListEnd();
           }
@@ -153124,9 +155771,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter2022 : struct.part_vals)
+            for (java.lang.String _iter2038 : struct.part_vals)
             {
-              oprot.writeString(_iter2022);
+              oprot.writeString(_iter2038);
             }
           }
         }
@@ -153149,13 +155796,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2023 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2023.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2024;
-            for (int _i2025 = 0; _i2025 < _list2023.size; ++_i2025)
+            org.apache.thrift.protocol.TList _list2039 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2039.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2040;
+            for (int _i2041 = 0; _i2041 < _list2039.size; ++_i2041)
             {
-              _elem2024 = iprot.readString();
-              struct.part_vals.add(_elem2024);
+              _elem2040 = iprot.readString();
+              struct.part_vals.add(_elem2040);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -153648,13 +156295,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2026 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2026.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2027;
-                  for (int _i2028 = 0; _i2028 < _list2026.size; ++_i2028)
+                  org.apache.thrift.protocol.TList _list2042 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2042.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2043;
+                  for (int _i2044 = 0; _i2044 < _list2042.size; ++_i2044)
                   {
-                    _elem2027 = iprot.readString();
-                    struct.success.add(_elem2027);
+                    _elem2043 = iprot.readString();
+                    struct.success.add(_elem2043);
                   }
                   iprot.readListEnd();
                 }
@@ -153698,9 +156345,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2029 : struct.success)
+            for (java.lang.String _iter2045 : struct.success)
             {
-              oprot.writeString(_iter2029);
+              oprot.writeString(_iter2045);
             }
             oprot.writeListEnd();
           }
@@ -153747,9 +156394,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2030 : struct.success)
+            for (java.lang.String _iter2046 : struct.success)
             {
-              oprot.writeString(_iter2030);
+              oprot.writeString(_iter2046);
             }
           }
         }
@@ -153767,13 +156414,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2031 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2031.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2032;
-            for (int _i2033 = 0; _i2033 < _list2031.size; ++_i2033)
+            org.apache.thrift.protocol.TList _list2047 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2047.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2048;
+            for (int _i2049 = 0; _i2049 < _list2047.size; ++_i2049)
             {
-              _elem2032 = iprot.readString();
-              struct.success.add(_elem2032);
+              _elem2048 = iprot.readString();
+              struct.success.add(_elem2048);
             }
           }
           struct.setSuccessIsSet(true);
@@ -155585,13 +158232,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2034 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2034.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2035;
-                  for (int _i2036 = 0; _i2036 < _list2034.size; ++_i2036)
+                  org.apache.thrift.protocol.TList _list2050 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2050.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2051;
+                  for (int _i2052 = 0; _i2052 < _list2050.size; ++_i2052)
                   {
-                    _elem2035 = iprot.readString();
-                    struct.success.add(_elem2035);
+                    _elem2051 = iprot.readString();
+                    struct.success.add(_elem2051);
                   }
                   iprot.readListEnd();
                 }
@@ -155635,9 +158282,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2037 : struct.success)
+            for (java.lang.String _iter2053 : struct.success)
             {
-              oprot.writeString(_iter2037);
+              oprot.writeString(_iter2053);
             }
             oprot.writeListEnd();
           }
@@ -155684,9 +158331,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2038 : struct.success)
+            for (java.lang.String _iter2054 : struct.success)
             {
-              oprot.writeString(_iter2038);
+              oprot.writeString(_iter2054);
             }
           }
         }
@@ -155704,13 +158351,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2039 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2039.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2040;
-            for (int _i2041 = 0; _i2041 < _list2039.size; ++_i2041)
+            org.apache.thrift.protocol.TList _list2055 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2055.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2056;
+            for (int _i2057 = 0; _i2057 < _list2055.size; ++_i2057)
             {
-              _elem2040 = iprot.readString();
-              struct.success.add(_elem2040);
+              _elem2056 = iprot.readString();
+              struct.success.add(_elem2056);
             }
           }
           struct.setSuccessIsSet(true);
@@ -156883,14 +159530,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2042 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list2042.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem2043;
-                  for (int _i2044 = 0; _i2044 < _list2042.size; ++_i2044)
+                  org.apache.thrift.protocol.TList _list2058 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list2058.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2059;
+                  for (int _i2060 = 0; _i2060 < _list2058.size; ++_i2060)
                   {
-                    _elem2043 = new Partition();
-                    _elem2043.read(iprot);
-                    struct.success.add(_elem2043);
+                    _elem2059 = new Partition();
+                    _elem2059.read(iprot);
+                    struct.success.add(_elem2059);
                   }
                   iprot.readListEnd();
                 }
@@ -156934,9 +159581,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter2045 : struct.success)
+            for (Partition _iter2061 : struct.success)
             {
-              _iter2045.write(oprot);
+              _iter2061.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -156983,9 +159630,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter2046 : struct.success)
+            for (Partition _iter2062 : struct.success)
             {
-              _iter2046.write(oprot);
+              _iter2062.write(oprot);
             }
           }
         }
@@ -157003,14 +159650,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2047 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list2047.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem2048;
-            for (int _i2049 = 0; _i2049 < _list2047.size; ++_i2049)
+            org.apache.thrift.protocol.TList _list2063 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list2063.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2064;
+            for (int _i2065 = 0; _i2065 < _list2063.size; ++_i2065)
             {
-              _elem2048 = new Partition();
-              _elem2048.read(iprot);
-              struct.success.add(_elem2048);
+              _elem2064 = new Partition();
+              _elem2064.read(iprot);
+              struct.success.add(_elem2064);
             }
           }
           struct.setSuccessIsSet(true);
@@ -157879,14 +160526,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2050 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list2050.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem2051;
-                  for (int _i2052 = 0; _i2052 < _list2050.size; ++_i2052)
+                  org.apache.thrift.protocol.TList _list2066 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list2066.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2067;
+                  for (int _i2068 = 0; _i2068 < _list2066.size; ++_i2068)
                   {
-                    _elem2051 = new Partition();
-                    _elem2051.read(iprot);
-                    struct.success.add(_elem2051);
+                    _elem2067 = new Partition();
+                    _elem2067.read(iprot);
+                    struct.success.add(_elem2067);
                   }
                   iprot.readListEnd();
                 }
@@ -157930,9 +160577,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter2053 : struct.success)
+            for (Partition _iter2069 : struct.success)
             {
-              _iter2053.write(oprot);
+              _iter2069.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -157979,9 +160626,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter2054 : struct.success)
+            for (Partition _iter2070 : struct.success)
             {
-              _iter2054.write(oprot);
+              _iter2070.write(oprot);
             }
           }
         }
@@ -157999,14 +160646,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2055 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list2055.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem2056;
-            for (int _i2057 = 0; _i2057 < _list2055.size; ++_i2057)
+            org.apache.thrift.protocol.TList _list2071 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list2071.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2072;
+            for (int _i2073 = 0; _i2073 < _list2071.size; ++_i2073)
             {
-              _elem2056 = new Partition();
-              _elem2056.read(iprot);
-              struct.success.add(_elem2056);
+              _elem2072 = new Partition();
+              _elem2072.read(iprot);
+              struct.success.add(_elem2072);
             }
           }
           struct.setSuccessIsSet(true);
@@ -159179,14 +161826,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2058 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<PartitionSpec>(_list2058.size);
-                  @org.apache.thrift.annotation.Nullable PartitionSpec _elem2059;
-                  for (int _i2060 = 0; _i2060 < _list2058.size; ++_i2060)
+                  org.apache.thrift.protocol.TList _list2074 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<PartitionSpec>(_list2074.size);
+                  @org.apache.thrift.annotation.Nullable PartitionSpec _elem2075;
+                  for (int _i2076 = 0; _i2076 < _list2074.size; ++_i2076)
                   {
-                    _elem2059 = new PartitionSpec();
-                    _elem2059.read(iprot);
-                    struct.success.add(_elem2059);
+                    _elem2075 = new PartitionSpec();
+                    _elem2075.read(iprot);
+                    struct.success.add(_elem2075);
                   }
                   iprot.readListEnd();
                 }
@@ -159230,9 +161877,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (PartitionSpec _iter2061 : struct.success)
+            for (PartitionSpec _iter2077 : struct.success)
             {
-              _iter2061.write(oprot);
+              _iter2077.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -159279,9 +161926,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (PartitionSpec _iter2062 : struct.success)
+            for (PartitionSpec _iter2078 : struct.success)
             {
-              _iter2062.write(oprot);
+              _iter2078.write(oprot);
             }
           }
         }
@@ -159299,14 +161946,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2063 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<PartitionSpec>(_list2063.size);
-            @org.apache.thrift.annotation.Nullable PartitionSpec _elem2064;
-            for (int _i2065 = 0; _i2065 < _list2063.size; ++_i2065)
+            org.apache.thrift.protocol.TList _list2079 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<PartitionSpec>(_list2079.size);
+            @org.apache.thrift.annotation.Nullable PartitionSpec _elem2080;
+            for (int _i2081 = 0; _i2081 < _list2079.size; ++_i2081)
             {
-              _elem2064 = new PartitionSpec();
-              _elem2064.read(iprot);
-              struct.success.add(_elem2064);
+              _elem2080 = new PartitionSpec();
+              _elem2080.read(iprot);
+              struct.success.add(_elem2080);
             }
           }
           struct.setSuccessIsSet(true);
@@ -162854,13 +165501,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // NAMES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2066 = iprot.readListBegin();
-                  struct.names = new java.util.ArrayList<java.lang.String>(_list2066.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2067;
-                  for (int _i2068 = 0; _i2068 < _list2066.size; ++_i2068)
+                  org.apache.thrift.protocol.TList _list2082 = iprot.readListBegin();
+                  struct.names = new java.util.ArrayList<java.lang.String>(_list2082.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2083;
+                  for (int _i2084 = 0; _i2084 < _list2082.size; ++_i2084)
                   {
-                    _elem2067 = iprot.readString();
-                    struct.names.add(_elem2067);
+                    _elem2083 = iprot.readString();
+                    struct.names.add(_elem2083);
                   }
                   iprot.readListEnd();
                 }
@@ -162896,9 +165543,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(NAMES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.names.size()));
-            for (java.lang.String _iter2069 : struct.names)
+            for (java.lang.String _iter2085 : struct.names)
             {
-              oprot.writeString(_iter2069);
+              oprot.writeString(_iter2085);
             }
             oprot.writeListEnd();
           }
@@ -162941,9 +165588,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetNames()) {
           {
             oprot.writeI32(struct.names.size());
-            for (java.lang.String _iter2070 : struct.names)
+            for (java.lang.String _iter2086 : struct.names)
             {
-              oprot.writeString(_iter2070);
+              oprot.writeString(_iter2086);
             }
           }
         }
@@ -162963,13 +165610,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2071 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.names = new java.util.ArrayList<java.lang.String>(_list2071.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2072;
-            for (int _i2073 = 0; _i2073 < _list2071.size; ++_i2073)
+            org.apache.thrift.protocol.TList _list2087 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.names = new java.util.ArrayList<java.lang.String>(_list2087.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2088;
+            for (int _i2089 = 0; _i2089 < _list2087.size; ++_i2089)
             {
-              _elem2072 = iprot.readString();
-              struct.names.add(_elem2072);
+              _elem2088 = iprot.readString();
+              struct.names.add(_elem2088);
             }
           }
           struct.setNamesIsSet(true);
@@ -163542,14 +166189,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2074 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Partition>(_list2074.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem2075;
-                  for (int _i2076 = 0; _i2076 < _list2074.size; ++_i2076)
+                  org.apache.thrift.protocol.TList _list2090 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Partition>(_list2090.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2091;
+                  for (int _i2092 = 0; _i2092 < _list2090.size; ++_i2092)
                   {
-                    _elem2075 = new Partition();
-                    _elem2075.read(iprot);
-                    struct.success.add(_elem2075);
+                    _elem2091 = new Partition();
+                    _elem2091.read(iprot);
+                    struct.success.add(_elem2091);
                   }
                   iprot.readListEnd();
                 }
@@ -163602,9 +166249,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Partition _iter2077 : struct.success)
+            for (Partition _iter2093 : struct.success)
             {
-              _iter2077.write(oprot);
+              _iter2093.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -163659,9 +166306,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Partition _iter2078 : struct.success)
+            for (Partition _iter2094 : struct.success)
             {
-              _iter2078.write(oprot);
+              _iter2094.write(oprot);
             }
           }
         }
@@ -163682,14 +166329,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(4);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2079 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Partition>(_list2079.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem2080;
-            for (int _i2081 = 0; _i2081 < _list2079.size; ++_i2081)
+            org.apache.thrift.protocol.TList _list2095 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Partition>(_list2095.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2096;
+            for (int _i2097 = 0; _i2097 < _list2095.size; ++_i2097)
             {
-              _elem2080 = new Partition();
-              _elem2080.read(iprot);
-              struct.success.add(_elem2080);
+              _elem2096 = new Partition();
+              _elem2096.read(iprot);
+              struct.success.add(_elem2096);
             }
           }
           struct.setSuccessIsSet(true);
@@ -168193,14 +170840,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // NEW_PARTS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2082 = iprot.readListBegin();
-                  struct.new_parts = new java.util.ArrayList<Partition>(_list2082.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem2083;
-                  for (int _i2084 = 0; _i2084 < _list2082.size; ++_i2084)
+                  org.apache.thrift.protocol.TList _list2098 = iprot.readListBegin();
+                  struct.new_parts = new java.util.ArrayList<Partition>(_list2098.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2099;
+                  for (int _i2100 = 0; _i2100 < _list2098.size; ++_i2100)
                   {
-                    _elem2083 = new Partition();
-                    _elem2083.read(iprot);
-                    struct.new_parts.add(_elem2083);
+                    _elem2099 = new Partition();
+                    _elem2099.read(iprot);
+                    struct.new_parts.add(_elem2099);
                   }
                   iprot.readListEnd();
                 }
@@ -168236,9 +170883,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(NEW_PARTS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.new_parts.size()));
-            for (Partition _iter2085 : struct.new_parts)
+            for (Partition _iter2101 : struct.new_parts)
             {
-              _iter2085.write(oprot);
+              _iter2101.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -168281,9 +170928,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetNew_parts()) {
           {
             oprot.writeI32(struct.new_parts.size());
-            for (Partition _iter2086 : struct.new_parts)
+            for (Partition _iter2102 : struct.new_parts)
             {
-              _iter2086.write(oprot);
+              _iter2102.write(oprot);
             }
           }
         }
@@ -168303,14 +170950,14 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2087 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.new_parts = new java.util.ArrayList<Partition>(_list2087.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem2088;
-            for (int _i2089 = 0; _i2089 < _list2087.size; ++_i2089)
+            org.apache.thrift.protocol.TList _list2103 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.new_parts = new java.util.ArrayList<Partition>(_list2103.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2104;
+            for (int _i2105 = 0; _i2105 < _list2103.size; ++_i2105)
             {
-              _elem2088 = new Partition();
-              _elem2088.read(iprot);
-              struct.new_parts.add(_elem2088);
+              _elem2104 = new Partition();
+              _elem2104.read(iprot);
+              struct.new_parts.add(_elem2104);
             }
           }
           struct.setNew_partsIsSet(true);
@@ -169372,14 +172019,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // NEW_PARTS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2090 = iprot.readListBegin();
-                  struct.new_parts = new java.util.ArrayList<Partition>(_list2090.size);
-                  @org.apache.thrift.annotation.Nullable Partition _elem2091;
-                  for (int _i2092 = 0; _i2092 < _list2090.size; ++_i2092)
+                  org.apache.thrift.protocol.TList _list2106 = iprot.readListBegin();
+                  struct.new_parts = new java.util.ArrayList<Partition>(_list2106.size);
+                  @org.apache.thrift.annotation.Nullable Partition _elem2107;
+                  for (int _i2108 = 0; _i2108 < _list2106.size; ++_i2108)
                   {
-                    _elem2091 = new Partition();
-                    _elem2091.read(iprot);
-                    struct.new_parts.add(_elem2091);
+                    _elem2107 = new Partition();
+                    _elem2107.read(iprot);
+                    struct.new_parts.add(_elem2107);
                   }
                   iprot.readListEnd();
                 }
@@ -169424,9 +172071,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(NEW_PARTS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.new_parts.size()));
-            for (Partition _iter2093 : struct.new_parts)
+            for (Partition _iter2109 : struct.new_parts)
             {
-              _iter2093.write(oprot);
+              _iter2109.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -169477,9 +172124,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetNew_parts()) {
           {
             oprot.writeI32(struct.new_parts.size());
-            for (Partition _iter2094 : struct.new_parts)
+            for (Partition _iter2110 : struct.new_parts)
             {
-              _iter2094.write(oprot);
+              _iter2110.write(oprot);
             }
           }
         }
@@ -169502,14 +172149,14 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2095 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.new_parts = new java.util.ArrayList<Partition>(_list2095.size);
-            @org.apache.thrift.annotation.Nullable Partition _elem2096;
-            for (int _i2097 = 0; _i2097 < _list2095.size; ++_i2097)
+            org.apache.thrift.protocol.TList _list2111 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.new_parts = new java.util.ArrayList<Partition>(_list2111.size);
+            @org.apache.thrift.annotation.Nullable Partition _elem2112;
+            for (int _i2113 = 0; _i2113 < _list2111.size; ++_i2113)
             {
-              _elem2096 = new Partition();
-              _elem2096.read(iprot);
-              struct.new_parts.add(_elem2096);
+              _elem2112 = new Partition();
+              _elem2112.read(iprot);
+              struct.new_parts.add(_elem2112);
             }
           }
           struct.setNew_partsIsSet(true);
@@ -172673,13 +175320,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2098 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2098.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2099;
-                  for (int _i2100 = 0; _i2100 < _list2098.size; ++_i2100)
+                  org.apache.thrift.protocol.TList _list2114 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2114.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2115;
+                  for (int _i2116 = 0; _i2116 < _list2114.size; ++_i2116)
                   {
-                    _elem2099 = iprot.readString();
-                    struct.part_vals.add(_elem2099);
+                    _elem2115 = iprot.readString();
+                    struct.part_vals.add(_elem2115);
                   }
                   iprot.readListEnd();
                 }
@@ -172724,9 +175371,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter2101 : struct.part_vals)
+            for (java.lang.String _iter2117 : struct.part_vals)
             {
-              oprot.writeString(_iter2101);
+              oprot.writeString(_iter2117);
             }
             oprot.writeListEnd();
           }
@@ -172777,9 +175424,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter2102 : struct.part_vals)
+            for (java.lang.String _iter2118 : struct.part_vals)
             {
-              oprot.writeString(_iter2102);
+              oprot.writeString(_iter2118);
             }
           }
         }
@@ -172802,13 +175449,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2103 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2103.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2104;
-            for (int _i2105 = 0; _i2105 < _list2103.size; ++_i2105)
+            org.apache.thrift.protocol.TList _list2119 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2119.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2120;
+            for (int _i2121 = 0; _i2121 < _list2119.size; ++_i2121)
             {
-              _elem2104 = iprot.readString();
-              struct.part_vals.add(_elem2104);
+              _elem2120 = iprot.readString();
+              struct.part_vals.add(_elem2120);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -174634,13 +177281,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 1: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2106 = iprot.readListBegin();
-                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2106.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2107;
-                  for (int _i2108 = 0; _i2108 < _list2106.size; ++_i2108)
+                  org.apache.thrift.protocol.TList _list2122 = iprot.readListBegin();
+                  struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2122.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2123;
+                  for (int _i2124 = 0; _i2124 < _list2122.size; ++_i2124)
                   {
-                    _elem2107 = iprot.readString();
-                    struct.part_vals.add(_elem2107);
+                    _elem2123 = iprot.readString();
+                    struct.part_vals.add(_elem2123);
                   }
                   iprot.readListEnd();
                 }
@@ -174674,9 +177321,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.lang.String _iter2109 : struct.part_vals)
+            for (java.lang.String _iter2125 : struct.part_vals)
             {
-              oprot.writeString(_iter2109);
+              oprot.writeString(_iter2125);
             }
             oprot.writeListEnd();
           }
@@ -174713,9 +177360,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.lang.String _iter2110 : struct.part_vals)
+            for (java.lang.String _iter2126 : struct.part_vals)
             {
-              oprot.writeString(_iter2110);
+              oprot.writeString(_iter2126);
             }
           }
         }
@@ -174730,13 +177377,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2111 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2111.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2112;
-            for (int _i2113 = 0; _i2113 < _list2111.size; ++_i2113)
+            org.apache.thrift.protocol.TList _list2127 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.part_vals = new java.util.ArrayList<java.lang.String>(_list2127.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2128;
+            for (int _i2129 = 0; _i2129 < _list2127.size; ++_i2129)
             {
-              _elem2112 = iprot.readString();
-              struct.part_vals.add(_elem2112);
+              _elem2128 = iprot.readString();
+              struct.part_vals.add(_elem2128);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -176909,13 +179556,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2114 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2114.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2115;
-                  for (int _i2116 = 0; _i2116 < _list2114.size; ++_i2116)
+                  org.apache.thrift.protocol.TList _list2130 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2130.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2131;
+                  for (int _i2132 = 0; _i2132 < _list2130.size; ++_i2132)
                   {
-                    _elem2115 = iprot.readString();
-                    struct.success.add(_elem2115);
+                    _elem2131 = iprot.readString();
+                    struct.success.add(_elem2131);
                   }
                   iprot.readListEnd();
                 }
@@ -176950,9 +179597,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2117 : struct.success)
+            for (java.lang.String _iter2133 : struct.success)
             {
-              oprot.writeString(_iter2117);
+              oprot.writeString(_iter2133);
             }
             oprot.writeListEnd();
           }
@@ -176991,9 +179638,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2118 : struct.success)
+            for (java.lang.String _iter2134 : struct.success)
             {
-              oprot.writeString(_iter2118);
+              oprot.writeString(_iter2134);
             }
           }
         }
@@ -177008,13 +179655,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2119 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2119.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2120;
-            for (int _i2121 = 0; _i2121 < _list2119.size; ++_i2121)
+            org.apache.thrift.protocol.TList _list2135 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2135.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2136;
+            for (int _i2137 = 0; _i2137 < _list2135.size; ++_i2137)
             {
-              _elem2120 = iprot.readString();
-              struct.success.add(_elem2120);
+              _elem2136 = iprot.readString();
+              struct.success.add(_elem2136);
             }
           }
           struct.setSuccessIsSet(true);
@@ -177785,15 +180432,15 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
-                  org.apache.thrift.protocol.TMap _map2122 = iprot.readMapBegin();
-                  struct.success = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2122.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _key2123;
-                  @org.apache.thrift.annotation.Nullable java.lang.String _val2124;
-                  for (int _i2125 = 0; _i2125 < _map2122.size; ++_i2125)
+                  org.apache.thrift.protocol.TMap _map2138 = iprot.readMapBegin();
+                  struct.success = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2138.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key2139;
+                  @org.apache.thrift.annotation.Nullable java.lang.String _val2140;
+                  for (int _i2141 = 0; _i2141 < _map2138.size; ++_i2141)
                   {
-                    _key2123 = iprot.readString();
-                    _val2124 = iprot.readString();
-                    struct.success.put(_key2123, _val2124);
+                    _key2139 = iprot.readString();
+                    _val2140 = iprot.readString();
+                    struct.success.put(_key2139, _val2140);
                   }
                   iprot.readMapEnd();
                 }
@@ -177828,10 +180475,10 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2126 : struct.success.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2142 : struct.success.entrySet())
             {
-              oprot.writeString(_iter2126.getKey());
-              oprot.writeString(_iter2126.getValue());
+              oprot.writeString(_iter2142.getKey());
+              oprot.writeString(_iter2142.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -177870,10 +180517,10 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2127 : struct.success.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2143 : struct.success.entrySet())
             {
-              oprot.writeString(_iter2127.getKey());
-              oprot.writeString(_iter2127.getValue());
+              oprot.writeString(_iter2143.getKey());
+              oprot.writeString(_iter2143.getValue());
             }
           }
         }
@@ -177888,15 +180535,15 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TMap _map2128 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct.success = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2128.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key2129;
-            @org.apache.thrift.annotation.Nullable java.lang.String _val2130;
-            for (int _i2131 = 0; _i2131 < _map2128.size; ++_i2131)
+            org.apache.thrift.protocol.TMap _map2144 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.success = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2144.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key2145;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val2146;
+            for (int _i2147 = 0; _i2147 < _map2144.size; ++_i2147)
             {
-              _key2129 = iprot.readString();
-              _val2130 = iprot.readString();
-              struct.success.put(_key2129, _val2130);
+              _key2145 = iprot.readString();
+              _val2146 = iprot.readString();
+              struct.success.put(_key2145, _val2146);
             }
           }
           struct.setSuccessIsSet(true);
@@ -178495,15 +181142,15 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
-                  org.apache.thrift.protocol.TMap _map2132 = iprot.readMapBegin();
-                  struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2132.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _key2133;
-                  @org.apache.thrift.annotation.Nullable java.lang.String _val2134;
-                  for (int _i2135 = 0; _i2135 < _map2132.size; ++_i2135)
+                  org.apache.thrift.protocol.TMap _map2148 = iprot.readMapBegin();
+                  struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2148.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key2149;
+                  @org.apache.thrift.annotation.Nullable java.lang.String _val2150;
+                  for (int _i2151 = 0; _i2151 < _map2148.size; ++_i2151)
                   {
-                    _key2133 = iprot.readString();
-                    _val2134 = iprot.readString();
-                    struct.part_vals.put(_key2133, _val2134);
+                    _key2149 = iprot.readString();
+                    _val2150 = iprot.readString();
+                    struct.part_vals.put(_key2149, _val2150);
                   }
                   iprot.readMapEnd();
                 }
@@ -178547,10 +181194,10 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2136 : struct.part_vals.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2152 : struct.part_vals.entrySet())
             {
-              oprot.writeString(_iter2136.getKey());
-              oprot.writeString(_iter2136.getValue());
+              oprot.writeString(_iter2152.getKey());
+              oprot.writeString(_iter2152.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -178601,10 +181248,10 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2137 : struct.part_vals.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2153 : struct.part_vals.entrySet())
             {
-              oprot.writeString(_iter2137.getKey());
-              oprot.writeString(_iter2137.getValue());
+              oprot.writeString(_iter2153.getKey());
+              oprot.writeString(_iter2153.getValue());
             }
           }
         }
@@ -178627,15 +181274,15 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TMap _map2138 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2138.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key2139;
-            @org.apache.thrift.annotation.Nullable java.lang.String _val2140;
-            for (int _i2141 = 0; _i2141 < _map2138.size; ++_i2141)
+            org.apache.thrift.protocol.TMap _map2154 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2154.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key2155;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val2156;
+            for (int _i2157 = 0; _i2157 < _map2154.size; ++_i2157)
             {
-              _key2139 = iprot.readString();
-              _val2140 = iprot.readString();
-              struct.part_vals.put(_key2139, _val2140);
+              _key2155 = iprot.readString();
+              _val2156 = iprot.readString();
+              struct.part_vals.put(_key2155, _val2156);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -180127,15 +182774,15 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // PART_VALS
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
-                  org.apache.thrift.protocol.TMap _map2142 = iprot.readMapBegin();
-                  struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2142.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _key2143;
-                  @org.apache.thrift.annotation.Nullable java.lang.String _val2144;
-                  for (int _i2145 = 0; _i2145 < _map2142.size; ++_i2145)
+                  org.apache.thrift.protocol.TMap _map2158 = iprot.readMapBegin();
+                  struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2158.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key2159;
+                  @org.apache.thrift.annotation.Nullable java.lang.String _val2160;
+                  for (int _i2161 = 0; _i2161 < _map2158.size; ++_i2161)
                   {
-                    _key2143 = iprot.readString();
-                    _val2144 = iprot.readString();
-                    struct.part_vals.put(_key2143, _val2144);
+                    _key2159 = iprot.readString();
+                    _val2160 = iprot.readString();
+                    struct.part_vals.put(_key2159, _val2160);
                   }
                   iprot.readMapEnd();
                 }
@@ -180179,10 +182826,10 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(PART_VALS_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING, struct.part_vals.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2146 : struct.part_vals.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2162 : struct.part_vals.entrySet())
             {
-              oprot.writeString(_iter2146.getKey());
-              oprot.writeString(_iter2146.getValue());
+              oprot.writeString(_iter2162.getKey());
+              oprot.writeString(_iter2162.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -180233,10 +182880,10 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetPart_vals()) {
           {
             oprot.writeI32(struct.part_vals.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2147 : struct.part_vals.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.String> _iter2163 : struct.part_vals.entrySet())
             {
-              oprot.writeString(_iter2147.getKey());
-              oprot.writeString(_iter2147.getValue());
+              oprot.writeString(_iter2163.getKey());
+              oprot.writeString(_iter2163.getValue());
             }
           }
         }
@@ -180259,15 +182906,15 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TMap _map2148 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
-            struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2148.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key2149;
-            @org.apache.thrift.annotation.Nullable java.lang.String _val2150;
-            for (int _i2151 = 0; _i2151 < _map2148.size; ++_i2151)
+            org.apache.thrift.protocol.TMap _map2164 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.STRING); 
+            struct.part_vals = new java.util.HashMap<java.lang.String,java.lang.String>(2*_map2164.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key2165;
+            @org.apache.thrift.annotation.Nullable java.lang.String _val2166;
+            for (int _i2167 = 0; _i2167 < _map2164.size; ++_i2167)
             {
-              _key2149 = iprot.readString();
-              _val2150 = iprot.readString();
-              struct.part_vals.put(_key2149, _val2150);
+              _key2165 = iprot.readString();
+              _val2166 = iprot.readString();
+              struct.part_vals.put(_key2165, _val2166);
             }
           }
           struct.setPart_valsIsSet(true);
@@ -208121,13 +210768,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2152 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2152.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2153;
-                  for (int _i2154 = 0; _i2154 < _list2152.size; ++_i2154)
+                  org.apache.thrift.protocol.TList _list2168 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2168.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2169;
+                  for (int _i2170 = 0; _i2170 < _list2168.size; ++_i2170)
                   {
-                    _elem2153 = iprot.readString();
-                    struct.success.add(_elem2153);
+                    _elem2169 = iprot.readString();
+                    struct.success.add(_elem2169);
                   }
                   iprot.readListEnd();
                 }
@@ -208162,9 +210809,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2155 : struct.success)
+            for (java.lang.String _iter2171 : struct.success)
             {
-              oprot.writeString(_iter2155);
+              oprot.writeString(_iter2171);
             }
             oprot.writeListEnd();
           }
@@ -208203,9 +210850,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2156 : struct.success)
+            for (java.lang.String _iter2172 : struct.success)
             {
-              oprot.writeString(_iter2156);
+              oprot.writeString(_iter2172);
             }
           }
         }
@@ -208220,13 +210867,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2157 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2157.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2158;
-            for (int _i2159 = 0; _i2159 < _list2157.size; ++_i2159)
+            org.apache.thrift.protocol.TList _list2173 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2173.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2174;
+            for (int _i2175 = 0; _i2175 < _list2173.size; ++_i2175)
             {
-              _elem2158 = iprot.readString();
-              struct.success.add(_elem2158);
+              _elem2174 = iprot.readString();
+              struct.success.add(_elem2174);
             }
           }
           struct.setSuccessIsSet(true);
@@ -213156,13 +215803,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2160 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2160.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2161;
-                  for (int _i2162 = 0; _i2162 < _list2160.size; ++_i2162)
+                  org.apache.thrift.protocol.TList _list2176 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2176.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2177;
+                  for (int _i2178 = 0; _i2178 < _list2176.size; ++_i2178)
                   {
-                    _elem2161 = iprot.readString();
-                    struct.success.add(_elem2161);
+                    _elem2177 = iprot.readString();
+                    struct.success.add(_elem2177);
                   }
                   iprot.readListEnd();
                 }
@@ -213197,9 +215844,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2163 : struct.success)
+            for (java.lang.String _iter2179 : struct.success)
             {
-              oprot.writeString(_iter2163);
+              oprot.writeString(_iter2179);
             }
             oprot.writeListEnd();
           }
@@ -213238,9 +215885,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2164 : struct.success)
+            for (java.lang.String _iter2180 : struct.success)
             {
-              oprot.writeString(_iter2164);
+              oprot.writeString(_iter2180);
             }
           }
         }
@@ -213255,13 +215902,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2165 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2165.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2166;
-            for (int _i2167 = 0; _i2167 < _list2165.size; ++_i2167)
+            org.apache.thrift.protocol.TList _list2181 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2181.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2182;
+            for (int _i2183 = 0; _i2183 < _list2181.size; ++_i2183)
             {
-              _elem2166 = iprot.readString();
-              struct.success.add(_elem2166);
+              _elem2182 = iprot.readString();
+              struct.success.add(_elem2182);
             }
           }
           struct.setSuccessIsSet(true);
@@ -216568,14 +219215,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2168 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<Role>(_list2168.size);
-                  @org.apache.thrift.annotation.Nullable Role _elem2169;
-                  for (int _i2170 = 0; _i2170 < _list2168.size; ++_i2170)
+                  org.apache.thrift.protocol.TList _list2184 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<Role>(_list2184.size);
+                  @org.apache.thrift.annotation.Nullable Role _elem2185;
+                  for (int _i2186 = 0; _i2186 < _list2184.size; ++_i2186)
                   {
-                    _elem2169 = new Role();
-                    _elem2169.read(iprot);
-                    struct.success.add(_elem2169);
+                    _elem2185 = new Role();
+                    _elem2185.read(iprot);
+                    struct.success.add(_elem2185);
                   }
                   iprot.readListEnd();
                 }
@@ -216610,9 +219257,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (Role _iter2171 : struct.success)
+            for (Role _iter2187 : struct.success)
             {
-              _iter2171.write(oprot);
+              _iter2187.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -216651,9 +219298,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (Role _iter2172 : struct.success)
+            for (Role _iter2188 : struct.success)
             {
-              _iter2172.write(oprot);
+              _iter2188.write(oprot);
             }
           }
         }
@@ -216668,14 +219315,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2173 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<Role>(_list2173.size);
-            @org.apache.thrift.annotation.Nullable Role _elem2174;
-            for (int _i2175 = 0; _i2175 < _list2173.size; ++_i2175)
+            org.apache.thrift.protocol.TList _list2189 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<Role>(_list2189.size);
+            @org.apache.thrift.annotation.Nullable Role _elem2190;
+            for (int _i2191 = 0; _i2191 < _list2189.size; ++_i2191)
             {
-              _elem2174 = new Role();
-              _elem2174.read(iprot);
-              struct.success.add(_elem2174);
+              _elem2190 = new Role();
+              _elem2190.read(iprot);
+              struct.success.add(_elem2190);
             }
           }
           struct.setSuccessIsSet(true);
@@ -219709,13 +222356,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 3: // GROUP_NAMES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2176 = iprot.readListBegin();
-                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list2176.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2177;
-                  for (int _i2178 = 0; _i2178 < _list2176.size; ++_i2178)
+                  org.apache.thrift.protocol.TList _list2192 = iprot.readListBegin();
+                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list2192.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2193;
+                  for (int _i2194 = 0; _i2194 < _list2192.size; ++_i2194)
                   {
-                    _elem2177 = iprot.readString();
-                    struct.group_names.add(_elem2177);
+                    _elem2193 = iprot.readString();
+                    struct.group_names.add(_elem2193);
                   }
                   iprot.readListEnd();
                 }
@@ -219751,9 +222398,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(GROUP_NAMES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.group_names.size()));
-            for (java.lang.String _iter2179 : struct.group_names)
+            for (java.lang.String _iter2195 : struct.group_names)
             {
-              oprot.writeString(_iter2179);
+              oprot.writeString(_iter2195);
             }
             oprot.writeListEnd();
           }
@@ -219796,9 +222443,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetGroup_names()) {
           {
             oprot.writeI32(struct.group_names.size());
-            for (java.lang.String _iter2180 : struct.group_names)
+            for (java.lang.String _iter2196 : struct.group_names)
             {
-              oprot.writeString(_iter2180);
+              oprot.writeString(_iter2196);
             }
           }
         }
@@ -219819,13 +222466,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(2)) {
           {
-            org.apache.thrift.protocol.TList _list2181 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.group_names = new java.util.ArrayList<java.lang.String>(_list2181.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2182;
-            for (int _i2183 = 0; _i2183 < _list2181.size; ++_i2183)
+            org.apache.thrift.protocol.TList _list2197 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.group_names = new java.util.ArrayList<java.lang.String>(_list2197.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2198;
+            for (int _i2199 = 0; _i2199 < _list2197.size; ++_i2199)
             {
-              _elem2182 = iprot.readString();
-              struct.group_names.add(_elem2182);
+              _elem2198 = iprot.readString();
+              struct.group_names.add(_elem2198);
             }
           }
           struct.setGroup_namesIsSet(true);
@@ -221296,14 +223943,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2184 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<HiveObjectPrivilege>(_list2184.size);
-                  @org.apache.thrift.annotation.Nullable HiveObjectPrivilege _elem2185;
-                  for (int _i2186 = 0; _i2186 < _list2184.size; ++_i2186)
+                  org.apache.thrift.protocol.TList _list2200 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<HiveObjectPrivilege>(_list2200.size);
+                  @org.apache.thrift.annotation.Nullable HiveObjectPrivilege _elem2201;
+                  for (int _i2202 = 0; _i2202 < _list2200.size; ++_i2202)
                   {
-                    _elem2185 = new HiveObjectPrivilege();
-                    _elem2185.read(iprot);
-                    struct.success.add(_elem2185);
+                    _elem2201 = new HiveObjectPrivilege();
+                    _elem2201.read(iprot);
+                    struct.success.add(_elem2201);
                   }
                   iprot.readListEnd();
                 }
@@ -221338,9 +223985,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (HiveObjectPrivilege _iter2187 : struct.success)
+            for (HiveObjectPrivilege _iter2203 : struct.success)
             {
-              _iter2187.write(oprot);
+              _iter2203.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -221379,9 +224026,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (HiveObjectPrivilege _iter2188 : struct.success)
+            for (HiveObjectPrivilege _iter2204 : struct.success)
             {
-              _iter2188.write(oprot);
+              _iter2204.write(oprot);
             }
           }
         }
@@ -221396,14 +224043,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2189 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<HiveObjectPrivilege>(_list2189.size);
-            @org.apache.thrift.annotation.Nullable HiveObjectPrivilege _elem2190;
-            for (int _i2191 = 0; _i2191 < _list2189.size; ++_i2191)
+            org.apache.thrift.protocol.TList _list2205 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<HiveObjectPrivilege>(_list2205.size);
+            @org.apache.thrift.annotation.Nullable HiveObjectPrivilege _elem2206;
+            for (int _i2207 = 0; _i2207 < _list2205.size; ++_i2207)
             {
-              _elem2190 = new HiveObjectPrivilege();
-              _elem2190.read(iprot);
-              struct.success.add(_elem2190);
+              _elem2206 = new HiveObjectPrivilege();
+              _elem2206.read(iprot);
+              struct.success.add(_elem2206);
             }
           }
           struct.setSuccessIsSet(true);
@@ -225381,13 +228028,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 2: // GROUP_NAMES
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2192 = iprot.readListBegin();
-                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list2192.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2193;
-                  for (int _i2194 = 0; _i2194 < _list2192.size; ++_i2194)
+                  org.apache.thrift.protocol.TList _list2208 = iprot.readListBegin();
+                  struct.group_names = new java.util.ArrayList<java.lang.String>(_list2208.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2209;
+                  for (int _i2210 = 0; _i2210 < _list2208.size; ++_i2210)
                   {
-                    _elem2193 = iprot.readString();
-                    struct.group_names.add(_elem2193);
+                    _elem2209 = iprot.readString();
+                    struct.group_names.add(_elem2209);
                   }
                   iprot.readListEnd();
                 }
@@ -225418,9 +228065,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(GROUP_NAMES_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.group_names.size()));
-            for (java.lang.String _iter2195 : struct.group_names)
+            for (java.lang.String _iter2211 : struct.group_names)
             {
-              oprot.writeString(_iter2195);
+              oprot.writeString(_iter2211);
             }
             oprot.writeListEnd();
           }
@@ -225457,9 +228104,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetGroup_names()) {
           {
             oprot.writeI32(struct.group_names.size());
-            for (java.lang.String _iter2196 : struct.group_names)
+            for (java.lang.String _iter2212 : struct.group_names)
             {
-              oprot.writeString(_iter2196);
+              oprot.writeString(_iter2212);
             }
           }
         }
@@ -225475,13 +228122,13 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(1)) {
           {
-            org.apache.thrift.protocol.TList _list2197 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.group_names = new java.util.ArrayList<java.lang.String>(_list2197.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2198;
-            for (int _i2199 = 0; _i2199 < _list2197.size; ++_i2199)
+            org.apache.thrift.protocol.TList _list2213 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.group_names = new java.util.ArrayList<java.lang.String>(_list2213.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2214;
+            for (int _i2215 = 0; _i2215 < _list2213.size; ++_i2215)
             {
-              _elem2198 = iprot.readString();
-              struct.group_names.add(_elem2198);
+              _elem2214 = iprot.readString();
+              struct.group_names.add(_elem2214);
             }
           }
           struct.setGroup_namesIsSet(true);
@@ -225889,13 +228536,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2200 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2200.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2201;
-                  for (int _i2202 = 0; _i2202 < _list2200.size; ++_i2202)
+                  org.apache.thrift.protocol.TList _list2216 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2216.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2217;
+                  for (int _i2218 = 0; _i2218 < _list2216.size; ++_i2218)
                   {
-                    _elem2201 = iprot.readString();
-                    struct.success.add(_elem2201);
+                    _elem2217 = iprot.readString();
+                    struct.success.add(_elem2217);
                   }
                   iprot.readListEnd();
                 }
@@ -225930,9 +228577,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2203 : struct.success)
+            for (java.lang.String _iter2219 : struct.success)
             {
-              oprot.writeString(_iter2203);
+              oprot.writeString(_iter2219);
             }
             oprot.writeListEnd();
           }
@@ -225971,9 +228618,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2204 : struct.success)
+            for (java.lang.String _iter2220 : struct.success)
             {
-              oprot.writeString(_iter2204);
+              oprot.writeString(_iter2220);
             }
           }
         }
@@ -225988,13 +228635,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2205 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2205.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2206;
-            for (int _i2207 = 0; _i2207 < _list2205.size; ++_i2207)
+            org.apache.thrift.protocol.TList _list2221 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2221.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2222;
+            for (int _i2223 = 0; _i2223 < _list2221.size; ++_i2223)
             {
-              _elem2206 = iprot.readString();
-              struct.success.add(_elem2206);
+              _elem2222 = iprot.readString();
+              struct.success.add(_elem2222);
             }
           }
           struct.setSuccessIsSet(true);
@@ -231333,13 +233980,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2208 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2208.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2209;
-                  for (int _i2210 = 0; _i2210 < _list2208.size; ++_i2210)
+                  org.apache.thrift.protocol.TList _list2224 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2224.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2225;
+                  for (int _i2226 = 0; _i2226 < _list2224.size; ++_i2226)
                   {
-                    _elem2209 = iprot.readString();
-                    struct.success.add(_elem2209);
+                    _elem2225 = iprot.readString();
+                    struct.success.add(_elem2225);
                   }
                   iprot.readListEnd();
                 }
@@ -231365,9 +234012,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2211 : struct.success)
+            for (java.lang.String _iter2227 : struct.success)
             {
-              oprot.writeString(_iter2211);
+              oprot.writeString(_iter2227);
             }
             oprot.writeListEnd();
           }
@@ -231398,9 +234045,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2212 : struct.success)
+            for (java.lang.String _iter2228 : struct.success)
             {
-              oprot.writeString(_iter2212);
+              oprot.writeString(_iter2228);
             }
           }
         }
@@ -231412,13 +234059,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2213 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2213.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2214;
-            for (int _i2215 = 0; _i2215 < _list2213.size; ++_i2215)
+            org.apache.thrift.protocol.TList _list2229 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2229.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2230;
+            for (int _i2231 = 0; _i2231 < _list2229.size; ++_i2231)
             {
-              _elem2214 = iprot.readString();
-              struct.success.add(_elem2214);
+              _elem2230 = iprot.readString();
+              struct.success.add(_elem2230);
             }
           }
           struct.setSuccessIsSet(true);
@@ -234469,13 +237116,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2216 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2216.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2217;
-                  for (int _i2218 = 0; _i2218 < _list2216.size; ++_i2218)
+                  org.apache.thrift.protocol.TList _list2232 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2232.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2233;
+                  for (int _i2234 = 0; _i2234 < _list2232.size; ++_i2234)
                   {
-                    _elem2217 = iprot.readString();
-                    struct.success.add(_elem2217);
+                    _elem2233 = iprot.readString();
+                    struct.success.add(_elem2233);
                   }
                   iprot.readListEnd();
                 }
@@ -234501,9 +237148,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2219 : struct.success)
+            for (java.lang.String _iter2235 : struct.success)
             {
-              oprot.writeString(_iter2219);
+              oprot.writeString(_iter2235);
             }
             oprot.writeListEnd();
           }
@@ -234534,9 +237181,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2220 : struct.success)
+            for (java.lang.String _iter2236 : struct.success)
             {
-              oprot.writeString(_iter2220);
+              oprot.writeString(_iter2236);
             }
           }
         }
@@ -234548,13 +237195,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2221 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2221.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2222;
-            for (int _i2223 = 0; _i2223 < _list2221.size; ++_i2223)
+            org.apache.thrift.protocol.TList _list2237 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2237.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2238;
+            for (int _i2239 = 0; _i2239 < _list2237.size; ++_i2239)
             {
-              _elem2222 = iprot.readString();
-              struct.success.add(_elem2222);
+              _elem2238 = iprot.readString();
+              struct.success.add(_elem2238);
             }
           }
           struct.setSuccessIsSet(true);
@@ -241615,15 +244262,15 @@ package org.apache.hadoop.hive.metastore.api;
             case 2: // WRITE_IDS
               if (schemeField.type == org.apache.thrift.protocol.TType.MAP) {
                 {
-                  org.apache.thrift.protocol.TMap _map2224 = iprot.readMapBegin();
-                  struct.writeIds = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map2224.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _key2225;
-                  long _val2226;
-                  for (int _i2227 = 0; _i2227 < _map2224.size; ++_i2227)
+                  org.apache.thrift.protocol.TMap _map2240 = iprot.readMapBegin();
+                  struct.writeIds = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map2240.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _key2241;
+                  long _val2242;
+                  for (int _i2243 = 0; _i2243 < _map2240.size; ++_i2243)
                   {
-                    _key2225 = iprot.readString();
-                    _val2226 = iprot.readI64();
-                    struct.writeIds.put(_key2225, _val2226);
+                    _key2241 = iprot.readString();
+                    _val2242 = iprot.readI64();
+                    struct.writeIds.put(_key2241, _val2242);
                   }
                   iprot.readMapEnd();
                 }
@@ -241652,10 +244299,10 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(WRITE_IDS_FIELD_DESC);
           {
             oprot.writeMapBegin(new org.apache.thrift.protocol.TMap(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I64, struct.writeIds.size()));
-            for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter2228 : struct.writeIds.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter2244 : struct.writeIds.entrySet())
             {
-              oprot.writeString(_iter2228.getKey());
-              oprot.writeI64(_iter2228.getValue());
+              oprot.writeString(_iter2244.getKey());
+              oprot.writeI64(_iter2244.getValue());
             }
             oprot.writeMapEnd();
           }
@@ -241692,10 +244339,10 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetWriteIds()) {
           {
             oprot.writeI32(struct.writeIds.size());
-            for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter2229 : struct.writeIds.entrySet())
+            for (java.util.Map.Entry<java.lang.String, java.lang.Long> _iter2245 : struct.writeIds.entrySet())
             {
-              oprot.writeString(_iter2229.getKey());
-              oprot.writeI64(_iter2229.getValue());
+              oprot.writeString(_iter2245.getKey());
+              oprot.writeI64(_iter2245.getValue());
             }
           }
         }
@@ -241711,15 +244358,15 @@ package org.apache.hadoop.hive.metastore.api;
         }
         if (incoming.get(1)) {
           {
-            org.apache.thrift.protocol.TMap _map2230 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I64); 
-            struct.writeIds = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map2230.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _key2231;
-            long _val2232;
-            for (int _i2233 = 0; _i2233 < _map2230.size; ++_i2233)
+            org.apache.thrift.protocol.TMap _map2246 = iprot.readMapBegin(org.apache.thrift.protocol.TType.STRING, org.apache.thrift.protocol.TType.I64); 
+            struct.writeIds = new java.util.HashMap<java.lang.String,java.lang.Long>(2*_map2246.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _key2247;
+            long _val2248;
+            for (int _i2249 = 0; _i2249 < _map2246.size; ++_i2249)
             {
-              _key2231 = iprot.readString();
-              _val2232 = iprot.readI64();
-              struct.writeIds.put(_key2231, _val2232);
+              _key2247 = iprot.readString();
+              _val2248 = iprot.readI64();
+              struct.writeIds.put(_key2247, _val2248);
             }
           }
           struct.setWriteIdsIsSet(true);
@@ -257716,13 +260363,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2234 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2234.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2235;
-                  for (int _i2236 = 0; _i2236 < _list2234.size; ++_i2236)
+                  org.apache.thrift.protocol.TList _list2250 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2250.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2251;
+                  for (int _i2252 = 0; _i2252 < _list2250.size; ++_i2252)
                   {
-                    _elem2235 = iprot.readString();
-                    struct.success.add(_elem2235);
+                    _elem2251 = iprot.readString();
+                    struct.success.add(_elem2251);
                   }
                   iprot.readListEnd();
                 }
@@ -257748,9 +260395,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2237 : struct.success)
+            for (java.lang.String _iter2253 : struct.success)
             {
-              oprot.writeString(_iter2237);
+              oprot.writeString(_iter2253);
             }
             oprot.writeListEnd();
           }
@@ -257781,9 +260428,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2238 : struct.success)
+            for (java.lang.String _iter2254 : struct.success)
             {
-              oprot.writeString(_iter2238);
+              oprot.writeString(_iter2254);
             }
           }
         }
@@ -257795,13 +260442,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(1);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2239 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2239.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2240;
-            for (int _i2241 = 0; _i2241 < _list2239.size; ++_i2241)
+            org.apache.thrift.protocol.TList _list2255 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2255.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2256;
+            for (int _i2257 = 0; _i2257 < _list2255.size; ++_i2257)
             {
-              _elem2240 = iprot.readString();
-              struct.success.add(_elem2240);
+              _elem2256 = iprot.readString();
+              struct.success.add(_elem2256);
             }
           }
           struct.setSuccessIsSet(true);
@@ -298783,14 +301430,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2242 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<SchemaVersion>(_list2242.size);
-                  @org.apache.thrift.annotation.Nullable SchemaVersion _elem2243;
-                  for (int _i2244 = 0; _i2244 < _list2242.size; ++_i2244)
+                  org.apache.thrift.protocol.TList _list2258 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<SchemaVersion>(_list2258.size);
+                  @org.apache.thrift.annotation.Nullable SchemaVersion _elem2259;
+                  for (int _i2260 = 0; _i2260 < _list2258.size; ++_i2260)
                   {
-                    _elem2243 = new SchemaVersion();
-                    _elem2243.read(iprot);
-                    struct.success.add(_elem2243);
+                    _elem2259 = new SchemaVersion();
+                    _elem2259.read(iprot);
+                    struct.success.add(_elem2259);
                   }
                   iprot.readListEnd();
                 }
@@ -298834,9 +301481,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (SchemaVersion _iter2245 : struct.success)
+            for (SchemaVersion _iter2261 : struct.success)
             {
-              _iter2245.write(oprot);
+              _iter2261.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -298883,9 +301530,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (SchemaVersion _iter2246 : struct.success)
+            for (SchemaVersion _iter2262 : struct.success)
             {
-              _iter2246.write(oprot);
+              _iter2262.write(oprot);
             }
           }
         }
@@ -298903,14 +301550,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(3);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2247 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<SchemaVersion>(_list2247.size);
-            @org.apache.thrift.annotation.Nullable SchemaVersion _elem2248;
-            for (int _i2249 = 0; _i2249 < _list2247.size; ++_i2249)
+            org.apache.thrift.protocol.TList _list2263 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<SchemaVersion>(_list2263.size);
+            @org.apache.thrift.annotation.Nullable SchemaVersion _elem2264;
+            for (int _i2265 = 0; _i2265 < _list2263.size; ++_i2265)
             {
-              _elem2248 = new SchemaVersion();
-              _elem2248.read(iprot);
-              struct.success.add(_elem2248);
+              _elem2264 = new SchemaVersion();
+              _elem2264.read(iprot);
+              struct.success.add(_elem2264);
             }
           }
           struct.setSuccessIsSet(true);
@@ -307525,14 +310172,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2250 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<RuntimeStat>(_list2250.size);
-                  @org.apache.thrift.annotation.Nullable RuntimeStat _elem2251;
-                  for (int _i2252 = 0; _i2252 < _list2250.size; ++_i2252)
+                  org.apache.thrift.protocol.TList _list2266 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<RuntimeStat>(_list2266.size);
+                  @org.apache.thrift.annotation.Nullable RuntimeStat _elem2267;
+                  for (int _i2268 = 0; _i2268 < _list2266.size; ++_i2268)
                   {
-                    _elem2251 = new RuntimeStat();
-                    _elem2251.read(iprot);
-                    struct.success.add(_elem2251);
+                    _elem2267 = new RuntimeStat();
+                    _elem2267.read(iprot);
+                    struct.success.add(_elem2267);
                   }
                   iprot.readListEnd();
                 }
@@ -307567,9 +310214,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (RuntimeStat _iter2253 : struct.success)
+            for (RuntimeStat _iter2269 : struct.success)
             {
-              _iter2253.write(oprot);
+              _iter2269.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -307608,9 +310255,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (RuntimeStat _iter2254 : struct.success)
+            for (RuntimeStat _iter2270 : struct.success)
             {
-              _iter2254.write(oprot);
+              _iter2270.write(oprot);
             }
           }
         }
@@ -307625,14 +310272,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2255 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<RuntimeStat>(_list2255.size);
-            @org.apache.thrift.annotation.Nullable RuntimeStat _elem2256;
-            for (int _i2257 = 0; _i2257 < _list2255.size; ++_i2257)
+            org.apache.thrift.protocol.TList _list2271 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<RuntimeStat>(_list2271.size);
+            @org.apache.thrift.annotation.Nullable RuntimeStat _elem2272;
+            for (int _i2273 = 0; _i2273 < _list2271.size; ++_i2273)
             {
-              _elem2256 = new RuntimeStat();
-              _elem2256.read(iprot);
-              struct.success.add(_elem2256);
+              _elem2272 = new RuntimeStat();
+              _elem2272.read(iprot);
+              struct.success.add(_elem2272);
             }
           }
           struct.setSuccessIsSet(true);
@@ -317743,13 +320390,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2258 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2258.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2259;
-                  for (int _i2260 = 0; _i2260 < _list2258.size; ++_i2260)
+                  org.apache.thrift.protocol.TList _list2274 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2274.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2275;
+                  for (int _i2276 = 0; _i2276 < _list2274.size; ++_i2276)
                   {
-                    _elem2259 = iprot.readString();
-                    struct.success.add(_elem2259);
+                    _elem2275 = iprot.readString();
+                    struct.success.add(_elem2275);
                   }
                   iprot.readListEnd();
                 }
@@ -317784,9 +320431,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2261 : struct.success)
+            for (java.lang.String _iter2277 : struct.success)
             {
-              oprot.writeString(_iter2261);
+              oprot.writeString(_iter2277);
             }
             oprot.writeListEnd();
           }
@@ -317825,9 +320472,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2262 : struct.success)
+            for (java.lang.String _iter2278 : struct.success)
             {
-              oprot.writeString(_iter2262);
+              oprot.writeString(_iter2278);
             }
           }
         }
@@ -317842,13 +320489,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2263 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2263.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2264;
-            for (int _i2265 = 0; _i2265 < _list2263.size; ++_i2265)
+            org.apache.thrift.protocol.TList _list2279 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2279.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2280;
+            for (int _i2281 = 0; _i2281 < _list2279.size; ++_i2281)
             {
-              _elem2264 = iprot.readString();
-              struct.success.add(_elem2264);
+              _elem2280 = iprot.readString();
+              struct.success.add(_elem2280);
             }
           }
           struct.setSuccessIsSet(true);
@@ -320305,13 +322952,13 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2266 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<java.lang.String>(_list2266.size);
-                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2267;
-                  for (int _i2268 = 0; _i2268 < _list2266.size; ++_i2268)
+                  org.apache.thrift.protocol.TList _list2282 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<java.lang.String>(_list2282.size);
+                  @org.apache.thrift.annotation.Nullable java.lang.String _elem2283;
+                  for (int _i2284 = 0; _i2284 < _list2282.size; ++_i2284)
                   {
-                    _elem2267 = iprot.readString();
-                    struct.success.add(_elem2267);
+                    _elem2283 = iprot.readString();
+                    struct.success.add(_elem2283);
                   }
                   iprot.readListEnd();
                 }
@@ -320346,9 +322993,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRING, struct.success.size()));
-            for (java.lang.String _iter2269 : struct.success)
+            for (java.lang.String _iter2285 : struct.success)
             {
-              oprot.writeString(_iter2269);
+              oprot.writeString(_iter2285);
             }
             oprot.writeListEnd();
           }
@@ -320387,9 +323034,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (java.lang.String _iter2270 : struct.success)
+            for (java.lang.String _iter2286 : struct.success)
             {
-              oprot.writeString(_iter2270);
+              oprot.writeString(_iter2286);
             }
           }
         }
@@ -320404,13 +323051,13 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2271 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
-            struct.success = new java.util.ArrayList<java.lang.String>(_list2271.size);
-            @org.apache.thrift.annotation.Nullable java.lang.String _elem2272;
-            for (int _i2273 = 0; _i2273 < _list2271.size; ++_i2273)
+            org.apache.thrift.protocol.TList _list2287 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRING);
+            struct.success = new java.util.ArrayList<java.lang.String>(_list2287.size);
+            @org.apache.thrift.annotation.Nullable java.lang.String _elem2288;
+            for (int _i2289 = 0; _i2289 < _list2287.size; ++_i2289)
             {
-              _elem2272 = iprot.readString();
-              struct.success.add(_elem2272);
+              _elem2288 = iprot.readString();
+              struct.success.add(_elem2288);
             }
           }
           struct.setSuccessIsSet(true);
@@ -321924,14 +324571,14 @@ package org.apache.hadoop.hive.metastore.api;
             case 0: // SUCCESS
               if (schemeField.type == org.apache.thrift.protocol.TType.LIST) {
                 {
-                  org.apache.thrift.protocol.TList _list2274 = iprot.readListBegin();
-                  struct.success = new java.util.ArrayList<WriteEventInfo>(_list2274.size);
-                  @org.apache.thrift.annotation.Nullable WriteEventInfo _elem2275;
-                  for (int _i2276 = 0; _i2276 < _list2274.size; ++_i2276)
+                  org.apache.thrift.protocol.TList _list2290 = iprot.readListBegin();
+                  struct.success = new java.util.ArrayList<WriteEventInfo>(_list2290.size);
+                  @org.apache.thrift.annotation.Nullable WriteEventInfo _elem2291;
+                  for (int _i2292 = 0; _i2292 < _list2290.size; ++_i2292)
                   {
-                    _elem2275 = new WriteEventInfo();
-                    _elem2275.read(iprot);
-                    struct.success.add(_elem2275);
+                    _elem2291 = new WriteEventInfo();
+                    _elem2291.read(iprot);
+                    struct.success.add(_elem2291);
                   }
                   iprot.readListEnd();
                 }
@@ -321966,9 +324613,9 @@ package org.apache.hadoop.hive.metastore.api;
           oprot.writeFieldBegin(SUCCESS_FIELD_DESC);
           {
             oprot.writeListBegin(new org.apache.thrift.protocol.TList(org.apache.thrift.protocol.TType.STRUCT, struct.success.size()));
-            for (WriteEventInfo _iter2277 : struct.success)
+            for (WriteEventInfo _iter2293 : struct.success)
             {
-              _iter2277.write(oprot);
+              _iter2293.write(oprot);
             }
             oprot.writeListEnd();
           }
@@ -322007,9 +324654,9 @@ package org.apache.hadoop.hive.metastore.api;
         if (struct.isSetSuccess()) {
           {
             oprot.writeI32(struct.success.size());
-            for (WriteEventInfo _iter2278 : struct.success)
+            for (WriteEventInfo _iter2294 : struct.success)
             {
-              _iter2278.write(oprot);
+              _iter2294.write(oprot);
             }
           }
         }
@@ -322024,14 +324671,14 @@ package org.apache.hadoop.hive.metastore.api;
         java.util.BitSet incoming = iprot.readBitSet(2);
         if (incoming.get(0)) {
           {
-            org.apache.thrift.protocol.TList _list2279 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
-            struct.success = new java.util.ArrayList<WriteEventInfo>(_list2279.size);
-            @org.apache.thrift.annotation.Nullable WriteEventInfo _elem2280;
-            for (int _i2281 = 0; _i2281 < _list2279.size; ++_i2281)
+            org.apache.thrift.protocol.TList _list2295 = iprot.readListBegin(org.apache.thrift.protocol.TType.STRUCT);
+            struct.success = new java.util.ArrayList<WriteEventInfo>(_list2295.size);
+            @org.apache.thrift.annotation.Nullable WriteEventInfo _elem2296;
+            for (int _i2297 = 0; _i2297 < _list2295.size; ++_i2297)
             {
-              _elem2280 = new WriteEventInfo();
-              _elem2280.read(iprot);
-              struct.success.add(_elem2280);
+              _elem2296 = new WriteEventInfo();
+              _elem2296.read(iprot);
+              struct.success.add(_elem2296);
             }
           }
           struct.setSuccessIsSet(true);

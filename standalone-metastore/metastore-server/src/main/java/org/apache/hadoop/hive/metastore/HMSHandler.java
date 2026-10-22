@@ -3658,6 +3658,20 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
     return extTable;
   }
 
+  /**
+   * Removed upstream by HIVE-26537, restored for backward compatibility with
+   * Hive 2.x/3.x clients (e.g. Spark's built-in Hive 2.3 client).
+   */
+  @Override
+  @Deprecated
+  public Table get_table(final String dbname, final String name) throws MetaException,
+      NoSuchObjectException {
+    String[] parsedDbName = parseDbName(dbname, conf);
+    GetTableRequest getTableRequest = new GetTableRequest(parsedDbName[DB_NAME], name);
+    getTableRequest.setCatName(parsedDbName[CAT_NAME]);
+    return getTableInternal(getTableRequest);
+  }
+
   @Override
   public GetTableResult get_table_req(GetTableRequest req) throws MetaException,
       NoSuchObjectException {
@@ -3787,6 +3801,21 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
   }
 
   /**
+   * Removed upstream by HIVE-26537, restored for backward compatibility with
+   * Hive 2.x/3.x clients (e.g. Spark's built-in Hive 2.3 client).
+   */
+  @Override
+  @Deprecated
+  public List<Table> get_table_objects_by_name(final String dbName, final List<String> tableNames)
+      throws MetaException, InvalidOperationException, UnknownDBException {
+    String[] parsedDbName = parseDbName(dbName, conf);
+    if (isDatabaseRemote(dbName)) {
+      return getRemoteTableObjectsInternal(dbName, tableNames, null);
+    }
+    return getTableObjectsInternal(parsedDbName[CAT_NAME], parsedDbName[DB_NAME], tableNames, null, null, null);
+  }
+
+  /**
    * Gets multiple tables from the hive metastore.
    *
    * @param req
@@ -3799,7 +3828,6 @@ public class HMSHandler extends FacebookBase implements IHMSHandler {
    * @throws InvalidOperationException
    * @throws UnknownDBException
    */
-
   @Override
   public GetTablesResult get_table_objects_by_name_req(GetTablesRequest req) throws TException {
     String catName = req.isSetCatName() ? req.getCatName() : getDefaultCatalog(conf);

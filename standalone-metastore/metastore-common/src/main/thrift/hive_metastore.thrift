@@ -2708,6 +2708,13 @@ service ThriftHiveMetastore extends fb303.FacebookService
                        throws (1: MetaException o1)
   list<string> get_all_tables(1: string db_name) throws (1: MetaException o1)
 
+  // Deprecated: removed upstream by HIVE-26537, restored for backward compatibility with
+  // Hive 2.x/3.x clients (e.g. Spark's built-in Hive 2.3 client and Iceberg's HiveCatalog).
+  // New clients should use get_table_req and get_table_objects_by_name_req.
+  Table get_table(1:string dbname, 2:string tbl_name)
+                       throws (1:MetaException o1, 2:NoSuchObjectException o2)
+  list<Table> get_table_objects_by_name(1:string dbname, 2:list<string> tbl_names)
+                       throws (1:MetaException o1, 2:InvalidOperationException o2, 3:UnknownDBException o3)
   list<ExtendedTableInfo> get_tables_ext(1: GetTablesExtRequest req) throws (1: MetaException o1)
   GetTableResult get_table_req(1:GetTableRequest req) throws (1:MetaException o1, 2:NoSuchObjectException o2)
   GetTablesResult get_table_objects_by_name_req(1:GetTablesRequest req)
