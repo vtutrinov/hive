@@ -66,7 +66,7 @@
     <module>iceberg</module>
   </modules>
   <properties>
-    <standalone-metastore.version>4.2.1</standalone-metastore.version>
+    <standalone-metastore.version>${project.version}</standalone-metastore.version>
     <hive.version.shortname>4.2.1</hive.version.shortname>
     <!-- Build Properties -->
     <maven.compiler.source>21</maven.compiler.source>
@@ -119,14 +119,16 @@
     <aircompressor.version>2.0.3</aircompressor.version>
     <async-http-client.version>2.12.4</async-http-client.version>
     <avro.version>1.12.0</avro.version>
-    <!-- CVE-2025-14813, CVE-2026-5598 -->
-    <bcprov-jdk18on.version>1.84</bcprov-jdk18on.version>
+    <!-- CVE-2025-14813, CVE-2026-5598, CVE-2026-8763, CVE-2026-13506 -->
+    <bcprov-jdk18on.version>1.85</bcprov-jdk18on.version>
     <calcite.version>1.33.0</calcite.version>
     <datanucleus-api-jdo.version>6.0.3</datanucleus-api-jdo.version>
     <datanucleus-core.version>6.0.10</datanucleus-core.version>
     <datanucleus-jdo.version>3.2.0-release</datanucleus-jdo.version>
     <datanucleus-rdbms.version>6.0.10</datanucleus-rdbms.version>
     <checkstyle.version>11.1.0</checkstyle.version>
+    <!-- CVE-2025-48734 -->
+    <commons-beanutils.version>1.11.0</commons-beanutils.version>
     <commons-cli.version>1.5.0</commons-cli.version>
     <commons-codec.version>1.15</commons-codec.version>
     <commons-collections.version>3.2.2</commons-collections.version>
@@ -174,20 +176,21 @@
     <httpcomponents5.core.version>5.4.4</httpcomponents5.core.version>
     <httpcomponents5.client.version>5.6.5</httpcomponents5.client.version>
     <ivy.version>2.5.2</ivy.version>
-    <!-- CVE-2026-54513/54512; report asks >=2.18.8, 2.18.10 is the latest 2.18.x -->
-    <jackson.version>2.18.10</jackson.version>
+    <!-- CVE-2026-54513/54512, CVE-2026-89425/89407, CVE-2026-91777/91776 -->
+    <jackson.version>2.18.11</jackson.version>
     <jamon.plugin.version>2.3.4</jamon.plugin.version>
     <jamon-runtime.version>2.4.1</jamon-runtime.version>
     <javax-servlet.version>3.1.0</javax-servlet.version>
     <javolution.version>5.5.1</javolution.version>
+    <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
     <jettison.version>1.5.4</jettison.version>
-    <!-- Latest public 9.4.x. NOTE: this does NOT close CVE-2026-2332 / CVE-2026-10050 -
-         NVD gives their fix boundary as 9.4.60/9.4.63, which are not published to Maven
-         Central (9.4 is EOL; those are extended-support builds). Closing them needs Jetty 10+. -->
+    <!-- Latest public 9.4.x. CVE-2026-2332/10050 require 9.4.60/9.4.63, available only
+         from credentialed extended-support repositories. The public fix is Jetty 12.0.36+,
+         which requires a separate servlet-environment migration. -->
     <jetty.version>9.4.58.v20250814</jetty.version>
     <jersey.version>1.19.4</jersey.version>
-    <!-- HIVE-28992: only upgrade to newer than 3.25.0 if you tested the prompt -->
-    <jline.version>3.25.0</jline.version>
+    <!-- CVE-2026-77422 -->
+    <jline.version>3.30.16</jline.version>
     <jms.version>2.0.2</jms.version>
     <joda.version>2.13.0</joda.version>
     <jodd.version>6.0.0</jodd.version>
@@ -206,14 +209,8 @@
     <kudu.version>1.18.1</kudu.version>
     <!-- Leaving libfb303 at 0.9.3 regardless of libthrift: As per THRIFT-4613 The Apache Thrift project does not publish items related to fb303 at this point -->
     <libfb303.version>0.9.3</libfb303.version>
-    <!-- Stays at 0.16.0. CVE-2026-43869 needs >=0.23.0 per NVD, but no version above 0.16.0
-         compiles the thrift-generated sources checked into src/gen: thrift 0.17 changed
-         ProcessFunction from two type arguments to three, so ThriftHiveMetastore.java fails
-         with 200 "wrong number of type arguments" errors (verified by clean-building
-         metastore-common against 0.17.0, 0.18.1, 0.19.0, 0.20.0, 0.21.0 and 0.23.0 - all fail).
-         Closing this CVE means regenerating the thrift sources with the 0.23.0 compiler, which
-         the thriftif profile gates on having that exact compiler installed. -->
-    <libthrift.version>0.16.0</libthrift.version>
+    <!-- CVE-2026-43869/43871. Keep the checked-in generated sources on the same compiler version. -->
+    <libthrift.version>0.23.0</libthrift.version>
     <log4j2.version>2.24.3</log4j2.version>
     <mariadb.version>2.5.0</mariadb.version>
     <mssql.version>6.2.1.jre8</mssql.version>
@@ -235,8 +232,8 @@
     <netty.version>4.1.137.Final</netty.version>
     <netty3.version>3.10.5.Final</netty3.version>
     <!-- used by druid storage handler -->
-    <!-- keep in lockstep with pac4j-core -->
-    <pac4j-saml.version>4.5.10</pac4j-saml.version>
+    <!-- CVE-2026-40458. Keep pac4j-core, pac4j-saml and pac4j-javaee in lockstep. -->
+    <pac4j.version>5.7.10</pac4j.version>
     <paranamer.version>2.8</paranamer.version>
     <parquet.version>1.15.2</parquet.version>
     <pig.version>0.16.0</pig.version>
@@ -249,7 +246,7 @@
     <stax.version>1.0.1</stax.version>
     <slf4j.version>1.7.30</slf4j.version>
     <ST4.version>4.0.4</ST4.version>
-    <storage-api.version>4.2.1</storage-api.version>
+    <storage-api.version>${project.version}</storage-api.version>
     <tez.version>0.10.5</tez.version>
     <super-csv.version>2.2.0</super-csv.version>
     <tempus-fugit.version>1.1</tempus-fugit.version>
@@ -259,10 +256,11 @@
     <jaxb-runtime.version>4.0.0-M2</jaxb-runtime.version>
     <!-- 2.3 shades commons-io 2.8.0 (CVE-2024-47554) under org/apache/velocity/shaded/commons/io.
          2.4.1 drops that copy entirely - its only dependencies are commons-lang3 and slf4j-api.
-         Reached transitively through pac4j-saml-opensamlv3; Hive has no direct velocity usage. -->
+         Reached transitively through pac4j-saml; Hive has no direct velocity usage. -->
     <velocity.version>2.4.1</velocity.version>
     <xerces.version>2.12.2</xerces.version>
-    <xmlsec.version>2.3.4</xmlsec.version>
+    <!-- OpenSAML 4, used by pac4j-saml 5.7.10, requires xmlsec 3.x. -->
+    <xmlsec.version>3.0.1</xmlsec.version>
     <!-- 3.8.3 is affected by CVE-2024-23944; 3.9.0-3.9.2 by CVE-2024-51504. 3.9.4 is clear of both. -->
     <!-- CVE-2026-24308, CVE-2026-24281 -->
     <zookeeper.version>3.9.5</zookeeper.version>
@@ -290,8 +288,8 @@
          endpoints reject; set aws.requestChecksumCalculation=WHEN_REQUIRED for those. -->
     <aws-java-sdk-v2.version>2.57.0</aws-java-sdk-v2.version>
     <jansi.version>2.4.0</jansi.version>
-    <!-- If upgrading, upgrade atlas as well in ql/pom.xml, which brings in some springframework dependencies transitively -->
-    <spring.version>5.3.39</spring.version>
+    <!-- CVE-2025-41249 is fixed in the public 6.2.11 release; 5.7.10 does not exist. -->
+    <spring.version>6.2.11</spring.version>
     <spring.ldap.version>2.4.4</spring.ldap.version>
     <project.build.outputTimestamp>2026-07-22T00:55:30Z</project.build.outputTimestamp>
     <keycloak.version>26.0.6</keycloak.version>
@@ -451,6 +449,11 @@
         <groupId>commons-cli</groupId>
         <artifactId>commons-cli</artifactId>
         <version>${commons-cli.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>commons-beanutils</groupId>
+        <artifactId>commons-beanutils</artifactId>
+        <version>${commons-beanutils.version}</version>
       </dependency>
       <dependency>
         <groupId>commons-codec</groupId>
@@ -989,6 +992,11 @@
         <version>${jetty.version}</version>
       </dependency>
       <dependency>
+        <groupId>javax.annotation</groupId>
+        <artifactId>javax.annotation-api</artifactId>
+        <version>${javax.annotation-api.version}</version>
+      </dependency>
+      <dependency>
         <groupId>javax.servlet</groupId>
         <artifactId>javax.servlet-api</artifactId>
         <version>${javax-servlet.version}</version>
@@ -1015,8 +1023,18 @@
       </dependency>
       <dependency>
         <groupId>org.pac4j</groupId>
-        <artifactId>pac4j-saml-opensamlv3</artifactId>
-        <version>${pac4j-saml.version}</version>
+        <artifactId>pac4j-core</artifactId>
+        <version>${pac4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.pac4j</groupId>
+        <artifactId>pac4j-javaee</artifactId>
+        <version>${pac4j.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.pac4j</groupId>
+        <artifactId>pac4j-saml</artifactId>
+        <version>${pac4j.version}</version>
         <exclusions>
           <exclusion>
             <groupId>com.google.code.findbugs</groupId>

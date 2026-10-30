@@ -178,7 +178,7 @@
     </dependency>
     <dependency>
       <groupId>org.pac4j</groupId>
-      <artifactId>pac4j-saml-opensamlv3</artifactId>
+      <artifactId>pac4j-saml</artifactId>
       <exclusions>
         <exclusion>
           <groupId>org.bouncycastle</groupId>
@@ -189,6 +189,11 @@
           <artifactId>javax.json</artifactId>
         </exclusion>
       </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.pac4j</groupId>
+      <artifactId>pac4j-javaee</artifactId>
+      <version>${pac4j.version}</version>
     </dependency>
     <dependency>
       <groupId>org.bouncycastle</groupId>

@@ -61,7 +61,7 @@ import org.apache.http.message.BasicHeader;
 import org.apache.http.protocol.HttpContext;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.THttpClient;
+import org.apache.hadoop.hive.metastore.utils.HttpClient4ThriftTransport;
 import org.apache.thrift.transport.TTransport;
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -227,7 +227,7 @@ public class TestThriftHttpCLIServiceFeatures extends AbstractThriftCLITest {
     httpClient.addRequestInterceptor(
         new HttpBasicAuthInterceptor(USERNAME, PASSWORD,
             null, null, false, null, null));
-    return new THttpClient(httpUrl, httpClient);
+    return new HttpClient4ThriftTransport(httpUrl, httpClient);
   }
 
   private static String getHttpUrl() {
@@ -287,7 +287,7 @@ public class TestThriftHttpCLIServiceFeatures extends AbstractThriftCLITest {
       new HttpBasicAuthInterceptorWithLogging(USERNAME, PASSWORD, null, null,
       false, additionalHeaders, cookieHeaders);
     hClient.addRequestInterceptor(authInt);
-    transport = new THttpClient(httpUrl, hClient);
+    transport = new HttpClient4ThriftTransport(httpUrl, hClient);
     TCLIService.Client httpClient = getClient(transport);
 
     // Create a new open session request object
@@ -341,7 +341,7 @@ public class TestThriftHttpCLIServiceFeatures extends AbstractThriftCLITest {
         false, null, null);
     hClient.addRequestInterceptor(authInt);
 
-    transport = new THttpClient(httpUrl, hClient);
+    transport = new HttpClient4ThriftTransport(httpUrl, hClient);
     TCLIService.Client httpClient = getClient(transport);
 
     // Create a new open session request object

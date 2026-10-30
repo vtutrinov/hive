@@ -40,7 +40,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.client.HttpClient;
 import org.apache.http.cookie.Cookie;
 import org.apache.http.impl.cookie.BasicClientCookie;
-import org.apache.thrift.transport.THttpClient;
+import org.apache.hadoop.hive.metastore.utils.HttpClient4ThriftTransport;
 import org.apache.thrift.transport.TTransport;
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
@@ -169,8 +169,8 @@ public class TestHttpCookieAuthenticationTest {
       transportField.setAccessible(true);
       TTransport transport = (TTransport) transportField.get(hiveConnection);
 
-      if(transport instanceof THttpClient) {
-        THttpClient httpTransport = (THttpClient) transport;
+      if(transport instanceof HttpClient4ThriftTransport) {
+        HttpClient4ThriftTransport httpTransport = (HttpClient4ThriftTransport) transport;
         Field clientField = httpTransport.getClass().getDeclaredField("client");
         clientField.setAccessible(true);
         HttpClient httpClient = (HttpClient) clientField.get(httpTransport);

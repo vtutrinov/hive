@@ -150,7 +150,7 @@ import org.apache.http.util.Args;
 import org.apache.thrift.TBaseHelper;
 import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
-import org.apache.thrift.transport.THttpClient;
+import org.apache.hadoop.hive.metastore.utils.HttpClient4ThriftTransport;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
 import org.slf4j.Logger;
@@ -573,7 +573,7 @@ public class HiveConnection implements java.sql.Connection {
     boolean useSsl = isSslConnection();
     validateSslForBrowserMode();
     httpClient = getHttpClient(useSsl);
-    transport = new THttpClient(getServerHttpUrl(useSsl), httpClient);
+    transport = new HttpClient4ThriftTransport(getServerHttpUrl(useSsl), httpClient);
     HiveAuthUtils.configureThriftMaxMessageSize(transport, getMaxMessageSize());
     return transport;
   }

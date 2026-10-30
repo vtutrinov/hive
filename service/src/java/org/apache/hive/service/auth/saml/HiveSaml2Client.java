@@ -32,9 +32,11 @@ import javax.servlet.http.HttpServletResponse;
 import org.apache.hadoop.hive.conf.HiveConf;
 import org.apache.hadoop.hive.conf.HiveConf.ConfVars;
 import org.opensaml.saml.common.xml.SAMLConstants;
-import org.pac4j.core.context.JEEContext;
+import org.pac4j.core.credentials.Credentials;
 import org.pac4j.core.exception.http.RedirectionAction;
 import org.pac4j.core.exception.http.WithLocationAction;
+import org.pac4j.jee.context.JEEContext;
+import org.pac4j.jee.context.session.JEESessionStore;
 import org.pac4j.saml.client.SAML2Client;
 import org.pac4j.saml.config.SAML2Configuration;
 import org.pac4j.saml.credentials.SAML2Credentials;
@@ -150,7 +152,7 @@ public class HiveSaml2Client extends SAML2Client {
     int responsePort = HiveSamlUtils.validateSamlResponsePort(request);
     LOG.debug("Request has response port set as {}", responsePort);
     Optional<RedirectionAction> redirect = getRedirectionAction(
-        new JEEContext(request, response));
+        new JEEContext(request, response), JEESessionStore.INSTANCE);
     if (!redirect.isPresent()) {
       throw new HttpSamlAuthenticationException("Could not get the redirect response");
     }
@@ -178,12 +180,12 @@ public class HiveSaml2Client extends SAML2Client {
    */
   public String validate(HttpServletRequest request, HttpServletResponse response)
       throws HttpSamlAuthenticationException {
-    Optional<SAML2Credentials> credentials;
+    Optional<Credentials> credentials;
     try {
       SAML2CredentialsExtractor credentialsExtractor = new SAML2CredentialsExtractor(
           this);
       credentials = credentialsExtractor
-          .extract(new JEEContext(request, response));
+          .extract(new JEEContext(request, response), JEESessionStore.INSTANCE);
     } catch (Exception ex) {
       throw new HttpSamlAuthenticationException("Could not validate the SAML response",
           ex);
@@ -191,8 +193,9 @@ public class HiveSaml2Client extends SAML2Client {
     if (!credentials.isPresent()) {
       throw new HttpSamlAuthenticationException("Credentials could not be extracted");
     }
-    String nameId = credentials.get().getNameId().getValue();
-    if (!groupNameFilter.apply(credentials.get().getAttributes())) {
+    SAML2Credentials samlCredentials = (SAML2Credentials) credentials.get();
+    String nameId = samlCredentials.getNameId().getValue();
+    if (!groupNameFilter.apply(samlCredentials.getAttributes())) {
       LOG.warn("Could not match any groups for the nameid {}", nameId);
       throw new HttpSamlNoGroupsMatchedException(
           "None of the configured groups match for the user");

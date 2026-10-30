@@ -248,6 +248,11 @@
       <artifactId>hive-storage-api</artifactId>
     </dependency>
     <dependency>
+      <groupId>javax.servlet</groupId>
+      <artifactId>javax.servlet-api</artifactId>
+      <version>3.1.0</version>
+    </dependency>
+    <dependency>
       <groupId>org.apache.thrift</groupId>
       <artifactId>libfb303</artifactId>
     </dependency>
@@ -432,6 +437,27 @@
                       <token>public interface</token>
                       <value>@org.apache.hadoop.classification.InterfaceAudience.Public @org.apache.hadoop.classification.InterfaceStability.Stable public interface</value>
                       <unescape>true</unescape>
+                    </replacement>
+                  </replacements>
+                </configuration>
+              </execution>
+              <execution>
+                <id>process-thrift-sources-fb303-compatibility</id>
+                <phase>process-sources</phase>
+                <goals>
+                  <goal>replace</goal>
+                </goals>
+                <configuration>
+                  <!-- libfb303 0.9.3 still exposes the pre-0.17 ProcessFunction
+                       generic signature. Its bytecode is compatible with libthrift
+                       0.23; only the generated constructor call needs a raw-map bridge. -->
+                  <basedir>${basedir}/src/gen/thrift/gen-javabean/org/apache/hadoop/hive/metastore/api/</basedir>
+                  <filesToInclude>ThriftHiveMetastore.java</filesToInclude>
+                  <regex>false</regex>
+                  <replacements>
+                    <replacement>
+                      <token>super(iface, getProcessMap(</token>
+                      <value>super(iface, (java.util.Map) getProcessMap(</value>
                     </replacement>
                   </replacements>
                 </configuration>

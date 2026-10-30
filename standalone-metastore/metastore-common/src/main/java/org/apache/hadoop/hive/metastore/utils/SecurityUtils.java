@@ -35,7 +35,6 @@ import org.apache.hadoop.security.authentication.util.KerberosUtil;
 import org.apache.hadoop.security.token.Token;
 import org.apache.hadoop.security.token.TokenIdentifier;
 import org.apache.hadoop.security.token.TokenSelector;
-import org.apache.thrift.transport.THttpClient;
 import org.apache.thrift.transport.TSSLTransportFactory;
 import org.apache.thrift.transport.TServerSocket;
 import org.apache.thrift.transport.TSocket;
@@ -339,7 +338,7 @@ public class SecurityUtils {
   Sets the ssl related configs in the underlying http client builder and wrap it up
   in a THttpClient
    */
-  public static THttpClient getThriftHttpsClient(String httpsUrl, String trustStorePath,
+  public static HttpClient4ThriftTransport getThriftHttpsClient(String httpsUrl, String trustStorePath,
       String trustStorePasswd, String trustStoreAlgorithm, String trustStoreType,
       HttpClientBuilder underlyingHttpClientBuilder) throws TTransportException, IOException,
       KeyStoreException, NoSuchAlgorithmException, CertificateException,
@@ -362,7 +361,7 @@ public class SecurityUtils {
         RegistryBuilder.<ConnectionSocketFactory> create().register("https", socketFactory)
             .build();
     underlyingHttpClientBuilder.setConnectionManager(new BasicHttpClientConnectionManager(registry));
-    return new THttpClient(httpsUrl, underlyingHttpClientBuilder.build());
+    return new HttpClient4ThriftTransport(httpsUrl, underlyingHttpClientBuilder.build());
   }
 
   // Using endpoint identification algorithm as HTTPS enables us to do

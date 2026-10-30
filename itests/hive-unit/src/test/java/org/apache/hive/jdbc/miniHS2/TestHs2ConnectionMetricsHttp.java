@@ -34,7 +34,7 @@ import org.apache.http.client.CookieStore;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.THttpClient;
+import org.apache.hadoop.hive.metastore.utils.HttpClient4ThriftTransport;
 import org.apache.thrift.transport.TTransport;
 
 import org.junit.AfterClass;
@@ -96,7 +96,7 @@ public class TestHs2ConnectionMetricsHttp extends Hs2ConnectionMetrics {
     httpClient.addRequestInterceptor(new BasicHttpRequestInterceptor(USERNAME, PASSWORD, null,
             null, false, headers));
 
-    TTransport transport = new THttpClient(getHttpUrl(), httpClient);
+    TTransport transport = new HttpClient4ThriftTransport(getHttpUrl(), httpClient);
     TProtocol protocol = new TBinaryProtocol(transport);
     return new TCLIService.Client(protocol);
   }

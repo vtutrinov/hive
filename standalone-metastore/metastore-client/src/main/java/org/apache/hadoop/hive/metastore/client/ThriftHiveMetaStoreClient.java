@@ -60,7 +60,7 @@ import org.apache.thrift.TException;
 import org.apache.thrift.protocol.TBinaryProtocol;
 import org.apache.thrift.protocol.TCompactProtocol;
 import org.apache.thrift.protocol.TProtocol;
-import org.apache.thrift.transport.THttpClient;
+import org.apache.hadoop.hive.metastore.utils.HttpClient4ThriftTransport;
 import org.apache.thrift.transport.TSocket;
 import org.apache.thrift.transport.TTransport;
 import org.apache.thrift.transport.TTransportException;
@@ -549,7 +549,7 @@ public class ThriftHiveMetaStoreClient extends BaseMetaStoreClient {
   then the method fetches JWT from environment variable: HMS_JWT and sets in auth
   header in http request
    */
-  private THttpClient createHttpClient(URI store, boolean useSSL) throws MetaException,
+  private HttpClient4ThriftTransport createHttpClient(URI store, boolean useSSL) throws MetaException,
       TTransportException {
     String path = MetaStoreUtils.getHttpPath(MetastoreConf.getVar(conf, MetastoreConf.ConfVars.THRIFT_HTTP_PATH));
     String urlScheme;
@@ -561,7 +561,7 @@ public class ThriftHiveMetaStoreClient extends BaseMetaStoreClient {
     String httpUrl = urlScheme + store.getHost() + ":" + store.getPort() + path;
 
     HttpClientBuilder httpClientBuilder = createHttpClientBuilder();
-    THttpClient tHttpClient;
+    HttpClient4ThriftTransport tHttpClient;
     try {
       if (useSSL) {
         String trustStorePath = MetastoreConf.getVar(conf, MetastoreConf.ConfVars.SSL_TRUSTSTORE_PATH).trim();
@@ -575,7 +575,7 @@ public class ThriftHiveMetaStoreClient extends BaseMetaStoreClient {
             SecurityUtils.getThriftHttpsClient(httpUrl, trustStorePath, trustStorePassword, trustStoreAlgorithm,
                 trustStoreType, httpClientBuilder);
       } else {
-        tHttpClient = new THttpClient(httpUrl, httpClientBuilder.build());
+        tHttpClient = new HttpClient4ThriftTransport(httpUrl, httpClientBuilder.build());
       }
     } catch (Exception e) {
       if (e instanceof TTransportException) {

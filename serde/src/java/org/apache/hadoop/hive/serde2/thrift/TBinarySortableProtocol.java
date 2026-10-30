@@ -22,6 +22,7 @@ import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.util.Arrays;
 import java.util.Properties;
+import java.util.UUID;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -296,6 +297,17 @@ public class TBinarySortableProtocol extends TProtocol implements
     i64out[7] = (byte) (0xff & (i64));
     writeRawBytes(nonNullByte, 0, 1);
     writeRawBytes(i64out, 0, 8);
+  }
+
+  private final byte[] uuidOut = new byte[16];
+
+  @Override
+  public void writeUuid(UUID uuid) throws TException {
+    ByteBuffer buffer = ByteBuffer.wrap(uuidOut);
+    buffer.putLong(uuid.getMostSignificantBits());
+    buffer.putLong(uuid.getLeastSignificantBits());
+    writeRawBytes(nonNullByte, 0, 1);
+    writeRawBytes(uuidOut, 0, uuidOut.length);
   }
 
   @Override
@@ -575,6 +587,18 @@ public class TBinarySortableProtocol extends TProtocol implements
         | ((long) (i64rd[3] & 0xff) << 32) | ((long) (i64rd[4] & 0xff) << 24)
         | ((long) (i64rd[5] & 0xff) << 16) | ((long) (i64rd[6] & 0xff) << 8)
         | ((i64rd[7] & 0xff));
+  }
+
+  private final byte[] uuidRd = new byte[16];
+
+  @Override
+  public UUID readUuid() throws TException {
+    if (readIsNull()) {
+      return null;
+    }
+    readRawAll(uuidRd, 0, uuidRd.length);
+    ByteBuffer buffer = ByteBuffer.wrap(uuidRd);
+    return new UUID(buffer.getLong(), buffer.getLong());
   }
 
   @Override
