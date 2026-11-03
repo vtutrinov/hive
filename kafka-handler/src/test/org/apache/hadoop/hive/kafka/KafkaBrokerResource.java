@@ -26,7 +26,7 @@ import kafka.zk.AdminZkClient;
 import kafka.zk.EmbeddedZookeeper;
 import org.apache.commons.io.FileUtils;
 import org.apache.hadoop.hive.common.IPStackUtils;
-import org.apache.kafka.common.network.Mode;
+import org.apache.kafka.common.network.ConnectionMode;
 import org.apache.kafka.common.utils.Time;
 import org.apache.kafka.test.TestSslUtils;
 import org.junit.rules.ExternalResource;
@@ -106,7 +106,7 @@ class KafkaBrokerResource extends ExternalResource {
       brokerProps.setProperty("listener.name.l2.gssapi.sasl.jaas.config", jaasConfig);
       brokerProps.setProperty("listener.name.l3.gssapi.sasl.jaas.config", jaasConfig);
       truststoreFile = File.createTempFile("kafka_truststore", "jks");
-      brokerProps.putAll(new TestSslUtils.SslConfigsBuilder(Mode.SERVER).createNewTrustStore(truststoreFile).build());
+      brokerProps.putAll(new TestSslUtils.SslConfigsBuilder(ConnectionMode.SERVER).createNewTrustStore(truststoreFile).build());
       brokerProps.setProperty("delegation.token.master.key", "AnyValueShouldDoHereItDoesntMatter");
     }
     brokerProps.setProperty("offsets.topic.replication.factor", "1");
@@ -116,9 +116,9 @@ class KafkaBrokerResource extends ExternalResource {
     kafkaServer = TestUtils.createServer(config, Time.SYSTEM);
     kafkaServer.startup();
     kafkaServer.zkClient();
-    adminZkClient = new AdminZkClient(kafkaServer.zkClient());
+    adminZkClient = new AdminZkClient(kafkaServer.zkClient(), scala.Option.empty());
     LOG.info("Creating kafka TOPIC [{}]", TOPIC);
-    adminZkClient.createTopic(TOPIC, 1, 1, new Properties(), RackAwareMode.Disabled$.MODULE$);
+    adminZkClient.createTopic(TOPIC, 1, 1, new Properties(), RackAwareMode.Disabled$.MODULE$, false);
   }
 
   /**

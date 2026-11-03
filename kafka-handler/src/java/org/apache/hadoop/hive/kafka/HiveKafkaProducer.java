@@ -32,7 +32,9 @@ import org.apache.kafka.common.Metric;
 import org.apache.kafka.common.MetricName;
 import org.apache.kafka.common.PartitionInfo;
 import org.apache.kafka.common.TopicPartition;
+import org.apache.kafka.common.Uuid;
 import org.apache.kafka.common.errors.ProducerFencedException;
+import org.apache.kafka.common.utils.ProducerIdAndEpoch;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -41,6 +43,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.time.Duration;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Properties;
@@ -117,6 +120,10 @@ class HiveKafkaProducer<K, V> implements Producer<K, V> {
     kafkaProducer.close(duration);
   }
 
+  @Override public Uuid clientInstanceId(Duration timeout) {
+    return kafkaProducer.clientInstanceId(timeout);
+  }
+
   @Override public void flush() {
     kafkaProducer.flush();
     if (transactionalId != null) {
@@ -138,14 +145,15 @@ class HiveKafkaProducer<K, V> implements Producer<K, V> {
 
     Object transactionManager = getValue(kafkaProducer, "transactionManager");
 
-    Object topicPartitionBookkeeper = getValue(transactionManager, "topicPartitionBookkeeper");
+    // Kafka 3.x replaced topicPartitionBookkeeper with TxnPartitionMap (field: txnPartitionMap).
+    Object txnPartitionMap = getValue(transactionManager, "txnPartitionMap");
     invoke(transactionManager,
         "transitionTo",
         getEnum("org.apache.kafka.clients.producer.internals.TransactionManager$State.INITIALIZING"));
-    invoke(topicPartitionBookkeeper, "reset");
-    Object producerIdAndEpoch = getValue(transactionManager, "producerIdAndEpoch");
-    setValue(producerIdAndEpoch, "producerId", producerId);
-    setValue(producerIdAndEpoch, "epoch", epoch);
+    invoke(txnPartitionMap, "reset");
+    // Kafka 3.x: ProducerIdAndEpoch (org.apache.kafka.common.utils) is immutable, so replace
+    // the whole object instead of reflectively writing its final fields.
+    setValue(transactionManager, "producerIdAndEpoch", new ProducerIdAndEpoch(producerId, epoch));
 
     invoke(transactionManager,
         "transitionTo",
@@ -163,14 +171,12 @@ class HiveKafkaProducer<K, V> implements Producer<K, V> {
 
   long getProducerId() {
     Object transactionManager = getValue(kafkaProducer, "transactionManager");
-    Object producerIdAndEpoch = getValue(transactionManager, "producerIdAndEpoch");
-    return (long) getValue(producerIdAndEpoch, "producerId");
+    return ((ProducerIdAndEpoch) getValue(transactionManager, "producerIdAndEpoch")).producerId;
   }
 
   short getEpoch() {
     Object transactionManager = getValue(kafkaProducer, "transactionManager");
-    Object producerIdAndEpoch = getValue(transactionManager, "producerIdAndEpoch");
-    return (short) getValue(producerIdAndEpoch, "epoch");
+    return ((ProducerIdAndEpoch) getValue(transactionManager, "producerIdAndEpoch")).epoch;
   }
 
   /**
@@ -182,6 +188,10 @@ class HiveKafkaProducer<K, V> implements Producer<K, V> {
   private void flushNewPartitions() {
     LOG.info("Flushing new partitions");
     TransactionalRequestResult result = enqueueNewPartitions();
+    if (result == null) {
+      // There were no new (or pending) partitions to add to the transaction, nothing to flush.
+      return;
+    }
     Object sender = getValue(kafkaProducer, "sender");
     invoke(sender, "wakeup");
     result.await();
@@ -189,6 +199,14 @@ class HiveKafkaProducer<K, V> implements Producer<K, V> {
 
   private synchronized TransactionalRequestResult enqueueNewPartitions() {
     Object transactionManager = getValue(kafkaProducer, "transactionManager");
+    // Kafka 3.x brokers reject AddPartitionsToTxn requests with an empty partition set and the
+    // 3.x client mishandles such error responses (NPE in AddPartitionsToTxnHandler#handleResponse),
+    // so only enqueue the request when there are actually partitions to add.
+    Collection<?> newPartitions = (Collection<?>) getValue(transactionManager, "newPartitionsInTransaction");
+    Collection<?> pendingPartitions = (Collection<?>) getValue(transactionManager, "pendingPartitionsInTransaction");
+    if (newPartitions.isEmpty() && pendingPartitions.isEmpty()) {
+      return null;
+    }
     Object txnRequestHandler = invoke(transactionManager, "addPartitionsToTransactionHandler");
     invoke(transactionManager,
         "enqueueRequest",

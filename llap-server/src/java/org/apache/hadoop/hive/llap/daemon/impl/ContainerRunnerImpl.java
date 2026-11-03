@@ -365,7 +365,7 @@ public class ContainerRunnerImpl extends CompositeService implements ContainerRu
         throw e;
       }
 
-      String extClientAppIdFromJwt = (String) claimsJws.getBody().get(LlapExtClientJwtHelper.LLAP_EXT_CLIENT_APP_ID);
+      String extClientAppIdFromJwt = (String) claimsJws.getPayload().get(LlapExtClientJwtHelper.LLAP_EXT_CLIENT_APP_ID);
 
       // this should never happen ideally.
       // extClientAppId is injected in JWT and fragment request by initial get_splits() call.

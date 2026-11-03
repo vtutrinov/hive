@@ -69,7 +69,7 @@ class AsyncTaskCopyLocalJars implements Callable<Void> {
         com.carrotsearch.hppc.ByteArrayDeque.class, //hppc
         io.jsonwebtoken.security.Keys.class, //jjwt-api
         io.jsonwebtoken.impl.DefaultJws.class, //jjwt-impl
-        io.jsonwebtoken.io.JacksonSerializer.class, //jjwt-jackson
+        io.jsonwebtoken.jackson.io.JacksonSerializer.class, //jjwt-jackson
     };
 
     for (Class<?> c : dependencies) {

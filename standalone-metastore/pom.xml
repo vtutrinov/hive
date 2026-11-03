@@ -66,7 +66,8 @@
     <antlr.version>4.9.3</antlr.version>
     <apache-directory-server.version>2.0.0-M24</apache-directory-server.version>
     <checkstyle.version>11.1.0</checkstyle.version>
-    <commons-lang3.version>3.14.0</commons-lang3.version>
+    <!-- CVE-2025-48924; keep in sync with the root pom. -->
+    <commons-lang3.version>3.18.0</commons-lang3.version>
     <commons-dbcp2.version>2.12.0</commons-dbcp2.version>
     <datasketches.version>2.0.0</datasketches.version>
     <datanucleus-api-jdo.version>6.0.3</datanucleus-api-jdo.version>
@@ -74,7 +75,8 @@
     <datanucleus-jdo.version>3.2.0-release</datanucleus-jdo.version>
     <datanucleus-rdbms.version>6.0.10</datanucleus-rdbms.version>
     <derby.version>10.17.1.0</derby.version>
-    <mariadb.version>2.5.0</mariadb.version>
+    <!-- CVE-2026-61700, CVE-2026-55858, CVE-2026-55857, CVE-2026-55856; keep in sync with the root pom. -->
+    <mariadb.version>2.7.14</mariadb.version>
     <mssql.version>6.2.1.jre8</mssql.version>
     <!-- CVE-2023-22102; 8.4.0 is the last 8.x -->
     <mysql.version>8.4.0</mysql.version>
@@ -84,7 +86,8 @@
     <dropwizard-metrics-hadoop-metrics2-reporter.version>0.1.2
     </dropwizard-metrics-hadoop-metrics2-reporter.version>
     <dropwizard.version>3.1.0</dropwizard.version>
-    <guava.version>22.0</guava.version>
+    <!-- CVE-2023-2976, CVE-2018-10237, CVE-2020-8908; keep in sync with the root pom. -->
+    <guava.version>32.0.0-jre</guava.version>
     <hadoop.version>3.4.1</hadoop.version>
     <hikaricp.version>4.0.3</hikaricp.version>
     <!-- CVE-2026-54513/54512, CVE-2026-89425/89407, CVE-2026-91777/91776 -->
@@ -97,7 +100,7 @@
     <junit.platform.version>1.13.3</junit.platform.version>
     <libfb303.version>0.9.3</libfb303.version>
     <!-- CVE-2026-43869/43871. Keep the checked-in generated sources on the same compiler version. -->
-    <libthrift.version>0.23.0</libthrift.version>
+    <libthrift.version>0.24.0</libthrift.version>
     <log4j2.version>2.24.3</log4j2.version>
     <mockito-core.version>5.17.0</mockito-core.version>
     <orc.version>2.1.2</orc.version>
@@ -121,6 +124,8 @@
     <!-- 3.8.3 is affected by CVE-2024-23944; 3.9.0-3.9.2 by CVE-2024-51504. 3.9.4 is clear of both. -->
     <!-- CVE-2026-24308, CVE-2026-24281 -->
     <zookeeper.version>3.9.5</zookeeper.version>
+    <!-- Transitive from orc-core; pinned like in the root pom (CVE report RSK00154941). -->
+    <zstd-jni.version>1.5.7-14</zstd-jni.version>
     <!-- Keep hadoop-common from pulling an old avro (CVE-2024-47561); pin it like the root pom does. -->
     <avro.version>1.12.0</avro.version>
     <cron-utils.version>9.2.1</cron-utils.version>
@@ -138,8 +143,9 @@
     <jetty.version>9.4.58.v20250814</jetty.version>
     <javax.annotation-api.version>1.3.2</javax.annotation-api.version>
     <keycloak.version>26.0.6</keycloak.version>
-    <!-- CVE-2025-41249 is fixed in the public 6.2.11 release; 5.7.10 does not exist. -->
-    <spring.version>6.2.11</spring.version>
+    <!-- CVE-2025-41249 is fixed in the public 6.2.11 release; 5.7.10 does not exist.
+         CVE-2026-41848 (AntPathMatcher ReDoS) is fixed in 6.2.19. -->
+    <spring.version>6.2.19</spring.version>
     <spring.ldap.version>2.4.4</spring.ldap.version>
     <testcontainers.version>1.21.3</testcontainers.version>
     <!-- AWS SDK v2 bundle used by hadoop-aws (S3A). hadoop-aws 3.4.1 asks for 2.24.6, which shades
@@ -175,6 +181,11 @@
         <groupId>io.netty</groupId>
         <artifactId>netty-transport-native-epoll</artifactId>
         <version>${netty.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.github.luben</groupId>
+        <artifactId>zstd-jni</artifactId>
+        <version>${zstd-jni.version}</version>
       </dependency>
       <dependency>
         <groupId>io.netty</groupId>

@@ -24,6 +24,7 @@ import io.jsonwebtoken.Jwts;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.yarn.api.records.ApplicationId;
 
+import javax.crypto.SecretKey;
 import java.util.Date;
 import java.util.UUID;
 
@@ -48,9 +49,9 @@ public class LlapExtClientJwtHelper {
    */
   public String buildJwtForLlap(ApplicationId extClientAppId) {
     return Jwts.builder()
-        .setSubject(LLAP_JWT_SUBJECT)
-        .setIssuedAt(new Date())
-        .setId(UUID.randomUUID().toString())
+        .subject(LLAP_JWT_SUBJECT)
+        .issuedAt(new Date())
+        .id(UUID.randomUUID().toString())
         .claim(LLAP_EXT_CLIENT_APP_ID, extClientAppId.toString())
         .signWith(jwtSecretProvider.getEncryptionSecret())
         .compact();
@@ -63,8 +64,9 @@ public class LlapExtClientJwtHelper {
    */
   public Jws<Claims> parseClaims(String jwt) {
     return Jwts.parser()
-        .setSigningKey(jwtSecretProvider.getDecryptionSecret())
-        .parseClaimsJws(jwt);
+        .verifyWith((SecretKey) jwtSecretProvider.getDecryptionSecret())
+        .build()
+        .parseSignedClaims(jwt);
   }
 
 }

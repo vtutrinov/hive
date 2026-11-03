@@ -63,6 +63,11 @@ import java.util.stream.IntStream;
   private static final byte[] KEY_BYTES = "KEY".getBytes(Charset.forName("UTF-8"));
 
   private static final KafkaBrokerResource BROKER_RESOURCE = new KafkaBrokerResource();
+  // Records must carry a realistic (current-time) timestamp: with epoch-0 timestamps the broker's
+  // first time-based retention check (~30s after startup on Kafka 3.x) deletes all segments,
+  // which advances the log start offset and makes consumers fail with OffsetOutOfRangeException.
+  // Note: must be declared before RECORDS/TX_RECORDS so static initialization picks it up.
+  private static final long RECORD_TIMESTAMP = System.currentTimeMillis();
   private static final List<ConsumerRecord<byte[], byte[]>> RECORDS = getRecords(TOPIC);
   private static final List<ConsumerRecord<byte[], byte[]>> TX_RECORDS = getRecords(TX_TOPIC);
   private static final long POLL_TIMEOUT_MS = 900L;
@@ -75,7 +80,7 @@ import java.util.stream.IntStream;
   private static List<ConsumerRecord<byte[], byte[]>> getRecords(String topic) {
     return IntStream.range(0, RECORD_NUMBER).mapToObj(number -> {
       final byte[] value = ("VALUE-" + Integer.toString(number)).getBytes(Charset.forName("UTF-8"));
-      return new ConsumerRecord<>(topic, 0, (long) number, 0L, null, 0L, 0, 0, KEY_BYTES, value);
+      return new ConsumerRecord<>(topic, 0, (long) number, RECORD_TIMESTAMP, null, 0L, 0, 0, KEY_BYTES, value);
     }).collect(Collectors.toList());
   }
 

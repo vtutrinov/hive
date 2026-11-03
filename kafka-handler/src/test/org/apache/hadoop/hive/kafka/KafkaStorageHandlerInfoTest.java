@@ -48,10 +48,14 @@ public class KafkaStorageHandlerInfoTest {
     private static final byte[] KEY_BYTES = "KEY".getBytes(Charset.forName("UTF-8"));
     private static final KafkaBrokerResource KAFKA_BROKER_RESOURCE = new KafkaBrokerResource();
 
+    // Realistic timestamps: epoch-0 records are deleted by the broker's first retention
+    // check on Kafka 3.x (~30s after startup), breaking consumers with OffsetOutOfRange.
+    private static final long RECORD_TIMESTAMP = System.currentTimeMillis();
+
     private static List<ConsumerRecord<byte[], byte[]>> getRecords(String topic) {
         return IntStream.range(0, RECORD_NUMBER).mapToObj(number -> {
             final byte[] value = ("VALUE-" + Integer.toString(number)).getBytes(Charset.forName("UTF-8"));
-            return new ConsumerRecord<>(topic, 0, (long) number, 0L, null, 0L, 0, 0, KEY_BYTES, value);
+            return new ConsumerRecord<>(topic, 0, (long) number, RECORD_TIMESTAMP, null, 0L, 0, 0, KEY_BYTES, value);
         }).collect(Collectors.toList());
     }
 

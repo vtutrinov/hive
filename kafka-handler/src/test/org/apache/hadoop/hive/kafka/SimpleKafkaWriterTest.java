@@ -53,11 +53,14 @@ public class SimpleKafkaWriterTest {
   private static final int RECORD_NUMBER = 17384;
   private static final byte[] KEY_BYTES = "KEY".getBytes(Charset.forName("UTF-8"));
   private static final KafkaBrokerResource KAFKA_BROKER_RESOURCE = new KafkaBrokerResource();
+  // Realistic timestamps: epoch-0 records are deleted by the broker's first retention
+  // check on Kafka 3.x (~30s after startup), breaking consumers with OffsetOutOfRange.
+  private static final long TIMESTAMP_BASE = System.currentTimeMillis();
   private static final List<KafkaWritable> RECORDS_WRITABLES = IntStream
       .range(0, RECORD_NUMBER)
       .mapToObj(number -> {
         final byte[] value = ("VALUE-" + Integer.toString(number)).getBytes(Charset.forName("UTF-8"));
-        return new KafkaWritable(0, (long) number, value, KEY_BYTES);
+        return new KafkaWritable(0, TIMESTAMP_BASE + number, value, KEY_BYTES);
       }).collect(Collectors.toList());
   private final Configuration conf = new Configuration();
   private KafkaConsumer<byte[], byte[]> consumer;
